@@ -1,0 +1,3 @@
+[submodule "my-closet-secret"]
+	path = my-closet-secret
+	url = https://github.com/today-clothes/my-closet-secret.git
