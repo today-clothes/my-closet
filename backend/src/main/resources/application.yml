@@ -2,3 +2,4 @@ spring:
   profiles:
     group:
       "prod": "jwt,oauth"
+      "local": "jwt,oauth"
