@@ -36,3 +36,11 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+processResources.dependsOn('copySecret')
+
+task copySecret(type: Copy) {
+    from '../my-closet-secret'
+    include "*.yml"
+    into 'src/main/resources'
+}
