@@ -1,5 +1,5 @@
 spring:
   profiles:
     group:
-      "prod": "jwt,oauth"
-      "local": "jwt,oauth"
+      "prod": "jwt,oauth,mail"
+      "local": "jwt,oauth,mail"

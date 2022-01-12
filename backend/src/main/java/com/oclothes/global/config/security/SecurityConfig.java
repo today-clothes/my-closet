@@ -1,6 +1,7 @@
 package com.oclothes.global.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,8 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("h2-console/**")
-                .permitAll();
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
+                .antMatchers("/h2-console/**").permitAll();
     }
 
     @Override

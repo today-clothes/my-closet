@@ -8,6 +8,7 @@ import com.oclothes.domain.style.dao.StyleRepository;
 import com.oclothes.domain.style.domain.Style;
 import com.oclothes.domain.user.dao.UserRepository;
 import com.oclothes.domain.user.dao.UserStyleRepository;
+import com.oclothes.infra.email.dao.EmailAuthenticationCodeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class UserTest {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,6 +43,9 @@ class UserTest {
 
     @Autowired
     private ClothRepository clothRepository;
+
+    @Autowired
+    private EmailAuthenticationCodeRepository emailAuthenticationCodeRepository;
 
     User user;
 
@@ -94,6 +102,16 @@ class UserTest {
         log.info(() -> String.format("closet id: %s | name: %s", userStyle.getId(), userStyle.getName()));
         assertNotNull(userStyle.getId());
         assertEquals(styleName, userStyle.getName());
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Test
+    void findByEmailTest() {
+        this.userRepository.save(user);
+        User findByEmailUser = this.userRepository.findByEmail_Value(this.user.getEmail().getValue()).get();
+        log.info(() -> String.format("user id: %s", findByEmailUser.getId()));
+        assertNotNull(findByEmailUser);
+        assertEquals(user.getEmail(), findByEmailUser.getEmail());
     }
 
 }
