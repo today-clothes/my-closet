@@ -1,4 +1,4 @@
-package com.oclothes.global.error;
+package com.oclothes.global.error.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

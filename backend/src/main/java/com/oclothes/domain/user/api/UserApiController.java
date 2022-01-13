@@ -1,5 +1,7 @@
 package com.oclothes.domain.user.api;
 
+import com.oclothes.domain.user.dto.UserDto;
+import com.oclothes.domain.user.dto.UserResponseMessage;
 import com.oclothes.domain.user.service.UserService;
 import com.oclothes.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,13 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<SignUpResponse>> signUp(@Valid  @RequestBody SignUpRequest requestDto) {
-        return ResponseEntity.status(CREATED).body(ResponseDto.create("회원가입 성공.", this.userService.signUp(requestDto)));
+    public ResponseEntity<ResponseDto<SignUpResponse>> signUp(@Valid @RequestBody SignUpRequest requestDto) {
+        return ResponseEntity.status(CREATED).body(ResponseDto.create(UserResponseMessage.SIGN_UP.getMessage(), this.userService.signUp(requestDto)));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseDto<UserDto.LoginResponse>> login(@Valid @RequestBody UserDto.LoginRequest loginRequest) {
+        return ResponseEntity.ok(ResponseDto.create(UserResponseMessage.LOGIN.getMessage(), this.userService.login(loginRequest)));
     }
 
 }

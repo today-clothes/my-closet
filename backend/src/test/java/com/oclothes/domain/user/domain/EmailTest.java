@@ -1,9 +1,10 @@
 package com.oclothes.domain.user.domain;
 
+import com.oclothes.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class EmailTest {
+class EmailTest extends BaseTest {
 
     @Test
     void getHostTest() {

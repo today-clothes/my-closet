@@ -1,6 +1,6 @@
 package com.oclothes.domain.user.exception;
 
-import com.oclothes.global.error.AlreadyExistsException;
+import com.oclothes.global.error.exception.AlreadyExistsException;
 
 public class AlreadyExistsEmailException extends AlreadyExistsException {
     public AlreadyExistsEmailException() {

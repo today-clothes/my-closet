@@ -3,9 +3,11 @@ package com.oclothes.domain.user.service;
 import com.oclothes.domain.user.dao.UserRepository;
 import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
+import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.exception.AlreadyExistsEmailException;
 import com.oclothes.domain.user.exception.UserNotFoundException;
 import com.oclothes.domain.user.exception.UserStatusIsWaitException;
+import com.oclothes.global.config.security.jwt.JwtProvider;
 import com.oclothes.infra.email.domain.EmailAuthenticationCode;
 import com.oclothes.infra.email.domain.EmailSubject;
 import com.oclothes.infra.email.service.EmailAuthenticationCodeService;
@@ -13,6 +15,7 @@ import com.oclothes.infra.email.service.EmailService;
 import com.oclothes.infra.email.util.EmailAuthenticationCodeGenerator;
 import com.oclothes.infra.email.util.EmailMessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailAuthenticationCodeService emailAuthenticationCodeService;
     private final EmailService emailService;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtProvider jwtProvider;
 
     @Override
     public SignUpResponse signUp(SignUpRequest requestDto) {
@@ -53,7 +58,7 @@ public class UserServiceImpl implements UserService {
     private User createUser(SignUpRequest requestDto) {
         return User.builder()
                 .status(User.Status.WAIT)
-                .role(User.Role.USER)
+                .role(User.Role.ROLE_USER)
                 .email(new Email(requestDto.getEmail()))
                 .password(this.passwordEncoder.encode(requestDto.getPassword()))
                 .build();
@@ -65,6 +70,13 @@ public class UserServiceImpl implements UserService {
             if (status.equals(User.Status.NORMAL)) throw new AlreadyExistsEmailException();
             if (status.equals(User.Status.WAIT)) throw new UserStatusIsWaitException();
         }
+    }
+
+    @Override
+    public UserDto.LoginResponse login(UserDto.LoginRequest loginRequest) {
+        this.findByEmail(loginRequest.getEmail());
+        return this.jwtProvider.generateToken(this.authenticationManagerBuilder.getObject()
+                .authenticate(loginRequest.toAuthentication()));
     }
 
 }

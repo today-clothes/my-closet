@@ -1,6 +1,6 @@
 package com.oclothes.domain.user.exception;
 
-import com.oclothes.global.error.NotFoundException;
+import com.oclothes.global.error.exception.NotFoundException;
 
 public class UserNotFoundException extends NotFoundException {
     public UserNotFoundException() {

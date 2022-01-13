@@ -1,6 +1,6 @@
 package com.oclothes.domain.user.exception;
 
-import com.oclothes.global.error.TooManyRequestException;
+import com.oclothes.global.error.exception.TooManyRequestException;
 
 public class EmailAuthenticationCodeTooManyRequestException extends TooManyRequestException {
     public EmailAuthenticationCodeTooManyRequestException() {
