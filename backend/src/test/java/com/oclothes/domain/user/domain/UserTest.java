@@ -1,5 +1,6 @@
 package com.oclothes.domain.user.domain;
 
+import com.oclothes.BaseTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.cloth.dao.ClothRepository;
@@ -12,8 +13,6 @@ import com.oclothes.infra.email.dao.EmailAuthenticationCodeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -22,9 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
-class UserTest {
-
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+class UserTest extends BaseTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -54,7 +51,7 @@ class UserTest {
         user = User.builder()
                 .email(new Email("test@mail.com"))
                 .password("1234")
-                .role(User.Role.USER)
+                .role(User.Role.ROLE_USER)
                 .status(User.Status.WAIT)
                 .build();
     }
@@ -63,7 +60,7 @@ class UserTest {
     @Test
     void saveTest() {
         User savedUser = this.userRepository.save(user);
-        log.info(() -> String.format("user id: %s", savedUser.getId()));
+        log.info("user id: {}", savedUser.getId());
         assertNotNull(savedUser.getId());
     }
 
@@ -73,7 +70,7 @@ class UserTest {
         User savedUser = this.userRepository.save(user);
         savedUser.addCloset(new Closet("my first closet", user));
         Closet closet = this.closetRepository.findByUser(savedUser).get(0);
-        log.info(() -> String.format("closet id: %s", closet.getId()));
+        log.info("closet id: {}", closet.getId());
         assertNotNull(closet.getId());
     }
 
@@ -85,7 +82,7 @@ class UserTest {
         Closet closet = this.closetRepository.findByUser(savedUser).get(0);
         closet.addCloth(new Cloth(closet, "", Cloth.Season.SPRING, ""));
         Cloth cloth = this.clothRepository.findByCloset(closet).get(0);
-        log.info(() -> String.format("cloth id: %s", cloth.getId()));
+        log.info("cloth id: {}", cloth.getId());
         assertNotNull(cloth);
         assertEquals("my first closet", cloth.getCloset().getName());
         assertEquals(Cloth.Season.SPRING, cloth.getSeason());
@@ -99,7 +96,7 @@ class UserTest {
         Style style = this.styleRepository.save(new Style(styleName));
         savedUser.addUserStyle(new UserStyle(savedUser, style));
         UserStyle userStyle = this.userStyleRepository.findByUser(savedUser).get(0);
-        log.info(() -> String.format("closet id: %s | name: %s", userStyle.getId(), userStyle.getName()));
+        log.info("closet id: {} | name: {}", userStyle.getId(), userStyle.getName());
         assertNotNull(userStyle.getId());
         assertEquals(styleName, userStyle.getName());
     }
@@ -110,7 +107,7 @@ class UserTest {
     void findByEmailTest() {
         this.userRepository.save(user);
         User findByEmailUser = this.userRepository.findByEmail_Value(this.user.getEmail().getValue()).get();
-        log.info(() -> String.format("user id: %s", findByEmailUser.getId()));
+        log.info("user id: {}", findByEmailUser.getId());
         assertNotNull(findByEmailUser);
         assertEquals(user.getEmail(), findByEmailUser.getEmail());
     }

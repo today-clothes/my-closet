@@ -1,4 +1,4 @@
-package com.oclothes.global.error;
+package com.oclothes.global.error.exception;
 
 public class TooManyRequestException extends RuntimeException {
     public TooManyRequestException(String message) {

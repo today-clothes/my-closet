@@ -6,7 +6,7 @@ import com.oclothes.domain.user.exception.EmailAuthenticationCodeTooManyRequestE
 import com.oclothes.domain.user.exception.UserExceptionMessage;
 import com.oclothes.domain.user.exception.WrongEmailAuthenticationCodeException;
 import com.oclothes.global.entity.BaseEntity;
-import com.oclothes.global.error.UserStatusException;
+import com.oclothes.global.error.exception.UserStatusException;
 import com.oclothes.infra.email.domain.EmailAuthenticationCode;
 import lombok.*;
 
@@ -28,7 +28,7 @@ public class User extends BaseEntity {
     }
 
     public enum Role {
-        USER, ADMIN
+        ROLE_USER, ROLE_ADMIN
     }
 
     @Embedded
