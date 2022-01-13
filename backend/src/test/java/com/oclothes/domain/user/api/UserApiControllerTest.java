@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
-import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
+import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -37,8 +37,8 @@ class UserApiControllerTest {
     void signUpTest() throws Exception {
         String email = "test@gmail.com";
         String password = "123456";
-        SignUpResponseDto signUpResponseDto = new SignUpResponseDto(email);
-        when(this.userService.signUp(any())).thenReturn(signUpResponseDto);
+        SignUpResponse signUpResponse = new SignUpResponse(email);
+        when(this.userService.signUp(any())).thenReturn(signUpResponse);
         SignUpRequest signUpRequest = new SignUpRequest(email, password);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -52,8 +52,8 @@ class UserApiControllerTest {
     @CsvSource({"email1, abcde", "email2, 123"})
     @ParameterizedTest
     void invalidSignUpRequestTest(String email, String password) throws Exception {
-        SignUpResponseDto signUpResponseDto = new SignUpResponseDto(email);
-        when(this.userService.signUp(any())).thenReturn(signUpResponseDto);
+        SignUpResponse signUpResponse = new SignUpResponse(email);
+        when(this.userService.signUp(any())).thenReturn(signUpResponse);
         SignUpRequest signUpRequest = new SignUpRequest(email, password);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)

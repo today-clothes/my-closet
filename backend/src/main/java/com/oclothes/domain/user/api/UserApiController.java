@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
-import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
+import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<SignUpResponseDto>> signUp(@Valid  @RequestBody SignUpRequest requestDto) {
+    public ResponseEntity<ResponseDto<SignUpResponse>> signUp(@Valid  @RequestBody SignUpRequest requestDto) {
         return ResponseEntity.status(CREATED).body(ResponseDto.create("회원가입 성공.", this.userService.signUp(requestDto)));
     }
 

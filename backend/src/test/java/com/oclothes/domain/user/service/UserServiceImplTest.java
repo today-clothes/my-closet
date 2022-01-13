@@ -23,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
-import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
+import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -82,9 +82,9 @@ class UserServiceImplTest {
         when(this.userRepository.save(any())).thenReturn(user);
         when(this.emailAuthenticationCodeService.save(any())).thenReturn(new EmailAuthenticationCode(user, EmailAuthenticationCodeGenerator.generateAuthCode()));
         doNothing().when(this.emailService).sendEmail(any(), any(), any());
-        SignUpResponseDto signUpResponseDto = this.userService.signUp(requestDto);
-        log.info(() -> String.format("dto email: %s", signUpResponseDto.getEmail()));
-        assertEquals(email, signUpResponseDto.getEmail());
+        SignUpResponse signUpResponse = this.userService.signUp(requestDto);
+        log.info(() -> String.format("dto email: %s", signUpResponse.getEmail()));
+        assertEquals(email, signUpResponse.getEmail());
     }
 
     @DisplayName("이메일 인증 시도 중 해당 유저가 존재하지 않으면 UserNotFoundException이 발생한다.")
@@ -121,9 +121,9 @@ class UserServiceImplTest {
         User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.WAIT);
         user.setEmailAuthenticationCode(new EmailAuthenticationCode(user, authCode));
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
-        SignUpResponseDto signUpResponseDto = this.userService.emailAuthentication(email, authCode);
-        assertNotNull(signUpResponseDto);
-        assertEquals(email, signUpResponseDto.getEmail());
+        SignUpResponse signUpResponse = this.userService.emailAuthentication(email, authCode);
+        assertNotNull(signUpResponse);
+        assertEquals(email, signUpResponse.getEmail());
         assertEquals(User.Status.NORMAL, user.getStatus());
     }
 

@@ -1,10 +1,10 @@
 package com.oclothes.domain.user.service;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
-import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
+import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 
 public interface UserService {
-    SignUpResponseDto signUp(SignUpRequest requestDto);
+    SignUpResponse signUp(SignUpRequest requestDto);
 
-    SignUpResponseDto emailAuthentication(String email, String code);
+    SignUpResponse emailAuthentication(String email, String code);
 }

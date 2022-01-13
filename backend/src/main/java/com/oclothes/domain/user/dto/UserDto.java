@@ -24,7 +24,7 @@ public class UserDto {
 
     @Getter
     @RequiredArgsConstructor
-    public static class SignUpResponseDto {
+    public static class SignUpResponse {
         private final String email;
     }
 

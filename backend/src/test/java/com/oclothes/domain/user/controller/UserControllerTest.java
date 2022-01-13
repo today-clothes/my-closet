@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
+import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 import static org.mockito.Mockito.*;
 
 @WebMvcTest(UserController.class)
@@ -29,8 +29,8 @@ public class UserControllerTest {
     void emailAuthCodeAuthenticationSuccessTest() throws Exception {
         String email = "test@gmial.com";
         String authCode = "ABCDEFG";
-        SignUpResponseDto signUpResponseDto = new SignUpResponseDto(email);
-        when(this.userService.emailAuthentication(email, authCode)).thenReturn(signUpResponseDto);
+        SignUpResponse signUpResponse = new SignUpResponse(email);
+        when(this.userService.emailAuthentication(email, authCode)).thenReturn(signUpResponse);
         this.mockMvc.perform(MockMvcRequestBuilders.get("/users/email-auth/{email}/{authCode}", email, authCode))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.TEXT_HTML))

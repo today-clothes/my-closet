@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
-import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
+import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 
 @RequiredArgsConstructor
 @Transactional
@@ -31,19 +31,19 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
 
     @Override
-    public SignUpResponseDto signUp(SignUpRequest requestDto) {
+    public SignUpResponse signUp(SignUpRequest requestDto) {
         this.validateAlreadyExistsEmail(requestDto);
         User savedUser = this.userRepository.save(createUser(requestDto));
         String authenticationCode = EmailAuthenticationCodeGenerator.generateAuthCode();
         savedUser.setEmailAuthenticationCode(this.emailAuthenticationCodeService.save(
                 new EmailAuthenticationCode(savedUser, authenticationCode)));
         this.emailService.sendEmail(savedUser.getEmail(), EmailSubject.SIGN_UP, EmailMessageUtil.getSignUpEmailMessage(savedUser.getEmail(), authenticationCode));
-        return new SignUpResponseDto(savedUser.getEmail().getValue());
+        return new SignUpResponse(savedUser.getEmail().getValue());
     }
 
     @Override
-    public SignUpResponseDto emailAuthentication(String email, String code) {
-        return new SignUpResponseDto(this.findByEmail(email).emailAuthentication(code).getEmail().getValue());
+    public SignUpResponse emailAuthentication(String email, String code) {
+        return new SignUpResponse(this.findByEmail(email).emailAuthentication(code).getEmail().getValue());
     }
 
     public User findByEmail(String email) {
