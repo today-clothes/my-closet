@@ -3,7 +3,6 @@ package com.oclothes.domain.user.exception;
 import com.oclothes.global.error.AlreadyExistsException;
 
 public class AlreadyExistsEmailException extends AlreadyExistsException {
-
     public AlreadyExistsEmailException() {
         super(UserExceptionMessage.ALREADY_EXISTS_EMAIL.getMessage());
     }
@@ -11,5 +10,4 @@ public class AlreadyExistsEmailException extends AlreadyExistsException {
     public AlreadyExistsEmailException(String message) {
         super(message);
     }
-
 }

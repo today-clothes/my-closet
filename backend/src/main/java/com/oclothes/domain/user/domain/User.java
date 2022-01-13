@@ -1,12 +1,21 @@
 package com.oclothes.domain.user.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.user.exception.EmailAuthenticationCodeNotFoundException;
+import com.oclothes.domain.user.exception.EmailAuthenticationCodeTooManyRequestException;
+import com.oclothes.domain.user.exception.UserExceptionMessage;
+import com.oclothes.domain.user.exception.WrongEmailAuthenticationCodeException;
 import com.oclothes.global.entity.BaseEntity;
+import com.oclothes.global.error.UserStatusException;
+import com.oclothes.infra.email.domain.EmailAuthenticationCode;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -33,6 +42,7 @@ public class User extends BaseEntity {
 
     private Integer weight;
 
+    @Setter(AccessLevel.NONE)
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -44,6 +54,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserStyle> userStyles = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private EmailAuthenticationCode emailAuthenticationCode;
 
     @Builder
     public User(Email email, String password, String nickname, Integer height, Integer weight, Status status, Role role) {
@@ -70,6 +83,34 @@ public class User extends BaseEntity {
 
     public void deleteUserStyle(UserStyle userStyle) {
         this.userStyles.remove(userStyle);
+    }
+
+    public void setEmailAuthenticationCode(EmailAuthenticationCode emailAuthenticationCode) {
+        if (Objects.nonNull(this.emailAuthenticationCode)) {
+            final int retryLimitMinutes = 3;
+            if (ChronoUnit.MINUTES.between(this.emailAuthenticationCode.getUpdatedAt(), LocalDateTime.now()) < retryLimitMinutes)
+                throw new EmailAuthenticationCodeTooManyRequestException();
+        }
+        this.emailAuthenticationCode = emailAuthenticationCode;
+    }
+
+    public User emailAuthentication(String code) {
+        if (!this.getEmailAuthenticationCode().getCode().equals(code)) throw new WrongEmailAuthenticationCodeException();
+        return this.successEmailAuthentication();
+    }
+
+    private EmailAuthenticationCode getEmailAuthenticationCode() {
+        if (this.status.equals(User.Status.NORMAL))
+            throw new UserStatusException(UserExceptionMessage.USER_STATUS_IS_ALREADY_NORMAL.getMessage());
+        if (Objects.isNull(this.emailAuthenticationCode)) throw new EmailAuthenticationCodeNotFoundException();
+        return emailAuthenticationCode;
+    }
+
+    private User successEmailAuthentication() {
+        this.status = Status.NORMAL;
+        this.emailAuthenticationCode.setUser(null);
+        this.emailAuthenticationCode = null;
+        return this;
     }
 
 }
