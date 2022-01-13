@@ -1,54 +1,68 @@
-<table width=100% border=0 cellspacing=0 cellpadding=0>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tbody>
   <tr>
-    <td align=center>
-      <div style=max-width:520px;margin:0 auto>
+    <td align="center">
+      <div style="max-width:520px;margin:0 auto">
         <div
-            style='vertical-align:top;text-align:left;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;color:#091e42;line-height:20px'>
-          <div style='padding-top:0px;padding-bottom:0px;vertical-align:top;text-align:center'>
-            <a
-                href='https://www.google.com' target=_blank
-                data-saferedirecturl='https://www.google.com/'><img
-                src='https://lh3.googleusercontent.com/pw/ACtC-3c04Gv-k45cMqMbwSpHLtBOXanwyyU4NJ7CCEImXO7Ea5W27F0KzqWm7ClWu96vPF1F9e9VWs4VfS-zqMY5EOwvi1hySnsMPuDA7I-bmfO4k9wb0o3CrCWE0uzCTaHVW7H6nW2oXvo5Irn8J9Acn98=w1280-h720-no?authuser=4'
-                height=150 alt=KATI logo style=border:0 class=CToWUd>
+            style="vertical-align:top;text-align:left;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;color:#091e42;line-height:20px">
+          <div style="padding-top:0px;padding-bottom:0px;vertical-align:top;text-align:center">
+            <a href="https://www.atlassian.com" target="_blank">
+              <img
+                  src="https://lh3.googleusercontent.com/pw/AM-JKLVq0DQ2o4TfUK8Dfn0fxyXvMSY-pgYyWBb1suFIp4M_T9g7WoFGURKTO3YTXWvsiGnXEiwML5FDxC-_G2LOQODobiuW7tp2Jks_YEh_hLJ09BWbkBnNKhilKmzOUmtADJfZfvW95ymSQ0vpjugyKOmQ=s500-no?authuser=0"
+                  height="150" alt="오늘의 집 logo" style="border:0" class="CToWUd">
             </a>
           </div>
-          <hr style='margin-top:0px;margin-bottom:24px;border:0;border-bottom:1px solid #c1c7d0'>
-          <h2 style='margin-bottom:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:20px;font-weight:500;color:#172b4d;line-height:24px;margin-top:28px'>
-            <span>오늘의 옷</span> 회원가입 인증 메일</h2>
-          <p style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;color:#091e42;line-height:20px;margin-top:12px'>
-            안녕하세요.
-          </p>
-          <p style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;color:#091e42;line-height:20px;margin-top:12px'>
-            회원가입을 완료하시려면 아래의 <b>이메일 인증</b>을 클릭하세요.
-          </p>
-          <table width=100% border=0 cellspacing=0 cellpadding=0>
+          <hr style="margin-top:0px;margin-bottom:24px;border:0;border-bottom:1px solid #c1c7d0">
+          <h2
+              style="margin-bottom:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:20px;font-weight:500;color:#172b4d;line-height:24px;margin-top:28px">
+            <span>오늘의 집</span> 회원가입 인증 메일</h2>
+          <p
+              style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;color:#091e42;line-height:20px;margin-top:12px">
+            안녕하세요.</p>
+          <p
+              style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;color:#091e42;line-height:20px;margin-top:12px">
+            회원가입을 완료하시려면 아래의 <b>이메일 인증</b>을 클릭하세요.</p>
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody>
             <tr>
-              <td align=center>
-                <a style='text-decoration: none; font-size: 20px; color: #011627'
-                   href='http://localhost:8080/users/email-auth/{authCode}'>이메일 인증</a>
+              <td align="center">
+                <a style="text-decoration: none; font-size: 20px; color: #011627"
+                   href='http://localhost:8080/users/email-auth/{email}/{authCode}'>
+                  이메일 인증
+                </a>
               </td>
             </tr>
             </tbody>
           </table>
-          <hr style='margin-top:24px;margin-bottom:24px;border:0;border-bottom:1px solid #c1c7d0'>
-          <div style='color:#707070;font-size:13px;line-height:19px;text-align:center;margin-top:10px'>
-            <table width=100% cellpadding=0 cellspacing=0 border=0 bgcolor=#ffffff align=center>
+          <hr style="margin-top:24px;margin-bottom:24px;border:0;border-bottom:1px solid #c1c7d0">
+          <div style="color:#707070;font-size:13px;line-height:19px;text-align:center;margin-top:10px">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff"
+                   align="center">
               <tbody>
               <tr>
-                <td valign=top align=center
-                    style='padding-top:10px;line-height:18px;text-align:center;font-weight:none;font-size:12px;color:#505f79'>
-                  <span>이 메시지는 오늘의 옷에서 전송되었습니다.</span><br></td>
+                <td valign="top" align="center"
+                    style="padding-top:10px;line-height:18px;text-align:center;font-weight:none;font-size:12px;color:#505f79">
+                  <span>이 메시지는 오늘의 집에서 전송되었습니다.</span><br></td>
               </tr>
-              <tr valign=top>
-                <td align=center style='padding-top:15px;padding-bottom:30px'>
+              <tr valign="top">
+                <td align="center" style="padding-top:15px;padding-bottom:30px">
                   <a
-                      href='https://www.kati.com' target=_blank
-                      data-saferedirecturl='https://www.google.com'><img
-                      src='https://lh3.googleusercontent.com/pw/ACtC-3e3OsSdKKOWeKcrnQOrArwgoAGuAVg5ZUukTz-h7wXQTucQZDxKJPOuRRxPGZeV7XeQsljC9nJ7I9SlKaSmpKM5jmG1f-WKBEmbPbhauwheNbKVUaEPcRnLu0MWY--WgMZZbxjz2m3wO9WMO28UfT4=s1182-no?authuser=0'
-                      width=40 border=0 alt=Atlassian
-                      style='display:block;color:#4c9ac9' class='CToWUd'></a></td>
+                      href="https://www.오늘의 집.com" target="_blank">
+                    <img
+                        src="https://lh3.googleusercontent.com/pw/AM-JKLVq0DQ2o4TfUK8Dfn0fxyXvMSY-pgYyWBb1suFIp4M_T9g7WoFGURKTO3YTXWvsiGnXEiwML5FDxC-_G2LOQODobiuW7tp2Jks_YEh_hLJ09BWbkBnNKhilKmzOUmtADJfZfvW95ymSQ0vpjugyKOmQ=s500-no?authuser=0"
+                        width="50" border="0" alt="Atlassian"
+                        style="display:block;color:#4c9ac9" class="CToWUd">
+                  </a>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -59,3 +73,5 @@
   </tr>
   </tbody>
 </table>
+</body>
+</html>

@@ -24,7 +24,7 @@ public class UserApiController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<SignUpResponseDto>> signUp(@Valid  @RequestBody SignUpRequest requestDto) {
-        return ResponseEntity.status(CREATED).body(ResponseDto.create(this.userService.signUp(requestDto), "회원가입 성공."));
+        return ResponseEntity.status(CREATED).body(ResponseDto.create("회원가입 성공.", this.userService.signUp(requestDto)));
     }
 
 }

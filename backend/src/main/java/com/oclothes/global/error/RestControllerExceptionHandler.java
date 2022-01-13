@@ -6,12 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+@RestControllerAdvice(annotations = RestController.class)
+public class RestControllerExceptionHandler {
 
     @SuppressWarnings("ConstantConditions")
     @ExceptionHandler(MethodArgumentNotValidException.class)

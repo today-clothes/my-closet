@@ -3,9 +3,8 @@ package com.oclothes.domain.user.service;
 import com.oclothes.domain.user.dao.UserRepository;
 import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
-import com.oclothes.domain.user.exception.AlreadyExistsEmailException;
-import com.oclothes.domain.user.exception.UserExceptionMessage;
-import com.oclothes.domain.user.exception.UserStatusIsWaitException;
+import com.oclothes.domain.user.exception.*;
+import com.oclothes.global.error.UserStatusException;
 import com.oclothes.infra.email.domain.EmailAuthenticationCode;
 import com.oclothes.infra.email.service.EmailAuthenticationCodeService;
 import com.oclothes.infra.email.service.EmailService;
@@ -25,8 +24,7 @@ import java.util.Optional;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
 import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 //@ContextConfiguration(classes = {PasswordEncoderConfig.class})
@@ -55,21 +53,18 @@ class UserServiceImplTest {
     @Test
     void userStateIsWaitExceptionTest() {
         SignUpRequest requestDto = new SignUpRequest("email@gmail.com", "123456");
-        User user = this.createUser(requestDto);
+        User user = this.createUser(requestDto, User.Status.WAIT);
         when(this.userRepository.existsByEmail_Value(any())).thenReturn(true);
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
-        assertThrows(UserStatusIsWaitException.class, () ->
-                        this.userService.signUp(requestDto),
-                UserExceptionMessage.ALREADY_EXISTS_EMAIL.getMessage());
+        assertThrows(UserStatusIsWaitException.class, () -> this.userService.signUp(requestDto));
         verify(this.userRepository, atMostOnce()).existsByEmail_Value(any());
     }
 
-    @DisplayName("이미 회원가입이 된 이메일은 AlreadyExistsEmailException 엑셉션이 발생한다.")
+    @DisplayName("이미 회원가입이 된 이메일은 AlreadyExistsEmailException이 발생한다.")
     @Test
     void alreadyExistsEmailThrowTest() {
         SignUpRequest requestDto = new SignUpRequest("email@gmail.com", "123456");
-        User user = this.createUser(requestDto);
-        user.setStatus(User.Status.NORMAL);
+        User user = this.createUser(requestDto, User.Status.NORMAL);
         when(this.userRepository.existsByEmail_Value(any())).thenReturn(true);
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         assertThrows(AlreadyExistsEmailException.class, () ->
@@ -83,7 +78,7 @@ class UserServiceImplTest {
     void signUpTest() {
         String email = "test@gmail.com";
         SignUpRequest requestDto = new SignUpRequest(email, "123456");
-        User user = this.createUser(requestDto);
+        User user = this.createUser(requestDto, User.Status.WAIT);
         when(this.userRepository.save(any())).thenReturn(user);
         when(this.emailAuthenticationCodeService.save(any())).thenReturn(new EmailAuthenticationCode(user, EmailAuthenticationCodeGenerator.generateAuthCode()));
         doNothing().when(this.emailService).sendEmail(any(), any(), any());
@@ -92,9 +87,49 @@ class UserServiceImplTest {
         assertEquals(email, signUpResponseDto.getEmail());
     }
 
-    private User createUser(SignUpRequest requestDto) {
+    @DisplayName("이메일 인증 시도 중 해당 유저가 존재하지 않으면 UserNotFoundException이 발생한다.")
+    @Test
+    void emailAuthenticationFailToUserNotFoundExceptionTest() {
+        assertThrows(UserNotFoundException.class, () -> this.userService.emailAuthentication("no@gmail.com", "ABCDEFG"));
+    }
+
+    @DisplayName("해당 이메일이 이미 인증된 이메일일 경우 UserStatusException이 발생한다.")
+    @Test
+    void userStatusIsAlreadyNormalExceptionTest() {
+        String email = "test@gmail.com";
+        User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.NORMAL);
+        when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
+        assertThrows(UserStatusException.class, () -> this.userService.emailAuthentication(email, "ABCDEFG"));
+    }
+
+    @DisplayName("인증 코드가 틀릴 경우 WrongEmailAuthenticationCodeException이 발생한다.")
+    @Test
+    void wrongEmailAuthenticationCodeExceptionTest() {
+        String email = "test@gmail.com";
+        String authCode = EmailAuthenticationCodeGenerator.generateAuthCode();
+        User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.WAIT);
+        user.setEmailAuthenticationCode(new EmailAuthenticationCode(user, authCode));
+        when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
+        assertThrows(WrongEmailAuthenticationCodeException.class, () -> this.userService.emailAuthentication(email, "ABCDEFG"));
+    }
+
+    @DisplayName("이메일 인증에 성공한다.")
+    @Test
+    void successEmailAuthentication() {
+        String email = "test@gmail.com";
+        String authCode = EmailAuthenticationCodeGenerator.generateAuthCode();
+        User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.WAIT);
+        user.setEmailAuthenticationCode(new EmailAuthenticationCode(user, authCode));
+        when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
+        SignUpResponseDto signUpResponseDto = this.userService.emailAuthentication(email, authCode);
+        assertNotNull(signUpResponseDto);
+        assertEquals(email, signUpResponseDto.getEmail());
+        assertEquals(User.Status.NORMAL, user.getStatus());
+    }
+
+    private User createUser(SignUpRequest requestDto, User.Status status) {
         return User.builder()
-                .status(User.Status.WAIT)
+                .status(status)
                 .role(User.Role.USER)
                 .email(new Email(requestDto.getEmail()))
                 .password(this.passwordEncoder.encode(requestDto.getPassword()))

@@ -16,7 +16,7 @@ public class ResponseDto<T> {
         return new ResponseDto<>(message, null);
     }
 
-    public static <T> ResponseDto<T> create(T dto, String message) {
+    public static <T> ResponseDto<T> create(String message, T dto) {
         return new ResponseDto<>(message, dto);
     }
 }

@@ -105,6 +105,7 @@ class UserTest {
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @DisplayName("이메일로 유저 가져오기 테스트")
     @Test
     void findByEmailTest() {
         this.userRepository.save(user);

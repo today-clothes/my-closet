@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +18,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
 import static com.oclothes.domain.user.dto.UserDto.SignUpResponseDto;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @WebMvcTest(UserApiController.class)
 class UserApiControllerTest {
@@ -37,7 +38,7 @@ class UserApiControllerTest {
         String email = "test@gmail.com";
         String password = "123456";
         SignUpResponseDto signUpResponseDto = new SignUpResponseDto(email);
-        Mockito.when(this.userService.signUp(Mockito.any())).thenReturn(signUpResponseDto);
+        when(this.userService.signUp(any())).thenReturn(signUpResponseDto);
         SignUpRequest signUpRequest = new SignUpRequest(email, password);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -52,7 +53,7 @@ class UserApiControllerTest {
     @ParameterizedTest
     void invalidSignUpRequestTest(String email, String password) throws Exception {
         SignUpResponseDto signUpResponseDto = new SignUpResponseDto(email);
-        Mockito.when(this.userService.signUp(Mockito.any())).thenReturn(signUpResponseDto);
+        when(this.userService.signUp(any())).thenReturn(signUpResponseDto);
         SignUpRequest signUpRequest = new SignUpRequest(email, password);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
