@@ -3,10 +3,8 @@ package com.oclothes.domain.closet.domain;
 import com.oclothes.domain.cloth.domain.Cloth;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.entity.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,13 +12,14 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Accessors(chain = true)
 @Entity
 public class Closet extends BaseEntity {
 
     private String name;
 
-    private boolean lock = false;
+    private boolean locked = false;
 
     @Setter(value = AccessLevel.NONE)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,8 +29,10 @@ public class Closet extends BaseEntity {
     @OneToMany(mappedBy = "closet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Cloth> cloths = new ArrayList<>();
 
-    public Closet(String name, User user) {
+    @Builder
+    public Closet(String name, boolean locked, User user) {
         this.name = name;
+        this.locked = locked;
         this.user = user;
     }
 
@@ -43,4 +44,8 @@ public class Closet extends BaseEntity {
         this.cloths.remove(cloth);
     }
 
+    public Closet changeLockedStatus() {
+        this.locked = !this.locked;
+        return this;
+    }
 }

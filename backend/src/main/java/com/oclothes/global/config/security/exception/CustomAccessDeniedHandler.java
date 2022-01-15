@@ -1,7 +1,7 @@
-package com.oclothes.global.config.security;
+package com.oclothes.global.config.security.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oclothes.global.error.ExceptionResponse;
+import com.oclothes.global.error.dto.ExceptionResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

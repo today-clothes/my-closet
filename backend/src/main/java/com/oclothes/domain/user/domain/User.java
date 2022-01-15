@@ -55,7 +55,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserStyle> userStyles = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     private EmailAuthenticationCode emailAuthenticationCode;
 
     @Builder
@@ -108,7 +108,6 @@ public class User extends BaseEntity {
 
     private User successEmailAuthentication() {
         this.status = Status.NORMAL;
-        this.emailAuthenticationCode.setUser(null);
         this.emailAuthenticationCode = null;
         return this;
     }

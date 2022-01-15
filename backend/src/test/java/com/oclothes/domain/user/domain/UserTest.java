@@ -68,8 +68,8 @@ class UserTest extends BaseTest {
     @Test
     void addClosetTest() {
         User savedUser = this.userRepository.save(user);
-        savedUser.addCloset(new Closet("my first closet", user));
-        Closet closet = this.closetRepository.findByUser(savedUser).get(0);
+        savedUser.addCloset(new Closet("my first closet", true, user));
+        Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
         log.info("closet id: {}", closet.getId());
         assertNotNull(closet.getId());
     }
@@ -78,10 +78,10 @@ class UserTest extends BaseTest {
     @Test
     void addClothTest() {
         User savedUser = this.userRepository.save(user);
-        savedUser.addCloset(new Closet("my first closet", user));
-        Closet closet = this.closetRepository.findByUser(savedUser).get(0);
+        savedUser.addCloset(new Closet("my first closet", true, user));
+        Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
         closet.addCloth(new Cloth(closet, "", Cloth.Season.SPRING, ""));
-        Cloth cloth = this.clothRepository.findByCloset(closet).get(0);
+        Cloth cloth = this.clothRepository.findAllByCloset(closet).get(0);
         log.info("cloth id: {}", cloth.getId());
         assertNotNull(cloth);
         assertEquals("my first closet", cloth.getCloset().getName());

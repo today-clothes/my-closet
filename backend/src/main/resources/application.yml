@@ -3,3 +3,7 @@ spring:
     group:
       "prod": "jwt,oauth,mail"
       "local": "jwt,oauth,mail"
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000

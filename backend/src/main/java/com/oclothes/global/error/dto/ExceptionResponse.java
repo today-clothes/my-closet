@@ -1,4 +1,4 @@
-package com.oclothes.global.error;
+package com.oclothes.global.error.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;

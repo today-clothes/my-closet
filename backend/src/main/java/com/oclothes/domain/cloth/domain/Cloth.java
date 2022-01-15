@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +27,7 @@ public class Cloth extends BaseEntity {
     private Closet closet;
 
     @OneToMany(mappedBy = "cloth", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClothStyle> clothStyles;
+    private List<ClothStyle> clothStyles = new ArrayList<>();
 
     private String imgUrl;
 
