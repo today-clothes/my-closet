@@ -40,8 +40,7 @@ public class UserServiceImpl implements UserService {
         this.validateAlreadyExistsEmail(requestDto);
         User savedUser = this.userRepository.save(createUser(requestDto));
         String authenticationCode = EmailAuthenticationCodeGenerator.generateAuthCode();
-        savedUser.setEmailAuthenticationCode(this.emailAuthenticationCodeService.save(
-                new EmailAuthenticationCode(savedUser, authenticationCode)));
+        savedUser.setEmailAuthenticationCode(this.emailAuthenticationCodeService.save(new EmailAuthenticationCode(authenticationCode)));
         this.emailService.sendEmail(savedUser.getEmail(), EmailSubject.SIGN_UP, EmailMessageUtil.getSignUpEmailMessage(savedUser.getEmail(), authenticationCode));
         return new SignUpResponse(savedUser.getEmail().getValue());
     }

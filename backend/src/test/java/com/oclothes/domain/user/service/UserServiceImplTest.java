@@ -12,11 +12,9 @@ import com.oclothes.infra.email.service.EmailService;
 import com.oclothes.infra.email.util.EmailAuthenticationCodeGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -26,7 +24,6 @@ import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest extends BaseTest {
 
     @Mock
@@ -76,7 +73,7 @@ class UserServiceImplTest extends BaseTest {
         SignUpRequest requestDto = new SignUpRequest(email, "123456");
         User user = this.createUser(requestDto, User.Status.WAIT);
         when(this.userRepository.save(any())).thenReturn(user);
-        when(this.emailAuthenticationCodeService.save(any())).thenReturn(new EmailAuthenticationCode(user, EmailAuthenticationCodeGenerator.generateAuthCode()));
+        when(this.emailAuthenticationCodeService.save(any())).thenReturn(new EmailAuthenticationCode(EmailAuthenticationCodeGenerator.generateAuthCode()));
         doNothing().when(this.emailService).sendEmail(any(), any(), any());
         SignUpResponse signUpResponse = this.userService.signUp(requestDto);
         log.info("dto email: {}", signUpResponse.getEmail());
@@ -104,7 +101,7 @@ class UserServiceImplTest extends BaseTest {
         String email = "test@gmail.com";
         String authCode = EmailAuthenticationCodeGenerator.generateAuthCode();
         User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.WAIT);
-        user.setEmailAuthenticationCode(new EmailAuthenticationCode(user, authCode));
+        user.setEmailAuthenticationCode(new EmailAuthenticationCode(authCode));
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         assertThrows(WrongEmailAuthenticationCodeException.class, () -> this.userService.emailAuthentication(email, "ABCDEFG"));
     }
@@ -115,7 +112,7 @@ class UserServiceImplTest extends BaseTest {
         String email = "test@gmail.com";
         String authCode = EmailAuthenticationCodeGenerator.generateAuthCode();
         User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.WAIT);
-        user.setEmailAuthenticationCode(new EmailAuthenticationCode(user, authCode));
+        user.setEmailAuthenticationCode(new EmailAuthenticationCode(authCode));
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         SignUpResponse signUpResponse = this.userService.emailAuthentication(email, authCode);
         assertNotNull(signUpResponse);

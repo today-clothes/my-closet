@@ -1,5 +1,8 @@
 package com.oclothes.global.config.security;
 
+import com.oclothes.domain.user.domain.User;
+import com.oclothes.global.config.security.exception.CustomAccessDeniedHandler;
+import com.oclothes.global.config.security.exception.CustomAuthenticationEntryPoint;
 import com.oclothes.global.config.security.jwt.JwtAuthenticationFilter;
 import com.oclothes.global.config.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +29,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(this.jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/users", "/users/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/email-auth/**").permitAll()
+                .antMatchers("/closet/**").hasAnyAuthority(User.Role.ROLE_USER.name(), User.Role.ROLE_ADMIN.name())
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
     }

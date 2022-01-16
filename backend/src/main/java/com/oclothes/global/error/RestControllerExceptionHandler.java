@@ -1,6 +1,8 @@
 package com.oclothes.global.error;
 
+import com.oclothes.global.error.dto.ExceptionResponse;
 import com.oclothes.global.error.exception.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,11 @@ public class RestControllerExceptionHandler {
     @ExceptionHandler(TooManyRequestException.class)
     public ResponseEntity<ExceptionResponse> tooManyRequestExceptionHandle(Exception exception) {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ExceptionResponse.create(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ExceptionResponse> expiredJwtExceptionHandle(Exception exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionResponse.create(exception.getMessage()));
     }
 
 }

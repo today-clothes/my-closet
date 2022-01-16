@@ -1,17 +1,20 @@
 package com.oclothes.global.config.security.jwt;
 
+import com.oclothes.domain.user.dao.UserRepository;
+import com.oclothes.domain.user.domain.User;
 import com.oclothes.domain.user.dto.UserDto;
+import com.oclothes.domain.user.exception.UserNotFoundException;
+import com.oclothes.global.config.security.service.CustomUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +27,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class JwtProvider {
 
@@ -34,6 +38,8 @@ public class JwtProvider {
     private String secretKey;
 
     private Key key;
+
+    private final UserRepository userRepository;
 
     @PostConstruct
     private void init() {
@@ -60,8 +66,8 @@ public class JwtProvider {
                 Arrays.stream(claims.get(JwtProperties.AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        User user = this.userRepository.findByEmail_Value(claims.getSubject()).orElseThrow(UserNotFoundException::new);
+        return new UsernamePasswordAuthenticationToken(new CustomUserDetails(user), user.getPassword(), authorities);
     }
 
     public boolean validateToken(String token) {
