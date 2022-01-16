@@ -1,6 +1,5 @@
 package com.oclothes.domain.closet.dto;
 
-import com.oclothes.domain.closet.domain.Closet;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +15,6 @@ public class ClosetDto {
         private final Long id;
         private final String name;
         private final boolean locked;
-
-        public static DefaultResponse create(Closet closet) {
-            return new DefaultResponse(closet.getId(), closet.getName(), closet.isLocked());
-        }
     }
 
     @Getter
@@ -32,16 +27,11 @@ public class ClosetDto {
     }
 
     @Getter
+    @RequiredArgsConstructor
     public static class CreateResponse {
         private final Long id;
         private final boolean locked;
         private final String name;
-
-        public CreateResponse(Closet closet) {
-            this.id = closet.getId();
-            this.locked = closet.isLocked();
-            this.name = closet.getName();
-        }
     }
 
     @Getter

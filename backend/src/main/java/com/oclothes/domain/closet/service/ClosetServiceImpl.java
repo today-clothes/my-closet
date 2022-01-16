@@ -2,6 +2,7 @@ package com.oclothes.domain.closet.service;
 
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.closet.dto.ClosetMapper;
 import com.oclothes.domain.closet.exception.ClosetNotEmptyException;
 import com.oclothes.domain.closet.exception.ClosetNotFoundException;
 import com.oclothes.domain.cloth.service.ClothService;
@@ -19,28 +20,29 @@ import static com.oclothes.global.config.security.util.SecurityUtils.getLoggedIn
 @RequiredArgsConstructor
 @Service
 public class ClosetServiceImpl implements ClosetService {
+    private final ClosetMapper closetMapper;
     private final ClosetRepository closetRepository;
     private final ClothService clothService;
 
     @Override
     public CreateResponse create(CreateRequest request) {
-        return new CreateResponse(this.closetRepository.save(new Closet(request.getName(), request.getLocked(), getLoggedInUser())));
+        return this.closetMapper.entityToCreateResponse(this.closetRepository.save(this.closetMapper.toEntity(request)));
     }
 
     @Override
     public SliceDto<DefaultResponse> findAllSliceByUser(Pageable pageable) {
-        return SliceDto.create(this.closetRepository.findAllSliceByUser(getLoggedInUser(), pageable).map(DefaultResponse::create));
+        return SliceDto.create(this.closetRepository.findAllSliceByUser(getLoggedInUser(), pageable).map(this.closetMapper::entityToDefaultResponse));
     }
 
     @Override
     public DefaultResponse updateName(Long id, NameUpdateRequest request) {
-        return DefaultResponse.create(this.findByUserAndClosetId(id).setName(request.getName()));
+        return this.closetMapper.entityToDefaultResponse(this.findByUserAndClosetId(id).setName(request.getName()));
     }
 
 
     @Override
     public DefaultResponse changeLockStatus(Long id) {
-        return DefaultResponse.create(this.findByUserAndClosetId(id).changeLockedStatus());
+        return this.closetMapper.entityToDefaultResponse(this.findByUserAndClosetId(id).changeLockedStatus());
     }
 
     @Override

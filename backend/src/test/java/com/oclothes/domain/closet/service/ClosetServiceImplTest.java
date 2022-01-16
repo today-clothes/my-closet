@@ -4,6 +4,7 @@ import com.oclothes.BaseTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.closet.dto.ClosetDto;
+import com.oclothes.domain.closet.dto.ClosetMapper;
 import com.oclothes.domain.closet.exception.ClosetNotEmptyException;
 import com.oclothes.domain.cloth.service.ClothService;
 import com.oclothes.domain.user.domain.User;
@@ -13,9 +14,11 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Spy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.SliceImpl;
 
@@ -29,6 +32,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class ClosetServiceImplTest extends BaseTest {
+
+    @Spy
+    private ClosetMapper closetMapper = Mappers.getMapper(ClosetMapper.class);
+
     @Mock
     private ClosetRepository closetRepository;
 
@@ -76,7 +83,6 @@ class ClosetServiceImplTest extends BaseTest {
         when(this.closetRepository.findAllSliceByUser(any(), any())).thenReturn(slice);
 
         final SliceDto<ClosetDto.DefaultResponse> response = this.closetService.findAllSliceByUser(pageRequest);
-        assertEquals(0, response.getSize());
         assertFalse(response.hasNext());
         assertTrue(response.isEmpty());
     }

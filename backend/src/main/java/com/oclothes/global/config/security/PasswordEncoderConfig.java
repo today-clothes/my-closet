@@ -1,5 +1,6 @@
 package com.oclothes.global.config.security;
 
+import org.mapstruct.Named;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,4 +14,8 @@ public class PasswordEncoderConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Named("passwordEncode")
+    public String encode(String string) {
+        return this.passwordEncoder().encode(string);
+    }
 }
