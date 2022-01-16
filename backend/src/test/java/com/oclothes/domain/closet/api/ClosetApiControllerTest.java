@@ -46,7 +46,8 @@ class ClosetApiControllerTest extends BaseWebMvcTest {
     @WithMockUser
     @Test
     void findAllSliceByUserTest() throws Exception {
-        final SliceDto<ClosetDto.DefaultResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
+        final SliceDto<ClosetDto.DefaultResponse> dto = SliceDto.
+                create(new SliceImpl<>(Collections.emptyList()));
         when(this.closetService.findAllSliceByUser(any())).thenReturn(dto);
         mockMvc.perform(get("/closets?size=20"))
                 .andExpect(status().isOk())

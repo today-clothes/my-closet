@@ -1,9 +1,9 @@
 package com.oclothes.domain.user.service;
 
 import com.oclothes.domain.user.dao.UserRepository;
-import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.domain.user.dto.UserDto;
+import com.oclothes.domain.user.dto.UserMapper;
 import com.oclothes.domain.user.exception.AlreadyExistsEmailException;
 import com.oclothes.domain.user.exception.UserNotFoundException;
 import com.oclothes.domain.user.exception.UserStatusIsWaitException;
@@ -16,7 +16,6 @@ import com.oclothes.infra.email.util.EmailAuthenticationCodeGenerator;
 import com.oclothes.infra.email.util.EmailMessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +27,8 @@ import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final EmailAuthenticationCodeService emailAuthenticationCodeService;
     private final EmailService emailService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SignUpResponse signUp(SignUpRequest requestDto) {
         this.validateAlreadyExistsEmail(requestDto);
-        User savedUser = this.userRepository.save(createUser(requestDto));
+        User savedUser = this.userRepository.save(this.userMapper.toEntity(requestDto));
         String authenticationCode = EmailAuthenticationCodeGenerator.generateAuthCode();
         savedUser.setEmailAuthenticationCode(this.emailAuthenticationCodeService.save(new EmailAuthenticationCode(authenticationCode)));
         this.emailService.sendEmail(savedUser.getEmail(), EmailSubject.SIGN_UP, EmailMessageUtil.getSignUpEmailMessage(savedUser.getEmail(), authenticationCode));
@@ -52,15 +51,6 @@ public class UserServiceImpl implements UserService {
 
     public User findByEmail(String email) {
         return this.userRepository.findByEmail_Value(email).orElseThrow(UserNotFoundException::new);
-    }
-
-    private User createUser(SignUpRequest requestDto) {
-        return User.builder()
-                .status(User.Status.WAIT)
-                .role(User.Role.ROLE_USER)
-                .email(new Email(requestDto.getEmail()))
-                .password(this.passwordEncoder.encode(requestDto.getPassword()))
-                .build();
     }
 
     private void validateAlreadyExistsEmail(SignUpRequest requestDto) {

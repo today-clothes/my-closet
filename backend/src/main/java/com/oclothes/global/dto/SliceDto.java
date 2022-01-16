@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SliceDto<T> {
-    private int size;
+    private int pageNumber;
+    private int contentsCount;
     @JsonProperty("isFirst")
     private boolean first;
     @JsonProperty("isLast")
@@ -28,7 +29,8 @@ public class SliceDto<T> {
 
     public static <T> SliceDto<T> create(Slice<T> slice) {
         return SliceDto.<T>builder()
-                .size(slice.getSize())
+                .pageNumber(slice.getNumber())
+                .contentsCount(slice.getContent().size())
                 .first(slice.isFirst())
                 .last(slice.isLast())
                 .hasNext(slice.hasNext())

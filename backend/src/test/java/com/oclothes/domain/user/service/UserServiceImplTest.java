@@ -2,9 +2,10 @@ package com.oclothes.domain.user.service;
 
 import com.oclothes.BaseTest;
 import com.oclothes.domain.user.dao.UserRepository;
-import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
+import com.oclothes.domain.user.dto.UserMapper;
 import com.oclothes.domain.user.exception.*;
+import com.oclothes.global.config.security.PasswordEncoderConfig;
 import com.oclothes.global.error.exception.UserStatusException;
 import com.oclothes.infra.email.domain.EmailAuthenticationCode;
 import com.oclothes.infra.email.service.EmailAuthenticationCodeService;
@@ -12,10 +13,10 @@ import com.oclothes.infra.email.service.EmailService;
 import com.oclothes.infra.email.util.EmailAuthenticationCodeGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -26,11 +27,15 @@ import static org.mockito.Mockito.*;
 
 class UserServiceImplTest extends BaseTest {
 
-    @Mock
-    private UserRepository userRepository;
+    @Spy
+    PasswordEncoderConfig passwordEncoderConfig;
 
     @Spy
-    private PasswordEncoder passwordEncoder;
+    @InjectMocks
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+    @Mock
+    private UserRepository userRepository;
 
     @Mock
     private EmailAuthenticationCodeService emailAuthenticationCodeService;
@@ -46,7 +51,7 @@ class UserServiceImplTest extends BaseTest {
     @Test
     void userStateIsWaitExceptionTest() {
         SignUpRequest requestDto = new SignUpRequest("email@gmail.com", "123456");
-        User user = this.createUser(requestDto, User.Status.WAIT);
+        User user = this.userMapper.toEntity(requestDto);
         when(this.userRepository.existsByEmail_Value(any())).thenReturn(true);
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         assertThrows(UserStatusIsWaitException.class, () -> this.userService.signUp(requestDto));
@@ -57,7 +62,7 @@ class UserServiceImplTest extends BaseTest {
     @Test
     void alreadyExistsEmailThrowTest() {
         SignUpRequest requestDto = new SignUpRequest("email@gmail.com", "123456");
-        User user = this.createUser(requestDto, User.Status.NORMAL);
+        User user = this.userMapper.toEntity(requestDto, User.Status.NORMAL);
         when(this.userRepository.existsByEmail_Value(any())).thenReturn(true);
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         assertThrows(AlreadyExistsEmailException.class, () ->
@@ -71,7 +76,7 @@ class UserServiceImplTest extends BaseTest {
     void signUpTest() {
         String email = "test@gmail.com";
         SignUpRequest requestDto = new SignUpRequest(email, "123456");
-        User user = this.createUser(requestDto, User.Status.WAIT);
+        User user = this.userMapper.toEntity(requestDto, User.Status.WAIT);
         when(this.userRepository.save(any())).thenReturn(user);
         when(this.emailAuthenticationCodeService.save(any())).thenReturn(new EmailAuthenticationCode(EmailAuthenticationCodeGenerator.generateAuthCode()));
         doNothing().when(this.emailService).sendEmail(any(), any(), any());
@@ -90,7 +95,7 @@ class UserServiceImplTest extends BaseTest {
     @Test
     void userStatusIsAlreadyNormalExceptionTest() {
         String email = "test@gmail.com";
-        User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.NORMAL);
+        User user = this.userMapper.toEntity(new SignUpRequest(email, "123456"), User.Status.NORMAL);
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         assertThrows(UserStatusException.class, () -> this.userService.emailAuthentication(email, "ABCDEFG"));
     }
@@ -100,7 +105,7 @@ class UserServiceImplTest extends BaseTest {
     void wrongEmailAuthenticationCodeExceptionTest() {
         String email = "test@gmail.com";
         String authCode = EmailAuthenticationCodeGenerator.generateAuthCode();
-        User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.WAIT);
+        User user = this.userMapper.toEntity((new SignUpRequest(email, "123456")), User.Status.WAIT);
         user.setEmailAuthenticationCode(new EmailAuthenticationCode(authCode));
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         assertThrows(WrongEmailAuthenticationCodeException.class, () -> this.userService.emailAuthentication(email, "ABCDEFG"));
@@ -111,7 +116,7 @@ class UserServiceImplTest extends BaseTest {
     void successEmailAuthentication() {
         String email = "test@gmail.com";
         String authCode = EmailAuthenticationCodeGenerator.generateAuthCode();
-        User user = this.createUser(new SignUpRequest(email, "123456"), User.Status.WAIT);
+        User user = this.userMapper.toEntity(new SignUpRequest(email, "123456"));
         user.setEmailAuthenticationCode(new EmailAuthenticationCode(authCode));
         when(this.userRepository.findByEmail_Value(any())).thenReturn(Optional.of(user));
         SignUpResponse signUpResponse = this.userService.emailAuthentication(email, authCode);
@@ -120,12 +125,4 @@ class UserServiceImplTest extends BaseTest {
         assertEquals(User.Status.NORMAL, user.getStatus());
     }
 
-    private User createUser(SignUpRequest requestDto, User.Status status) {
-        return User.builder()
-                .status(status)
-                .role(User.Role.ROLE_USER)
-                .email(new Email(requestDto.getEmail()))
-                .password(this.passwordEncoder.encode(requestDto.getPassword()))
-                .build();
-    }
 }
