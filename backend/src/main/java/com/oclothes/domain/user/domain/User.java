@@ -7,7 +7,6 @@ import com.oclothes.domain.user.exception.UserExceptionMessage;
 import com.oclothes.domain.user.exception.WrongEmailAuthenticationCodeException;
 import com.oclothes.global.entity.BaseEntity;
 import com.oclothes.global.error.exception.UserStatusException;
-import com.oclothes.infra.email.domain.EmailAuthenticationCode;
 import lombok.*;
 
 import javax.persistence.*;

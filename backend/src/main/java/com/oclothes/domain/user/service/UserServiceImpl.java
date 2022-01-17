@@ -1,19 +1,18 @@
 package com.oclothes.domain.user.service;
 
 import com.oclothes.domain.user.dao.UserRepository;
+import com.oclothes.domain.user.domain.EmailAuthenticationCode;
+import com.oclothes.domain.user.domain.EmailSubject;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.dto.UserMapper;
 import com.oclothes.domain.user.exception.AlreadyExistsEmailException;
 import com.oclothes.domain.user.exception.UserNotFoundException;
 import com.oclothes.domain.user.exception.UserStatusIsWaitException;
+import com.oclothes.domain.user.util.EmailAuthenticationCodeGenerator;
+import com.oclothes.domain.user.util.EmailMessageUtil;
 import com.oclothes.global.config.security.jwt.JwtProvider;
-import com.oclothes.infra.email.domain.EmailAuthenticationCode;
-import com.oclothes.infra.email.domain.EmailSubject;
-import com.oclothes.infra.email.service.EmailAuthenticationCodeService;
-import com.oclothes.infra.email.service.EmailService;
-import com.oclothes.infra.email.util.EmailAuthenticationCodeGenerator;
-import com.oclothes.infra.email.util.EmailMessageUtil;
+import com.oclothes.infra.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;

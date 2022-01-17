@@ -3,13 +3,13 @@ package com.oclothes.domain.user.domain;
 import com.oclothes.BaseTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
-import com.oclothes.domain.cloth.dao.ClothRepository;
-import com.oclothes.domain.cloth.domain.Cloth;
+import com.oclothes.domain.clothes.dao.ClothesRepository;
+import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.style.dao.StyleRepository;
 import com.oclothes.domain.style.domain.Style;
+import com.oclothes.domain.user.dao.EmailAuthenticationCodeRepository;
 import com.oclothes.domain.user.dao.UserRepository;
 import com.oclothes.domain.user.dao.UserStyleRepository;
-import com.oclothes.infra.email.dao.EmailAuthenticationCodeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class UserTest extends BaseTest {
     private UserStyleRepository userStyleRepository;
 
     @Autowired
-    private ClothRepository clothRepository;
+    private ClothesRepository clothesRepository;
 
     @Autowired
     private EmailAuthenticationCodeRepository emailAuthenticationCodeRepository;
@@ -80,12 +80,12 @@ class UserTest extends BaseTest {
         User savedUser = this.userRepository.save(user);
         savedUser.addCloset(new Closet("my first closet", true, user));
         Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
-        closet.addCloth(new Cloth(closet, "", Cloth.Season.SPRING, ""));
-        Cloth cloth = this.clothRepository.findAllByCloset(closet).get(0);
-        log.info("cloth id: {}", cloth.getId());
-        assertNotNull(cloth);
-        assertEquals("my first closet", cloth.getCloset().getName());
-        assertEquals(Cloth.Season.SPRING, cloth.getSeason());
+        closet.addCloth(new Clothes(closet, "", Clothes.Season.SPRING, ""));
+        Clothes clothes = this.clothesRepository.findAllByCloset(closet).get(0);
+        log.info("cloth id: {}", clothes.getId());
+        assertNotNull(clothes);
+        assertEquals("my first closet", clothes.getCloset().getName());
+        assertEquals(Clothes.Season.SPRING, clothes.getSeason());
     }
 
     @DisplayName("유저 스타일 추가 테스트")

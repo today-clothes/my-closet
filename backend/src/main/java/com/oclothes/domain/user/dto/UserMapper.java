@@ -10,13 +10,13 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(target = "email", expression = "java(new Email(request.getEmail()))")
-    @Mapping(source = "password", target = "password", qualifiedByName = "passwordEncode")
+    @Mapping(target = "password", source = "password", qualifiedByName = "passwordEncode")
     @Mapping(target = "role", expression = "java(User.Role.ROLE_USER)")
     @Mapping(target = "status", expression = "java(User.Status.WAIT)")
     User toEntity(UserDto.SignUpRequest request);
 
     @Mapping(target = "email", expression = "java(new Email(request.getEmail()))")
-    @Mapping(source = "request.password", target = "password", qualifiedByName = "passwordEncode")
+    @Mapping(target = "password", source = "request.password",  qualifiedByName = "passwordEncode")
     @Mapping(target = "role", expression = "java(User.Role.ROLE_USER)")
     User toEntity(UserDto.SignUpRequest request, User.Status status);
 }

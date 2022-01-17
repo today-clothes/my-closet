@@ -1,6 +1,6 @@
 package com.oclothes.domain.closet.domain;
 
-import com.oclothes.domain.cloth.domain.Cloth;
+import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.entity.BaseEntity;
 import lombok.*;
@@ -27,7 +27,7 @@ public class Closet extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "closet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cloth> cloths = new ArrayList<>();
+    private List<Clothes> clothes = new ArrayList<>();
 
     @Builder
     public Closet(String name, boolean locked, User user) {
@@ -36,12 +36,12 @@ public class Closet extends BaseEntity {
         this.user = user;
     }
 
-    public void addCloth(Cloth cloth) {
-        this.cloths.add(cloth);
+    public void addCloth(Clothes clothes) {
+        this.clothes.add(clothes);
     }
 
-    public void deleteCloth(Cloth cloth) {
-        this.cloths.remove(cloth);
+    public void deleteCloth(Clothes clothes) {
+        this.clothes.remove(clothes);
     }
 
     public Closet changeLockedStatus() {

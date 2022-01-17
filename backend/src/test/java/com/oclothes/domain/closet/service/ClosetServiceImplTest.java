@@ -6,7 +6,7 @@ import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.closet.dto.ClosetDto;
 import com.oclothes.domain.closet.dto.ClosetMapper;
 import com.oclothes.domain.closet.exception.ClosetNotEmptyException;
-import com.oclothes.domain.cloth.service.ClothService;
+import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.global.dto.SliceDto;
@@ -40,10 +40,10 @@ class ClosetServiceImplTest extends BaseTest {
     private ClosetRepository closetRepository;
 
     @Mock
-    private ClothService clothService;
+    private ClothesService clothesService;
 
     @InjectMocks
-    ClosetServiceImpl closetService;
+    private ClosetServiceImpl closetService;
 
     private static MockedStatic<SecurityUtils> securityUtilsMock;
 
@@ -132,7 +132,7 @@ class ClosetServiceImplTest extends BaseTest {
         final Closet closet = Closet.builder().locked(false).build();
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
-        when(this.clothService.getSizeByCloset(any())).thenReturn(1L);
+        when(this.clothesService.getSizeByCloset(any())).thenReturn(1L);
 
         assertThrows(ClosetNotEmptyException.class, () -> this.closetService.delete(id));
     }
@@ -144,7 +144,7 @@ class ClosetServiceImplTest extends BaseTest {
         final Closet closet = Closet.builder().locked(false).build();
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
-        when(this.clothService.getSizeByCloset(any())).thenReturn(0L);
+        when(this.clothesService.getSizeByCloset(any())).thenReturn(0L);
         doNothing().when(this.closetRepository).delete(any());
 
         this.closetService.delete(id);
