@@ -25,7 +25,7 @@ public class RestControllerExceptionHandler {
                         .collect(Collectors.toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage))));
     }
 
-    @ExceptionHandler({AlreadyExistsException.class, UserStatusException.class, NotFoundException.class})
+    @ExceptionHandler({AlreadyExistsException.class, UserStatusException.class, NotFoundException.class, FileExtensionException.class})
     public ResponseEntity<ExceptionResponse> alreadyExistsExceptionHandle(Exception exception) {
         return ResponseEntity.badRequest().body(ExceptionResponse.create(exception.getMessage()));
     }

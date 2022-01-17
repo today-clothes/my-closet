@@ -1,8 +1,6 @@
 package com.oclothes.domain.user.dto;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,9 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserDto {
-
+public abstract class UserDto {
     @Getter
     @RequiredArgsConstructor
     public static class SignUpRequest {
@@ -49,5 +45,4 @@ public class UserDto {
     public static class LoginResponse {
         private final String accessToken;
     }
-
 }

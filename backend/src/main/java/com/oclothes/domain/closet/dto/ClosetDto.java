@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class ClosetDto {
+public abstract class ClosetDto {
     @Getter
     @RequiredArgsConstructor
     public static class DefaultResponse {

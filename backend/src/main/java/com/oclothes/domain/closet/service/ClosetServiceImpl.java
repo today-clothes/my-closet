@@ -5,7 +5,7 @@ import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.closet.dto.ClosetMapper;
 import com.oclothes.domain.closet.exception.ClosetNotEmptyException;
 import com.oclothes.domain.closet.exception.ClosetNotFoundException;
-import com.oclothes.domain.cloth.service.ClothService;
+import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.global.dto.SliceDto;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import static com.oclothes.global.config.security.util.SecurityUtils.getLoggedIn
 public class ClosetServiceImpl implements ClosetService {
     private final ClosetMapper closetMapper;
     private final ClosetRepository closetRepository;
-    private final ClothService clothService;
+    private final ClothesService clothesService;
 
     @Override
     public CreateResponse create(CreateRequest request) {
@@ -39,7 +39,6 @@ public class ClosetServiceImpl implements ClosetService {
         return this.closetMapper.entityToDefaultResponse(this.findByUserAndClosetId(id).setName(request.getName()));
     }
 
-
     @Override
     public DefaultResponse changeLockStatus(Long id) {
         return this.closetMapper.entityToDefaultResponse(this.findByUserAndClosetId(id).changeLockedStatus());
@@ -53,7 +52,7 @@ public class ClosetServiceImpl implements ClosetService {
     }
 
     private void validateClothesIsEmpty(Closet closet) {
-        if (this.clothService.getSizeByCloset(closet) > 0) throw new ClosetNotEmptyException();
+        if (this.clothesService.getSizeByCloset(closet) > 0) throw new ClosetNotEmptyException();
     }
 
     private Closet findByUserAndClosetId(Long id) {

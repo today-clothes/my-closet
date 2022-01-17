@@ -2,15 +2,14 @@ package com.oclothes.domain.user.service;
 
 import com.oclothes.BaseTest;
 import com.oclothes.domain.user.dao.UserRepository;
+import com.oclothes.domain.user.domain.EmailAuthenticationCode;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.domain.user.dto.UserMapper;
 import com.oclothes.domain.user.exception.*;
+import com.oclothes.domain.user.util.EmailAuthenticationCodeGenerator;
 import com.oclothes.global.config.security.PasswordEncoderConfig;
 import com.oclothes.global.error.exception.UserStatusException;
-import com.oclothes.infra.email.domain.EmailAuthenticationCode;
-import com.oclothes.infra.email.service.EmailAuthenticationCodeService;
-import com.oclothes.infra.email.service.EmailService;
-import com.oclothes.infra.email.util.EmailAuthenticationCodeGenerator;
+import com.oclothes.infra.email.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
