@@ -1,7 +1,6 @@
 package com.oclothes.domain.clothes.api;
 
 import com.oclothes.BaseWebMvcTest;
-import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.service.ClothesService;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +33,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @Test
     void clothesUploadTest() throws Exception {
         final MockMultipartFile file = new MockMultipartFile("file", new FileInputStream("./README.md"));
-        final ClothesDto.ClothesUploadRequest request = new ClothesDto.ClothesUploadRequest(1L, Clothes.Season.SPRING, List.of(1L), null, file);
+        final ClothesDto.ClothesUploadRequest request = new ClothesDto.ClothesUploadRequest(1L, List.of(1L), null, file);
         final ClothesDto.ClothesUploadResponse response = new ClothesDto.ClothesUploadResponse(1L, 1L);
 
         when(this.clothesService.save(any())).thenReturn(response);
@@ -42,7 +41,6 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
         mockMvc.perform(multipart("/clothes")
                         .file(file)
                         .param("closetId", request.getClosetId().toString())
-                        .param("season", request.getSeason().toString())
                         .param("styleIds", "1")
                 )
                 .andExpect(status().isCreated())

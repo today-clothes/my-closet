@@ -14,6 +14,7 @@ import org.mockito.Spy;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -31,7 +32,7 @@ class StyleServiceImplTest extends BaseTest {
 
     @Test
     void findAll() {
-        final List<Style> styles = IntStream.range(0, 10).mapToObj(i -> new Style("s" + i)).collect(Collectors.toList());
+        final List<Style> styles = IntStream.range(0, 10).mapToObj(i -> new Style(Style.TYPE.TPO, "t" + i)).collect(Collectors.toList());
 
         when(this.styleRepository.findAll()).thenReturn(styles);
 
@@ -42,8 +43,8 @@ class StyleServiceImplTest extends BaseTest {
 
     @Test
     void findAllById() {
-        final List<Style> styles = IntStream.range(1, 5).mapToObj(i -> new Style("s" + i)).collect(Collectors.toList());
-        final List<Long> ids = List.of(1L, 2L, 3L, 4L);
+        final List<Style> styles = IntStream.range(0, 3).mapToObj(i -> new Style(Style.TYPE.TPO, "t" + i)).collect(Collectors.toList());
+        final List<Long> ids = LongStream.range(0, 3).boxed().collect(Collectors.toList());
 
         when(this.styleRepository.findAllById(any())).thenReturn(styles);
 

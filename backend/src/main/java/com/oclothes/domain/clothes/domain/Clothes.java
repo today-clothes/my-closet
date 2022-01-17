@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,31 +19,23 @@ import java.util.Objects;
 @Entity
 public class Clothes extends BaseEntity {
 
-    public enum Season {
-        SPRING, SUMMER, FALL, WINTER, NONE
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Closet closet;
 
     @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClothesStyle> clothesStyles = new ArrayList<>();
+    private Set<ClothesStyle> clothesStyles = new HashSet<>();
 
     private String imgUrl;
-
-    @Enumerated(EnumType.STRING)
-    private Season season;
 
     private String location;
 
     private boolean bookmarked = false;
 
     @Builder
-    public Clothes(Closet closet, String imgUrl, Season season, String location) {
+    public Clothes(Closet closet, String imgUrl, String location) {
         this.closet = closet;
         this.imgUrl = imgUrl;
-        this.season = season;
         this.location = location;
     }
 
