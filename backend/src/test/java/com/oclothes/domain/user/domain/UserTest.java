@@ -80,12 +80,11 @@ class UserTest extends BaseTest {
         User savedUser = this.userRepository.save(user);
         savedUser.addCloset(new Closet("my first closet", true, user));
         Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
-        closet.addCloth(new Clothes(closet, "", Clothes.Season.SPRING, ""));
+        closet.addCloth(new Clothes(closet, "", ""));
         Clothes clothes = this.clothesRepository.findAllByCloset(closet).get(0);
         log.info("cloth id: {}", clothes.getId());
         assertNotNull(clothes);
         assertEquals("my first closet", clothes.getCloset().getName());
-        assertEquals(Clothes.Season.SPRING, clothes.getSeason());
     }
 
     @DisplayName("유저 스타일 추가 테스트")
@@ -93,7 +92,7 @@ class UserTest extends BaseTest {
     void addUserStyleTest() {
         User savedUser = this.userRepository.save(user);
         String styleName = "귀염뽀짝";
-        Style style = this.styleRepository.save(new Style(styleName));
+        Style style = this.styleRepository.save(new Style(Style.TYPE.MOOD, styleName));
         savedUser.addUserStyle(new UserStyle(savedUser, style));
         UserStyle userStyle = this.userStyleRepository.findByUser(savedUser).get(0);
         log.info("closet id: {} | name: {}", userStyle.getId(), userStyle.getName());

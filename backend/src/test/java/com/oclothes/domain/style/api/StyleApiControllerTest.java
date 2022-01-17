@@ -1,6 +1,7 @@
 package com.oclothes.domain.style.api;
 
 import com.oclothes.BaseWebMvcTest;
+import com.oclothes.domain.style.domain.Style;
 import com.oclothes.domain.style.dto.StyleDto;
 import com.oclothes.domain.style.service.StyleService;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,7 @@ class StyleApiControllerTest extends BaseWebMvcTest {
     @WithMockUser
     @Test
     void findAllTest() throws Exception {
-        final List<StyleDto.Response> responses = LongStream.rangeClosed(0, 5).mapToObj(i -> new StyleDto.Response(i, "style" + i)).collect(Collectors.toList());
+        final List<StyleDto.Response> responses = LongStream.rangeClosed(0, 5).mapToObj(i -> new StyleDto.Response(i, Style.TYPE.MOOD, "style" + i)).collect(Collectors.toList());
 
         when(this.styleService.findAll()).thenReturn(responses);
 
