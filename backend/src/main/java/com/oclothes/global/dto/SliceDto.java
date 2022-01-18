@@ -29,7 +29,7 @@ public class SliceDto<T> {
 
     public static <T> SliceDto<T> create(Slice<T> slice) {
         return SliceDto.<T>builder()
-                .pageNumber(slice.getNumber())
+                .pageNumber(slice.getNumber() + 1)
                 .contentsCount(slice.getContent().size())
                 .first(slice.isFirst())
                 .last(slice.isLast())
