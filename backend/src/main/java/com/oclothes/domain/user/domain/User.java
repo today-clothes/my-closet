@@ -51,9 +51,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Closet> closets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserStyle> userStyles = new ArrayList<>();
-
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     private EmailAuthenticationCode emailAuthenticationCode;
 
@@ -72,16 +69,8 @@ public class User extends BaseEntity {
         this.closets.add(closet);
     }
 
-    public void addUserStyle(UserStyle userStyle) {
-        this.userStyles.add(userStyle);
-    }
-
     public void deleteCloset(Closet closet) {
         this.closets.remove(closet);
-    }
-
-    public void deleteUserStyle(UserStyle userStyle) {
-        this.userStyles.remove(userStyle);
     }
 
     public void setEmailAuthenticationCode(EmailAuthenticationCode emailAuthenticationCode) {

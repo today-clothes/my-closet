@@ -5,11 +5,8 @@ import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.domain.clothes.domain.Clothes;
-import com.oclothes.domain.style.dao.StyleRepository;
-import com.oclothes.domain.style.domain.Style;
 import com.oclothes.domain.user.dao.EmailAuthenticationCodeRepository;
 import com.oclothes.domain.user.dao.UserRepository;
-import com.oclothes.domain.user.dao.UserStyleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,12 +28,6 @@ class UserTest extends BaseTest {
 
     @Autowired
     private ClosetRepository closetRepository;
-
-    @Autowired
-    private StyleRepository styleRepository;
-
-    @Autowired
-    private UserStyleRepository userStyleRepository;
 
     @Autowired
     private ClothesRepository clothesRepository;
@@ -80,24 +71,11 @@ class UserTest extends BaseTest {
         User savedUser = this.userRepository.save(user);
         savedUser.addCloset(new Closet("my first closet", true, user));
         Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
-        closet.addCloth(new Clothes(closet, "", ""));
+        closet.addCloth(Clothes.builder().build());
         Clothes clothes = this.clothesRepository.findAllByCloset(closet).get(0);
         log.info("cloth id: {}", clothes.getId());
         assertNotNull(clothes);
         assertEquals("my first closet", clothes.getCloset().getName());
-    }
-
-    @DisplayName("유저 스타일 추가 테스트")
-    @Test
-    void addUserStyleTest() {
-        User savedUser = this.userRepository.save(user);
-        String styleName = "귀염뽀짝";
-        Style style = this.styleRepository.save(new Style(Style.TYPE.MOOD, styleName));
-        savedUser.addUserStyle(new UserStyle(savedUser, style));
-        UserStyle userStyle = this.userStyleRepository.findByUser(savedUser).get(0);
-        log.info("closet id: {} | name: {}", userStyle.getId(), userStyle.getName());
-        assertNotNull(userStyle.getId());
-        assertEquals(styleName, userStyle.getName());
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

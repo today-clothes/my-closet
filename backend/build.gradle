@@ -31,6 +31,14 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
 
+    // QUERYDSL
+    compileOnly 'com.querydsl:querydsl-core'
+    compileOnly 'com.querydsl:querydsl-jpa'
+    testImplementation 'com.querydsl:querydsl-jpa'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+
     // LOMBOK
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -64,4 +72,8 @@ task copySecret(type: Copy) {
     from '../my-closet-secret'
     include "*.yml"
     into 'src/main/resources'
+}
+
+task cleanGeneatedDir(type: Delete) {
+    delete file('src/main/generated')
 }

@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -24,34 +23,25 @@ public class Clothes extends BaseEntity {
     private Closet closet;
 
     @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ClothesStyle> clothesStyles = new HashSet<>();
+    private Set<ClothesSeasonTag> seasonTags = new HashSet<>();
+
+    @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClothesEventTag> eventTags = new HashSet<>();
+
+    @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClothesMoodTag> moodTags = new HashSet<>();
 
     private String imgUrl;
 
-    private String location;
-
-    private boolean bookmarked = false;
-
     @Builder
-    public Clothes(Closet closet, String imgUrl, String location) {
+    public Clothes(Closet closet, String imgUrl) {
         this.closet = closet;
         this.imgUrl = imgUrl;
-        this.location = location;
-    }
-
-    public Clothes addAllClothStyle(List<ClothesStyle> clothesStyles) {
-        clothesStyles.forEach(c -> c.setClothes(this));
-        this.clothesStyles.addAll(clothesStyles);
-        return this;
     }
 
     public void setCloset(Closet closet) {
         if (Objects.nonNull(this.closet)) this.closet.deleteCloth(this);
         this.closet = closet;
-    }
-
-    public void deleteClothStyle(ClothesStyle clothesStyle) {
-        this.clothesStyles.remove(clothesStyle);
     }
 
 }

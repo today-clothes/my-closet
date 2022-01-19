@@ -17,4 +17,8 @@ public interface ClothesMapper {
     @Mapping(target = "clothesId", source = "clothes.id")
     @Mapping(target = "closetId", source = "clothes.closet.id")
     ClothesUploadResponse toUploadResponse(Clothes clothes);
+
+    @Mapping(target = "closetId", source = "clothes.closet.id")
+    @Mapping(target = "clothesId", source = "clothes.id")
+    ClothesDto.SearchResponse toSearchResponse(Clothes clothes);
 }
