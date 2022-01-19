@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 
 import java.util.List;
 
-public interface ClothesRepository extends JpaRepository<Clothes, Long> {
+public interface ClothesRepository extends JpaRepository<Clothes, Long>, ClothesSupportRepository {
     List<Clothes> findAllByCloset(Closet closet);
 
     long countByCloset(@NonNull Closet closet);
