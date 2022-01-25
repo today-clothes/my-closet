@@ -8,6 +8,7 @@ import com.oclothes.mycloset.databinding.ActivityLoginLoginBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.login.signup.SignUpEmailActivity
 import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.utils.saveJwt
 
 class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLoginLoginBinding::inflate), LoginView, View.OnClickListener {
     override fun initAfterBinding() {
@@ -51,11 +52,8 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
     }
 
     override fun onLoginSuccess(auth: Auth) {
-
-    }
-
-    override fun onLoginSuccess() {
         binding.loginLoginLoadingPb.visibility = View.GONE
+        saveJwt(auth.jwt)
         startActivityWithClear(MainActivity::class.java)
     }
 

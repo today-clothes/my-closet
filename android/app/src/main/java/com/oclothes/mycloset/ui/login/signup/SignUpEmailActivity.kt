@@ -15,24 +15,25 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
     }
 
     private fun init() {
-        binding.loginSignUpAuthenticateEmailBtnIv.setOnClickListener(this)
         binding.loginSignUpSignUpBtnTv.setOnClickListener(this)
         binding.loginSignUpAgreeAllCb.setOnClickListener(this)
+        binding.loginSignUpAgree1Cb.setOnClickListener(this)
+        binding.loginSignUpAgree2Cb.setOnClickListener(this)
+        binding.loginSignUpAgree3Cb.setOnClickListener(this)
         binding.loginSignUpSignUpBtnTv.isClickable = false
-
+        binding.loginSignUpMainBackgroundCl.setOnClickListener(this)
     }
-
+    
     override fun onClick(v: View?) {
-
         when (v){
-            binding.loginSignUpAuthenticateEmailBtnIv -> {
-                authEmail()
-            }
             binding.loginSignUpAgreeAllCb -> {
                 checkLogic1()
             }
             binding.loginSignUpSignUpBtnTv -> {
                 signUp()
+            }
+            binding.loginSignUpMainBackgroundCl ->{
+                hideKeyboard(binding.loginSignUpMainBackgroundCl)
             }
         }
         checkLogic2()
@@ -83,10 +84,6 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
             binding.loginSignUpAgree2Cb.isChecked = false
             binding.loginSignUpAgree3Cb.isChecked = false
         }
-    }
-
-    private fun authEmail() {
-        showToast("모르게다다아아")
     }
 
     override fun onSignUpLoading() {

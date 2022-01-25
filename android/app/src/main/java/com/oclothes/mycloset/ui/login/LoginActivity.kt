@@ -3,6 +3,7 @@ package com.oclothes.mycloset.ui.login
 import android.content.Intent
 import com.oclothes.mycloset.databinding.ActivityLoginBinding
 import com.oclothes.mycloset.ui.BaseActivity
+import com.oclothes.mycloset.ui.info.InfoSelectActivity
 import com.oclothes.mycloset.ui.login.login.LoginLoginActivity
 import com.oclothes.mycloset.ui.login.signup.SignUpEmailActivity
 import com.oclothes.mycloset.ui.main.MainActivity
@@ -20,6 +21,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
         binding.loginEmailBtn.setOnClickListener {
             startActivity(Intent(this, SignUpEmailActivity::class.java))
+        }
+
+        binding.loginNaverBtn.setOnClickListener{
+            startActivity(Intent(this, InfoSelectActivity::class.java))
         }
     }
 }
