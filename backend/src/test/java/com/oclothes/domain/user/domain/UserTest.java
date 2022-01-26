@@ -4,24 +4,20 @@ import com.oclothes.BaseTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
-import com.oclothes.domain.clothes.domain.Clothes;
-import com.oclothes.domain.user.dao.EmailAuthenticationCodeRepository;
 import com.oclothes.domain.user.dao.UserRepository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 class UserTest extends BaseTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
@@ -32,8 +28,8 @@ class UserTest extends BaseTest {
     @Autowired
     private ClothesRepository clothesRepository;
 
-    @Autowired
-    private EmailAuthenticationCodeRepository emailAuthenticationCodeRepository;
+    @MockBean
+    private JPAQueryFactory jpaQueryFactory;
 
     User user;
 
@@ -63,19 +59,6 @@ class UserTest extends BaseTest {
         Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
         log.info("closet id: {}", closet.getId());
         assertNotNull(closet.getId());
-    }
-
-    @DisplayName("유저 옷장에 옷 추가 테스트")
-    @Test
-    void addClothTest() {
-        User savedUser = this.userRepository.save(user);
-        savedUser.addCloset(new Closet("my first closet", true, user));
-        Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
-        closet.addCloth(Clothes.builder().build());
-        Clothes clothes = this.clothesRepository.findAllByCloset(closet).get(0);
-        log.info("cloth id: {}", clothes.getId());
-        assertNotNull(clothes);
-        assertEquals("my first closet", clothes.getCloset().getName());
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

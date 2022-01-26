@@ -3,6 +3,7 @@ package com.oclothes.domain.clothes.dao;
 import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,19 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     @Override
     public List<Clothes> search(ClothesDto.SearchRequest request) {
         return this.jpaQueryFactory.selectFrom(clothes)
+                .where(hasClosetId(request.getClosetId()))
                 .join(clothes.seasonTags, clothesSeasonTag)
-                .where(clothes.closet.id.eq(request.getClosetId()), this.isSeasonTag(request.getSeasonTagIds()))
+                .where(this.isSeasonTag(request.getSeasonTagIds()))
                 .join(clothes.eventTags, clothesEventTag)
                 .where(this.isEventTag(request.getEventTagIds()))
                 .join(clothes.moodTags, clothesMoodTag)
                 .where(isMoodTag(request.getMoodTagIds()))
                 .fetch();
+    }
+
+    private BooleanExpression hasClosetId(Long closetId) {
+        if (Objects.isNull(closetId)) return null;
+        return clothes.closet.id.eq(closetId);
     }
 
     private BooleanBuilder isSeasonTag(List<Long> ids) {
