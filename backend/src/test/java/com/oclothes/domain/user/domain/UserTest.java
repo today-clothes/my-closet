@@ -1,23 +1,19 @@
 package com.oclothes.domain.user.domain;
 
-import com.oclothes.BaseTest;
+import com.oclothes.BaseDataJpaTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.domain.user.dao.UserRepository;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataJpaTest
-class UserTest extends BaseTest {
+class UserTest extends BaseDataJpaTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -27,9 +23,6 @@ class UserTest extends BaseTest {
 
     @Autowired
     private ClothesRepository clothesRepository;
-
-    @MockBean
-    private JPAQueryFactory jpaQueryFactory;
 
     User user;
 
