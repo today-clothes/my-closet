@@ -6,95 +6,119 @@
     
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        
+        <ImageView
+            android:id="@+id/closet_main_logo_iv"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:src="@drawable/app_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            />
+            
         
         <TextView
             android:id="@+id/closet_main_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MY CLOSET"
-            app:layout_constraintTop_toTopOf="parent"
+            android:text="오늘의 옷"
+            app:layout_constraintTop_toBottomOf="@id/closet_main_logo_iv"
+            app:layout_constraintStart_toStartOf="@id/closet_main_logo_iv"
+            android:textSize="40dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_bold"
+            android:layout_marginTop="20dp"
+            />
+        
+        <TextView
+            android:id="@+id/closet_info_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/closet_main_tv"
+            android:text="\'박예진\'님의 옷장"
+            app:layout_constraintStart_toStartOf="@id/closet_main_logo_iv"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/black"
+            android:textSize="16dp"/>
+        
+        <ImageView
+            android:id="@+id/closet_plus_btn_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintTop_toBottomOf="@id/closet_main_tv"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/btn_close"/>
+        
+        <androidx.cardview.widget.CardView
+            android:id="@+id/closet_all_closet_cv"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="50dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:layout_marginTop="50dp"
-            />
-        
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/closet_weather"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/closet_main_tv"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/temp_weather">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="날씨 날씨"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
-            
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/closet_closets"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/closet_weather"
-            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@id/closet_plus_btn_iv"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/temp_closet">
-
-            <LinearLayout
-                android:id="@+id/closet_tag_selector"
+            app:cardCornerRadius="15dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="3dp"
+            android:background="@color/white"
+            >
+            <ImageView
+                android:id="@+id/closet_all_closet_image_iv"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/white"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:orientation="horizontal"
-                >
-
-
-
-
-
-            </LinearLayout>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="옷장옷장"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/temp_selfee"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
                 />
-    
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="ALL"
+                android:textColor="@color/white"
+                android:textSize="40dp"
+                android:fontFamily="@font/roboto_bold"/>
+        </androidx.cardview.widget.CardView>
+        
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:text="공백"
-            app:layout_constraintTop_toBottomOf="@id/closet_closets"
-            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/closet_all_closet_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모든 옷장"
+            app:layout_constraintStart_toStartOf="@id/closet_main_logo_iv"
+            app:layout_constraintTop_toBottomOf="@id/closet_all_closet_cv"
+            android:textSize="20dp"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/black"
             />
         
+        <TextView
+            android:id="@+id/closet_all_closet_number_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/closet_main_logo_iv"
+            app:layout_constraintTop_toBottomOf="@id/closet_all_closet_tv"
+            android:text="10 개"
+            android:textSize="15dp"
+            android:fontFamily="@font/roboto_regular"
+            />
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </androidx.constraintlayout.widget.ConstraintLayout>
-    
-    
 </ScrollView>

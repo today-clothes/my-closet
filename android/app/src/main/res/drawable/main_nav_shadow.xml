@@ -15,7 +15,7 @@
     <item>
         <shape>
             <padding
-                android:top="8.5dp" />
+                android:top="2.5dp" />
             <solid
                 android:color="#4D302F2F" />
             <corners
@@ -26,8 +26,10 @@
     
     <item>
         <shape>
+            <padding
+                android:top="2.5dp" />
             <solid
-                android:color="#000000" />
+                android:color="#80302F2F" />
             <corners
                 android:topLeftRadius="18dp"
                 android:topRightRadius="18dp" />
@@ -40,9 +42,7 @@
             <solid android:color="@color/white"/>
             <corners
                 android:topLeftRadius="18dp"
-                android:topRightRadius="18dp"
-                android:bottomLeftRadius="30dp"
-                android:bottomRightRadius="30dp"/>
+                android:topRightRadius="18dp" />
         </shape>
     </item>
 </layer-list>

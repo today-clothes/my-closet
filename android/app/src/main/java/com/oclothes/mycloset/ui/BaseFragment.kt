@@ -22,7 +22,6 @@ abstract class BaseFragment<VB : ViewBinding>(
         savedInstanceState: Bundle?
     ): View? {
         _binding = inflate.invoke(inflater, container, false)
-
         return binding.root
     }
 
@@ -41,4 +40,5 @@ abstract class BaseFragment<VB : ViewBinding>(
     fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
 }

@@ -15,12 +15,20 @@ class ApplicationClass : Application() {
         const val TAG: String = "MYCLOSET-APP"                      // Log, SharedPreference
         const val APP_DATABASE = "$TAG-DB"
 
+
+
         const val DEV_URL: String = "localhost:8080/";       // 테스트 서버 주소
         const val PROD_URL: String = "https://api.template.com/"    // 실서버 주소
         const val BASE_URL: String = DEV_URL
 
         lateinit var mSharedPreferences: SharedPreferences
         lateinit var retrofit: Retrofit
+
+        //여기서부터는 각 클래스에서 사용할 상수 선언
+        const val MAN : Int = 1
+        const val WOMAN : Int = 2
+
+
     }
 
     override fun onCreate() {
