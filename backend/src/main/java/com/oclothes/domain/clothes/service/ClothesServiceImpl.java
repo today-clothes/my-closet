@@ -12,6 +12,7 @@ import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
 import com.oclothes.domain.tag.dto.TagDto;
+import com.oclothes.infra.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ public class ClothesServiceImpl implements ClothesService {
     private final SeasonTagRepository seasonTagRepository;
     private final EventTagRepository eventTagRepository;
     private final MoodTagRepository moodTagRepository;
+    private final FileService fileService;
 
     @Override
     public long getSizeByCloset(Closet closet) {
@@ -62,5 +64,10 @@ public class ClothesServiceImpl implements ClothesService {
                         c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                         c.getImgUrl()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public byte[] getImage(String url) {
+        return this.fileService.getImage(url);
     }
 }

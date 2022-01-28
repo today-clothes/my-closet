@@ -14,4 +14,6 @@ public interface ClothesService {
     ClothesUploadResponse save(ClothesUploadRequest request);
 
     List<ClothesDto.SearchResponse> search(ClothesDto.SearchRequest request);
+
+    byte[] getImage(String url);
 }
