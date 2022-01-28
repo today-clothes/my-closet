@@ -27,6 +27,7 @@ public abstract class ClothesDto {
     public static class ClothesUploadResponse {
         private final Long closetId;
         private final Long clothesId;
+        private final String imgUrl;
     }
 
     @Getter

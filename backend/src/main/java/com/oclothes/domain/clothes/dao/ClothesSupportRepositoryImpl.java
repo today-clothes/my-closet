@@ -6,7 +6,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +17,7 @@ import static com.oclothes.domain.clothes.domain.QClothesMoodTag.clothesMoodTag;
 import static com.oclothes.domain.clothes.domain.QClothesSeasonTag.clothesSeasonTag;
 
 @RequiredArgsConstructor
-@Service
+@Repository
 public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
