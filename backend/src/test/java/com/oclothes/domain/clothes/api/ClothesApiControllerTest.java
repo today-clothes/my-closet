@@ -66,5 +66,4 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(String.format("%s;%s", MediaType.IMAGE_JPEG_VALUE, utf8)));
         verify(this.clothesService, atMostOnce()).getImage(any());
     }
-
 }

@@ -1,37 +1,28 @@
 package com.oclothes.domain.clothes.dao;
 
-import com.oclothes.domain.closet.domain.QCloset;
-import com.oclothes.domain.clothes.domain.*;
+import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.dto.ClothesDto;
-import com.oclothes.domain.user.domain.QUser;
-import com.oclothes.global.config.security.util.SecurityUtils;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import static com.oclothes.domain.closet.domain.QCloset.closet;
-import static com.oclothes.domain.clothes.domain.QClothes.*;
+import static com.oclothes.domain.clothes.domain.QClothes.clothes;
 import static com.oclothes.domain.clothes.domain.QClothesEventTag.clothesEventTag;
 import static com.oclothes.domain.clothes.domain.QClothesMoodTag.clothesMoodTag;
 import static com.oclothes.domain.clothes.domain.QClothesSeasonTag.clothesSeasonTag;
-import static com.oclothes.domain.user.domain.QUser.user;
-
 
 @RequiredArgsConstructor
 @Repository
 public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
-    private final BooleanBuilder builder = new BooleanBuilder();
 
     @Override
-    public List<Clothes> searchByTag(ClothesDto.SearchRequest request) {
+    public List<Clothes> search(ClothesDto.SearchRequest request) {
         return this.jpaQueryFactory.selectFrom(clothes)
                 .where(hasClosetId(request.getClosetId()))
                 .join(clothes.seasonTags, clothesSeasonTag)
@@ -43,11 +34,11 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
                 .fetch();
     }
 
-
     private BooleanExpression hasClosetId(Long closetId) {
         if (Objects.isNull(closetId)) return null;
         return clothes.closet.id.eq(closetId);
     }
+
     private BooleanBuilder isSeasonTag(List<Long> ids) {
         if (Objects.isNull(ids) || ids.isEmpty()) return null;
         final BooleanBuilder builder = new BooleanBuilder();

@@ -1,6 +1,5 @@
 package com.oclothes.domain.clothes.api;
 
-import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.dto.ClothesResponseMessage;
 import com.oclothes.domain.clothes.service.ClothesService;
@@ -30,13 +29,7 @@ public class ClothesApiController {
 
     @GetMapping("/search")
     public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> search(@Valid ClothesDto.SearchRequest request) {
-        //return ResponseEntity.ok(ResponseDto.create("adf", this.clothesService.searchByTag(request)));
-        return null;
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> searchByKeyword(@RequestParam String keyword){
-        return ResponseEntity.ok(ResponseDto.create("success", clothesService.searchByKeyword( new ClothesDto.SearchKeywordRequest(keyword))));
+        return ResponseEntity.ok(ResponseDto.create("adf", this.clothesService.search(request)));
     }
 
     @GetMapping(value = "/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})

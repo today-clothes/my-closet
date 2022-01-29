@@ -13,7 +13,7 @@ public interface ClothesService {
 
     ClothesUploadResponse save(ClothesUploadRequest request);
 
-    byte[] getImage(String url);
+    List<ClothesDto.SearchResponse> search(ClothesDto.SearchRequest request);
 
-    List<ClothesDto.SearchResponse> searchByKeyword(ClothesDto.SearchKeywordRequest request);
+    byte[] getImage(String url);
 }
