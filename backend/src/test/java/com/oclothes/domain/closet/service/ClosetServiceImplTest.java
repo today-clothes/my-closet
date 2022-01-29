@@ -36,7 +36,6 @@ class ClosetServiceImplTest extends BaseTest {
     @Spy
     private ClosetMapper closetMapper = Mappers.getMapper(ClosetMapper.class);
 
-
     @Mock
     private ClosetRepository closetRepository;
 

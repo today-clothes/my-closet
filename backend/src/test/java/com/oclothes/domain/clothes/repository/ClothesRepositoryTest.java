@@ -23,8 +23,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
-
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.FileInputStream;
@@ -33,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ClothesRepositoryTest extends BaseDataJpaTest {
     @Autowired private ClosetRepository closetRepository;
     @Autowired private ClothesRepository clothesRepository;
@@ -159,8 +156,7 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         ClothesDto.SearchRequest searchRequest = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, searchMoodList);
         List<Clothes> clothes = clothesRepository.searchAllClosetByTag(searchRequest);
 
-        //userId=1로 했을때 성공.. 시큐리티에서 가져와서 하면됌
-        //Assertions.assertThat(clothes.size()).isEqualTo(2);
+        Assertions.assertThat(clothes.size()).isEqualTo(2);
     }
 
 

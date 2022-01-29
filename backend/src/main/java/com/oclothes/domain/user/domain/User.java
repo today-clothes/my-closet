@@ -98,7 +98,6 @@ public class User extends BaseEntity {
         this.status = Status.NORMAL;
         this.emailAuthenticationCode = null;
         this.addCloset(new Closet("나의 첫 옷장", false, this));
-
         return this;
     }
 

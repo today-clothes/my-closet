@@ -1,10 +1,6 @@
 package com.oclothes.domain.clothes.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
-import com.oclothes.domain.tag.domain.EventTag;
-import com.oclothes.domain.tag.domain.MoodTag;
-import com.oclothes.domain.tag.domain.SeasonTag;
-import com.oclothes.domain.tag.domain.Tag;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.entity.BaseEntity;
 import lombok.Builder;
@@ -14,7 +10,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,9 +38,9 @@ public class Clothes extends BaseEntity {
 
     private String styleTitle;
 
-    private String imgUrl;
-
     private String content;
+
+    private String imgUrl;
 
     @Builder
     public Clothes(Closet closet, String imgUrl, User user) {
@@ -58,4 +53,5 @@ public class Clothes extends BaseEntity {
         if (Objects.nonNull(this.closet)) this.closet.deleteCloth(this);
         this.closet = closet;
     }
+
 }

@@ -1,32 +1,32 @@
 package com.oclothes.domain.clothes.dao;
 
+
 import com.oclothes.domain.clothes.domain.*;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.global.config.security.util.SecurityUtils;
+import com.oclothes.domain.clothes.domain.Clothes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-import static com.oclothes.domain.clothes.domain.QClothes.*;
 import static com.oclothes.domain.clothes.domain.QClothesEventTag.clothesEventTag;
 import static com.oclothes.domain.clothes.domain.QClothesMoodTag.clothesMoodTag;
 import static com.oclothes.domain.clothes.domain.QClothesSeasonTag.clothesSeasonTag;
+import static com.oclothes.domain.clothes.domain.QClothes.clothes;
+
 
 
 @RequiredArgsConstructor
 @Repository
 public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
-    private final BooleanBuilder builder = new BooleanBuilder();
+    private final BooleanBuilder builder;
 
-    //1. 전체(기본) 옷장 태그 필터링
     @Override
     public List<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request){
         return jpaQueryFactory.selectFrom(clothes).distinct()
@@ -38,8 +38,6 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
                 .fetch();
     }
 
-
-    //2.개별 옷장 태그 필터링
     @Override
     public List<Clothes> searchByTag(ClothesDto.SearchRequest request) {
         return jpaQueryFactory.selectFrom(clothes).distinct()
@@ -62,7 +60,7 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
         return clothes.user.id.eq(id);
     }
 
-    private BooleanBuilder tagsEq(List<Long> sids, List<Long> eids, List<Long> mids){
+    private BooleanBuilder tagsEq(List<Long> sids, List<Long> eids, List<Long> mids) {
         Optional.ofNullable(sids).orElseGet(Collections::emptyList).stream()
                 .forEach(id -> builder.or(isSeasonTag(id)));
 
@@ -71,7 +69,6 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
 
         Optional.ofNullable(mids).orElseGet(Collections::emptyList).stream()
                 .forEach(id -> builder.or(isMoodTag(id)));
-
         return builder;
     }
 
@@ -90,7 +87,4 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
         if (Objects.isNull(id)) return null;
         return new BooleanBuilder(clothesMoodTag.id.eq(id));
     }
-
-
-
 }
