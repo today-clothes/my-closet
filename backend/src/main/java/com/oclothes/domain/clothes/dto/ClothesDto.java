@@ -1,7 +1,6 @@
 package com.oclothes.domain.clothes.dto;
 
 import com.oclothes.domain.tag.dto.TagDto;
-import com.oclothes.domain.user.domain.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,11 +49,5 @@ public abstract class ClothesDto {
         private final Set<TagDto.Response> eventTags;
         private final Set<TagDto.Response> moodTags;
         private final String imgUrl;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    public static class SearchKeywordRequest {
-        private final String Keyword;
     }
 }

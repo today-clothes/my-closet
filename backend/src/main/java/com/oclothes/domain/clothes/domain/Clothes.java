@@ -1,11 +1,6 @@
 package com.oclothes.domain.clothes.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
-import com.oclothes.domain.tag.domain.EventTag;
-import com.oclothes.domain.tag.domain.MoodTag;
-import com.oclothes.domain.tag.domain.SeasonTag;
-import com.oclothes.domain.tag.domain.Tag;
-import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +9,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,10 +22,6 @@ public class Clothes extends BaseEntity {
     @JoinColumn(nullable = false)
     private Closet closet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private User user;
-
     @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ClothesSeasonTag> seasonTags = new HashSet<>();
 
@@ -41,21 +31,17 @@ public class Clothes extends BaseEntity {
     @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ClothesMoodTag> moodTags = new HashSet<>();
 
-    private String styleTitle;
-
     private String imgUrl;
 
-    private String content;
-
     @Builder
-    public Clothes(Closet closet, String imgUrl, User user) {
+    public Clothes(Closet closet, String imgUrl) {
         this.closet = closet;
         this.imgUrl = imgUrl;
-        this.user = user;
     }
 
     public void setCloset(Closet closet) {
         if (Objects.nonNull(this.closet)) this.closet.deleteCloth(this);
         this.closet = closet;
     }
+
 }
