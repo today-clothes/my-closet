@@ -61,6 +61,22 @@ public class ClothesServiceImpl implements ClothesService {
         return this.fileService.getImage(url);
     }
 
+
+    @Override
+    public List<ClothesDto.SearchResponse> searchByTag(ClothesDto.SearchRequest request) {
+        return this.clothesRepository.searchByTag(request).stream()
+                .map(this::GetSearchDtoResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClothesDto.SearchResponse> searchAllClosetByTag(ClothesDto.SearchRequest request) {
+        return this.clothesRepository.searchAllClosetByTag(request).stream()
+                .map(this::GetSearchDtoResponse)
+                .collect(Collectors.toList());
+    }
+
+
     @Override
     public List<ClothesDto.SearchResponse> searchByKeyword(ClothesDto.SearchKeywordRequest request) {
         return clothesRepository.findByContentContaining(request.getKeyword())

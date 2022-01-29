@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ClothesSupportRepository {
 
+    List<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request);
     List<Clothes> searchByTag(ClothesDto.SearchRequest request);
 }

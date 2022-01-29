@@ -29,9 +29,8 @@ public class ClothesApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> search(@Valid ClothesDto.SearchRequest request) {
-        //return ResponseEntity.ok(ResponseDto.create("adf", this.clothesService.searchByTag(request)));
-        return null;
+    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> searchByTag(@Valid ClothesDto.SearchRequest request) {
+        return ResponseEntity.ok(ResponseDto.create("adf", this.clothesService.searchByTag(request)));
     }
 
     @GetMapping("/search")

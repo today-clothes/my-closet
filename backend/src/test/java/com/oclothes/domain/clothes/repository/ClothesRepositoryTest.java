@@ -55,6 +55,114 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         em.persist(user);
     }
 
+    @DisplayName("개별 옷장 태그 필터링")
+    @Test
+    public void searchByTag() throws IOException {
+        MockMultipartFile file = new MockMultipartFile("file", new FileInputStream("./README.md"));
+
+        //1.옷장 생성
+        Closet closet = new Closet("c1", true, user);
+        Closet result = closetRepository.save(closet);
+
+        //2.태그 생성
+        MoodTag mTag = new MoodTag("무드");
+        EventTag eTag = new EventTag("등산");
+        SeasonTag sTag = new SeasonTag("가을");
+        SeasonTag sTag2= new SeasonTag("봄");
+
+        MoodTag mood = moodTagRepository.save(mTag);
+        SeasonTag season = seasonTagRepository.save(sTag);
+        SeasonTag season2 = seasonTagRepository.save(sTag2);
+        EventTag event = eventTagRepository.save(eTag);
+
+        //3. 옷 생성
+        Clothes clothes1 = Clothes.builder()
+                .user(user)
+                .imgUrl("aa")
+                .closet(result).build();
+
+        Clothes clothes2 = Clothes.builder()
+                .user(user)
+                .imgUrl("bb")
+                .closet(result).build();
+
+        Clothes c1 = clothesRepository.save(clothes1);
+        Clothes c2 = clothesRepository.save(clothes2);
+
+        //4. 태그-옷 연결
+        //clothes1 - 가을 + 등산
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(c1, season));
+        clothesEventTagRepository.save(new ClothesEventTag(c1, event));
+
+        //clothes2 - 가을 + 봄 + 무드
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season));
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season2));
+        clothesMoodTagRepository.save(new ClothesMoodTag(c2, mood));
+
+        //4.검색 객체 생성
+        List<Long> searchSeasonList = new ArrayList<>();
+        searchSeasonList.add(season.getId());
+
+        List<Long> searchMoodList = new ArrayList<>();
+        searchMoodList.add(mood.getId());
+
+        ClothesDto.SearchRequest searchRequest = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, searchMoodList);
+        List<Clothes> clothes = clothesRepository.searchByTag(searchRequest);
+
+        Assertions.assertThat(clothes.size()).isEqualTo(2);
+    }
+
+
+    @Test
+    @DisplayName("전체 옷장 태그 필터링")
+    public void searchAllByTag(){
+        Closet closet = new Closet("c1", true, user);
+        Closet result = closetRepository.save(closet);
+
+        MoodTag mTag = new MoodTag("무드");
+        EventTag eTag = new EventTag("등산");
+        SeasonTag sTag = new SeasonTag("가을");
+        SeasonTag sTag2= new SeasonTag("봄");
+
+        MoodTag mood = moodTagRepository.save(mTag);
+        SeasonTag season = seasonTagRepository.save(sTag);
+        SeasonTag season2 = seasonTagRepository.save(sTag2);
+        EventTag event = eventTagRepository.save(eTag);
+
+        Clothes clothes1 = Clothes.builder()
+                .user(user)
+                .imgUrl("aa")
+                .closet(result).build();
+
+        Clothes clothes2 = Clothes.builder()
+                .user(user)
+                .imgUrl("bb")
+                .closet(result).build();
+
+        Clothes c1 = clothesRepository.save(clothes1);
+        Clothes c2 = clothesRepository.save(clothes2);
+
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(c1, season));
+        clothesEventTagRepository.save(new ClothesEventTag(c1, event));
+
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season));
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season2));
+        clothesMoodTagRepository.save(new ClothesMoodTag(c2, mood));
+
+
+        List<Long> searchSeasonList = new ArrayList<>();
+        searchSeasonList.add(season.getId());
+
+        List<Long> searchMoodList = new ArrayList<>();
+        searchMoodList.add(mood.getId());
+
+        ClothesDto.SearchRequest searchRequest = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, searchMoodList);
+        List<Clothes> clothes = clothesRepository.searchAllClosetByTag(searchRequest);
+
+        //userId=1로 했을때 성공.. 시큐리티에서 가져와서 하면됌
+        //Assertions.assertThat(clothes.size()).isEqualTo(2);
+    }
+
 
     @Test
     @DisplayName("전체 키워드로 옷 검색")
