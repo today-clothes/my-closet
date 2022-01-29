@@ -7,7 +7,9 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 1000
+        format_sql : true
   data:
     web:
       pageable:
         one-indexed-parameters: true
+

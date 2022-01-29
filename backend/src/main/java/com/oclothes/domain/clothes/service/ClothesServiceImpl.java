@@ -48,26 +48,34 @@ public class ClothesServiceImpl implements ClothesService {
                 .map(t -> new ClothesEventTag(clothes, t)).collect(Collectors.toList());
         final List<ClothesMoodTag> moodTags = this.moodTagRepository.findAllById(request.getMoodIds()).stream()
                 .map(t -> new ClothesMoodTag(clothes, t)).collect(Collectors.toList());
+
         clothes.getSeasonTags().addAll(clothesSeasonTags);
         clothes.getEventTags().addAll(eventTags);
         clothes.getMoodTags().addAll(moodTags);
         return this.clothesMapper.toUploadResponse(clothes);
     }
 
-    @Override
-    public List<ClothesDto.SearchResponse> search(ClothesDto.SearchRequest request) {
-        return this.clothesRepository.search(request).stream()
-                .map(c -> new ClothesDto.SearchResponse(
-                        c.getCloset().getId(), c.getId(),
-                        c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
-                        c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
-                        c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
-                        c.getImgUrl()))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public byte[] getImage(String url) {
         return this.fileService.getImage(url);
+    }
+
+    @Override
+    public List<ClothesDto.SearchResponse> searchByKeyword(ClothesDto.SearchKeywordRequest request) {
+        return clothesRepository.findByContentContaining(request.getKeyword())
+                .stream()
+                .map(this::GetSearchDtoResponse)
+                .collect(Collectors.toList());
+
+    }
+
+    private ClothesDto.SearchResponse GetSearchDtoResponse(Clothes c){
+        return new ClothesDto.SearchResponse(
+                c.getCloset().getId(), c.getId(),   //closet 프록시 초기화
+                c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()), //SeasonTag 프록시 초기화
+                c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
+                c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
+                c.getImgUrl());
     }
 }
