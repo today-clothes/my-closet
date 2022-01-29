@@ -1,11 +1,14 @@
 package com.oclothes.mycloset.ui.main.closet
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.R
+import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.databinding.FragmentClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.ui.main.closet.adapter.ClosetListRVAdapter
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -13,37 +16,16 @@ import com.oclothes.mycloset.ui.main.MainActivity
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ClosetFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 
 class ClosetFragment : BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate) {
 
     private var param1: String? = null
     private var param2: String? = null
 
-    private fun startTagSelection() {
-        (context as MainActivity).supportFragmentManager.beginTransaction()
-            .replace(R.id.main_frm, TagSelectFragment().apply {
-                arguments = Bundle().apply {
-                    //넘길 데이터를 써주는 부분임.
-                }
-            })
-            .commitAllowingStateLoss()
-    }
+    lateinit var closetList : ArrayList<Closet>
+    lateinit var nickName : String
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ClosetFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ClosetFragment().apply {
@@ -59,7 +41,43 @@ class ClosetFragment : BaseFragment<FragmentClosetBinding>(FragmentClosetBinding
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        initUser()
+        initClosetList()
+        binding.closetAllClosetListRv.layoutManager =LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val closetRVAdapter = ClosetListRVAdapter(closetList)
+
+        closetRVAdapter.setMyItemClickListener(object : ClosetListRVAdapter.MyItemClickListener{
+            override fun onItemClick(closet: Closet) {
+                startSingleClosetFragment(closet)
+            }
+
+            override fun onRemoveAlbum(position: Int) {
+
+            }
+        })
+        binding.closetAllClosetListRv.adapter = closetRVAdapter
+
     }
 
+    private fun initUser() {
+        nickName = ApplicationClass.mSharedPreferences.getString("nickname", null).toString()
+        binding.closetInfoTv.text = "\'" + nickName + "\'님의 옷장"
+    }
+
+
+    private fun initClosetList(){
+        closetList = ArrayList<Closet>()
+        for(i in 1..7) {
+            closetList.add(Closet())
+        }
+    }
+
+    fun startSingleClosetFragment(closet: Closet) {
+        (context as MainActivity).supportFragmentManager.beginTransaction()
+            .add(R.id.main_frm, SingleClosetFragment.newInstance())
+            .addToBackStack(null)
+            .hide(this)
+            .commit()
+    }
 
 }
