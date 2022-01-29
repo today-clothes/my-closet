@@ -3,6 +3,9 @@ spring:
     group:
       "prod": "jwt,oauth,mail"
       "local": "jwt,oauth,mail"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa:
     properties:
       hibernate:
@@ -11,3 +14,4 @@ spring:
     web:
       pageable:
         one-indexed-parameters: true
+
