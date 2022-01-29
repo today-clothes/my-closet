@@ -28,8 +28,13 @@ public class ClothesApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> search(@Valid ClothesDto.SearchRequest request) {
-        return ResponseEntity.ok(ResponseDto.create("adf", this.clothesService.search(request)));
+    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> searchByTag(@Valid ClothesDto.SearchRequest request) {
+        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.UPLOAD_SUCCESS.getMessage(), this.clothesService.searchByTag(request)));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> searchByKeyword(@RequestParam String keyword) {
+        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.KEYWORD_SEARCH_SUCCESS.getMessage(), clothesService.searchByKeyword(new ClothesDto.SearchKeywordRequest(keyword))));
     }
 
     @GetMapping(value = "/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})

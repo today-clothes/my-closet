@@ -6,5 +6,7 @@ import com.oclothes.domain.clothes.dto.ClothesDto;
 import java.util.List;
 
 public interface ClothesSupportRepository {
-    List<Clothes> search(ClothesDto.SearchRequest request);
+    List<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request);
+
+    List<Clothes> searchByTag(ClothesDto.SearchRequest request);
 }

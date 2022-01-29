@@ -10,5 +10,7 @@ import java.util.List;
 public interface ClothesRepository extends JpaRepository<Clothes, Long>, ClothesSupportRepository {
     List<Clothes> findAllByCloset(Closet closet);
 
+    List<Clothes> findByContentContaining(String keyword);
+
     long countByCloset(@NonNull Closet closet);
 }

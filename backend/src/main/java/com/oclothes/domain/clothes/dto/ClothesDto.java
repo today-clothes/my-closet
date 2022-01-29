@@ -50,4 +50,12 @@ public abstract class ClothesDto {
         private final Set<TagDto.Response> moodTags;
         private final String imgUrl;
     }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class SearchKeywordRequest{
+        private final String keyword;
+    }
+
+
 }

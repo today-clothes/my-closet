@@ -1,6 +1,7 @@
 package com.oclothes.domain.clothes.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,10 @@ public class Clothes extends BaseEntity {
     @JoinColumn(nullable = false)
     private Closet closet;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private User user;
+
     @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ClothesSeasonTag> seasonTags = new HashSet<>();
 
@@ -31,12 +36,17 @@ public class Clothes extends BaseEntity {
     @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ClothesMoodTag> moodTags = new HashSet<>();
 
+    private String styleTitle;
+
+    private String content;
+
     private String imgUrl;
 
     @Builder
-    public Clothes(Closet closet, String imgUrl) {
+    public Clothes(Closet closet, String imgUrl, User user) {
         this.closet = closet;
         this.imgUrl = imgUrl;
+        this.user = user;
     }
 
     public void setCloset(Closet closet) {
