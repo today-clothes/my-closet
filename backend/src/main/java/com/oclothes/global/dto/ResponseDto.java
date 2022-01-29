@@ -1,6 +1,7 @@
 package com.oclothes.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.oclothes.domain.clothes.domain.Clothes;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,4 +22,5 @@ public class ResponseDto<T> {
     public static <T> ResponseDto<T> create(String message, T dto) {
         return new ResponseDto<>(message, dto);
     }
+
 }
