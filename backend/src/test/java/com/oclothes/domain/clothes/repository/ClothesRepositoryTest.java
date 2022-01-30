@@ -83,8 +83,20 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
                 .imgUrl("bb")
                 .closet(result).build();
 
+        Clothes clothes3 = Clothes.builder()
+                .user(user)
+                .imgUrl("cc")
+                .closet(result).build();
+
+        Clothes clothes4 = Clothes.builder()
+                .user(user)
+                .imgUrl("dd")
+                .closet(result).build();
+
         Clothes c1 = clothesRepository.save(clothes1);
         Clothes c2 = clothesRepository.save(clothes2);
+        Clothes c3 = clothesRepository.save(clothes3);
+        Clothes c4 = clothesRepository.save(clothes4);
 
         //4. 태그-옷 연결
         //clothes1 - 가을 + 등산
@@ -96,6 +108,14 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season2));
         clothesMoodTagRepository.save(new ClothesMoodTag(c2, mood));
 
+        //clothes - 봄 + 등산
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(c3, season2));
+        clothesEventTagRepository.save(new ClothesEventTag(c3, event));
+
+        //clothes - 무드 + 등산
+        clothesMoodTagRepository.save(new ClothesMoodTag(c4, mood));
+        clothesEventTagRepository.save(new ClothesEventTag(c4, event));
+
         //4.검색 객체 생성
         List<Long> searchSeasonList = new ArrayList<>();
         searchSeasonList.add(season.getId());
@@ -103,10 +123,19 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         List<Long> searchMoodList = new ArrayList<>();
         searchMoodList.add(mood.getId());
 
-        ClothesDto.SearchRequest searchRequest = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, searchMoodList);
-        List<Clothes> clothes = clothesRepository.searchByTag(searchRequest);
+        List<Long> searchEventList = new ArrayList<>();
+        searchEventList.add(event.getId());
 
-        Assertions.assertThat(clothes.size()).isEqualTo(2);
+        ClothesDto.SearchRequest req1 = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, null);
+        ClothesDto.SearchRequest req2 = new ClothesDto.SearchRequest(result.getId(), null, null, searchMoodList);
+        ClothesDto.SearchRequest req3 = new ClothesDto.SearchRequest(result.getId(), null, searchEventList, searchMoodList);
+        List<Clothes> result1 = clothesRepository.searchByTag(req1);
+        List<Clothes> result2 = clothesRepository.searchByTag(req2);
+        List<Clothes> result3 = clothesRepository.searchByTag(req3);
+
+        Assertions.assertThat(result1.size()).isEqualTo(2);
+        Assertions.assertThat(result2.size()).isEqualTo(1);
+        Assertions.assertThat(result3.size()).isEqualTo(4);
     }
 
 
