@@ -25,7 +25,6 @@ import static com.oclothes.domain.clothes.domain.QClothes.clothes;
 @Repository
 public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
-    private final BooleanBuilder builder = new BooleanBuilder();
 
     @Override
     public List<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request){
@@ -61,6 +60,7 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     }
 
     private BooleanBuilder tagsEq(List<Long> sids, List<Long> eids, List<Long> mids) {
+        BooleanBuilder builder = new BooleanBuilder();
         Optional.ofNullable(sids).orElseGet(Collections::emptyList).stream()
                 .forEach(id -> builder.or(isSeasonTag(id)));
 
