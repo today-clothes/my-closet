@@ -13,8 +13,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableSwagger2
@@ -26,17 +24,6 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket apiV1() {
-        ParameterBuilder parameterBuilder = new ParameterBuilder();
-        Parameter parameter = parameterBuilder.name("X-ACCESS-TOKEN")
-                .description("X-ACCESS-TOKEN")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .build();
-
-        List<Parameter> parameterList = new ArrayList<>();
-        parameterList.add(parameter);
-
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("groupName1")
                 .select()

@@ -63,8 +63,8 @@ dependencies {
     testImplementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
 
     // swagger
-    compileOnly 'io.springfox:springfox-swagger2:2.9.2'
-    compileOnly 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
 test {

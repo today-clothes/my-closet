@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/closet/**").hasAnyAuthority(User.Role.ROLE_USER.name(), User.Role.ROLE_ADMIN.name())
                 .antMatchers("/clothes/**").hasAnyAuthority(User.Role.ROLE_USER.name(), User.Role.ROLE_ADMIN.name())
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/swagger-ui.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**" ).permitAll()
+                .antMatchers("/swagger*/**", "/configuration/**", "/webjars/**", "/v2/api-docs/**" ).permitAll()
                 .anyRequest().authenticated();
     }
 
