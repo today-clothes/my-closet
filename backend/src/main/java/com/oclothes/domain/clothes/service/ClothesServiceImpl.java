@@ -86,8 +86,8 @@ public class ClothesServiceImpl implements ClothesService {
 
     private ClothesDto.SearchResponse GetSearchDtoResponse(Clothes c){
         return new ClothesDto.SearchResponse(
-                c.getCloset().getId(), c.getId(),   //closet 프록시 초기화
-                c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()), //SeasonTag 프록시 초기화
+                c.getCloset().getId(), c.getId(),
+                c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getImgUrl());

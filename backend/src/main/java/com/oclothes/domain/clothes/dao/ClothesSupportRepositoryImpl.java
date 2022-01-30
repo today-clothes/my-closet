@@ -25,7 +25,7 @@ import static com.oclothes.domain.clothes.domain.QClothes.clothes;
 @Repository
 public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
-    private final BooleanBuilder builder;
+    private final BooleanBuilder builder = new BooleanBuilder();
 
     @Override
     public List<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request){

@@ -61,6 +61,10 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mockito:mockito-inline'
     testImplementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
+
+    // swagger
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
 test {
