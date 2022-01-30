@@ -29,21 +29,20 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         />
-        
-    
+m
+
     <TextView
         android:id="@+id/single_closet_cloth_name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/single_closet_cloth_image_iv"
-        android:text="옷 코디"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/single_closet_cloth_closet_text_body_tv"
-        android:textSize="17dp"
-        android:fontFamily="@font/roboto_bold"
-        android:textColor="@color/black"
+        android:layout_width="51dp"
+        android:layout_height="24dp"
         android:layout_marginTop="5dp"
-        />
+        android:fontFamily="@font/roboto_bold"
+        android:text="옷 코디"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@id/single_closet_cloth_closet_text_body_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/single_closet_cloth_image_iv" />
     
     <TextView
         android:id="@+id/single_closet_cloth_closet_text_body_tv"
@@ -52,10 +51,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/single_closet_cloth_name_tv"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="옷 코디임 옷장이름임"
+        android:text="옷 코디임 설명블라블라"
         android:fontFamily="@font/roboto_regular"
         android:textColor="@color/black"
-        android:textSize="15dp"
+        android:textSize="13dp"
         />
         
         

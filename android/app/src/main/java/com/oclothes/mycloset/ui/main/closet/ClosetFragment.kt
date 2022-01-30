@@ -43,7 +43,7 @@ class ClosetFragment : BaseFragment<FragmentClosetBinding>(FragmentClosetBinding
         }
         initUser()
         initClosetList()
-        binding.closetAllClosetListRv.layoutManager =LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.closetAllClosetListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val closetRVAdapter = ClosetListRVAdapter(closetList)
 
         closetRVAdapter.setMyItemClickListener(object : ClosetListRVAdapter.MyItemClickListener{

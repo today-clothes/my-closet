@@ -6,18 +6,18 @@
         android:id="@+id/homeFragment"
         app:showAsAction="always"
         android:enabled="true"
-        android:title="옷장"
-        android:icon="@drawable/ic_bottom_home_no_select"
+        android:title=""
+        android:icon="@drawable/closet_selected"
         tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/lookFragment"
         app:showAsAction="always"
-        android:icon="@drawable/ic_bottom_search_no_select"
-        android:title="검색" />
+        android:icon="@drawable/search_unselect"
+        android:title=""/>
     <item
         android:id="@+id/searchFragment"
         app:showAsAction="always"
-        android:icon="@drawable/ic_bottom_my_no_select"
-        android:title="마이" />
+        android:icon="@drawable/my_page_unselect"
+        android:title="" />
 
 </menu>
