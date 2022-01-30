@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="5dp"
+    android:paddingStart="5dp"
+    android:paddingEnd="5dp"
+    android:paddingBottom="5dp">
+    
+    <ImageView
+        android:id="@+id/single_closet_cloth_image_iv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/single_closet_cloth_name_tv"
+        android:src="@drawable/temp_selfee"
+        android:scaleType="centerCrop"
+        />
+    
+    <ImageView
+        android:id="@+id/single_closet_cloth_like_btn_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/heart_unselected"
+        app:layout_constraintEnd_toEndOf="@id/single_closet_cloth_image_iv"
+        app:layout_constraintBottom_toBottomOf="@id/single_closet_cloth_image_iv"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        />
+m
+
+    <TextView
+        android:id="@+id/single_closet_cloth_name_tv"
+        android:layout_width="51dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="옷 코디"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@id/single_closet_cloth_closet_text_body_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/single_closet_cloth_image_iv" />
+    
+    <TextView
+        android:id="@+id/single_closet_cloth_closet_text_body_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/single_closet_cloth_name_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="옷 코디임 설명블라블라"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/black"
+        android:textSize="13dp"
+        />
+        
+        
+        
+        
+        
+        
+
+</androidx.constraintlayout.widget.ConstraintLayout>
