@@ -4,6 +4,7 @@ import com.oclothes.BaseTest;
 import com.oclothes.domain.user.dao.UserRepository;
 import com.oclothes.domain.user.domain.EmailAuthenticationCode;
 import com.oclothes.domain.user.domain.User;
+import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.dto.UserMapper;
 import com.oclothes.domain.user.exception.*;
 import com.oclothes.domain.user.util.EmailAuthenticationCodeGenerator;
@@ -124,4 +125,28 @@ class UserServiceImplTest extends BaseTest {
         assertEquals(User.Status.NORMAL, user.getStatus());
     }
 
+    @DisplayName("회원 프로필 변경에 성공한다.")
+    @Test
+    void updateProfileTest() {
+        final Long id = 1L;
+        final Character gender = 'M';
+        final Integer age = 25;
+        final Integer height = 200;
+        final Integer weight = 100;
+        final User user = User.builder()
+                .gender('W')
+                .age(0)
+                .height(0)
+                .weight(0)
+                .build();
+        final UserDto.ProfileUpdateRequest request = new UserDto.ProfileUpdateRequest(id, gender, age, height, weight);
+
+        when(this.userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        final UserDto.DefaultResponse response = this.userService.updateProfile(id, request);
+        assertEquals(gender, response.getGender());
+        assertEquals(age, response.getAge());
+        assertEquals(height, response.getHeight());
+        assertEquals(weight, response.getWeight());
+    }
 }

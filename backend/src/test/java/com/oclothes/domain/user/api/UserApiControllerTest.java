@@ -1,8 +1,10 @@
 package com.oclothes.domain.user.api;
 
 import com.oclothes.BaseWebMvcTest;
+import com.oclothes.domain.user.domain.User;
 import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.service.UserService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,12 +12,13 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
 import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -73,5 +76,26 @@ class UserApiControllerTest extends BaseWebMvcTest {
                 .andExpect(jsonPath("$.message").value(containsString("성공")))
                 .andExpect(jsonPath("$.data.accessToken").value(loginResponse.getAccessToken()))
                 .andDo(print());
+    }
+
+    @DisplayName("회원 프로필 변경에 성공한다.")
+    @WithMockUser
+    @Test
+    void updateProfileTest() throws Exception{
+        final Long id = 1L;
+        final Character gender = 'M';
+        final Integer age = 25;
+        final Integer height = 200;
+        final Integer weight = 100;
+        final UserDto.ProfileUpdateRequest request = new UserDto.ProfileUpdateRequest(id, gender, age, height, weight);
+        final UserDto.DefaultResponse response = new UserDto.DefaultResponse(id, gender, age, height, weight);
+        when(this.userService.updateProfile(any(), any())).thenReturn(response);
+        mockMvc.perform(patch("/users/{id}/profile", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(Matchers.containsString("완료")))
+                .andDo(print());
+        verify(this.userService, atMostOnce()).updateProfile(id, request);
     }
 }

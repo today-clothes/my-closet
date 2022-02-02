@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public abstract class UserDto {
     @Getter
@@ -44,5 +45,30 @@ public abstract class UserDto {
     @RequiredArgsConstructor
     public static class LoginResponse {
         private final String accessToken;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class ProfileUpdateRequest{
+        @NotNull(message = "회원 id를 입력해주세요.")
+        private final Long id;
+        @NotNull(message = "성별을 선택해주세요.")
+        private final Character gender;
+        @NotNull(message = "나이를 입력해주세요.")
+        private final Integer age;
+        @NotNull(message = "키를 입력해주세요.")
+        private final Integer height;
+        @NotNull(message = "몸무게를 입력해주세요.")
+        private final Integer weight;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class DefaultResponse {
+        private final Long id;
+        private final Character gender;
+        private final Integer age;
+        private final Integer height;
+        private final Integer weight;
     }
 }

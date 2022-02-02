@@ -37,6 +37,10 @@ public class User extends BaseEntity {
 
     private String nickname;
 
+    private Character gender;
+
+    private Integer age;
+
     private Integer height;
 
     private Integer weight;
@@ -55,10 +59,12 @@ public class User extends BaseEntity {
     private EmailAuthenticationCode emailAuthenticationCode;
 
     @Builder
-    public User(Email email, String password, String nickname, Integer height, Integer weight, Status status, Role role) {
+    public User(Email email, String password, String nickname, Character gender, Integer age, Integer height, Integer weight, Status status, Role role) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.gender = gender;
+        this.age = age;
         this.height = height;
         this.weight = weight;
         this.status = status;
@@ -100,6 +106,4 @@ public class User extends BaseEntity {
         this.addCloset(new Closet("나의 첫 옷장", false, this));
         return this;
     }
-
 }
-
