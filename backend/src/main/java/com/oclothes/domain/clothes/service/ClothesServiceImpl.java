@@ -6,20 +6,22 @@ import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.domain.ClothesEventTag;
 import com.oclothes.domain.clothes.domain.ClothesMoodTag;
 import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
-import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
 import com.oclothes.domain.tag.dto.TagDto;
+import com.oclothes.global.dto.SliceDto;
 import com.oclothes.infra.file.FileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.oclothes.domain.clothes.dto.ClothesDto.*;
 import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadRequest;
 import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadResponse;
 
@@ -61,31 +63,22 @@ public class ClothesServiceImpl implements ClothesService {
 
 
     @Override
-    public List<ClothesDto.SearchResponse> searchByTag(ClothesDto.SearchRequest request) {
-        return this.clothesRepository.searchByTag(request).stream()
-                .map(this::GetSearchDtoResponse)
-                .collect(Collectors.toList());
+    public SliceDto<SearchResponse> searchByTag(SearchRequest request, Pageable pageable) {
+        return SliceDto.create(clothesRepository.searchByTag(request,pageable).map(this::GetSearchDtoResponse));
     }
 
     @Override
-    public List<ClothesDto.SearchResponse> searchAllClosetByTag(ClothesDto.SearchRequest request) {
-        return this.clothesRepository.searchAllClosetByTag(request).stream()
-                .map(this::GetSearchDtoResponse)
-                .collect(Collectors.toList());
+    public SliceDto<SearchResponse> searchAllClosetByTag(SearchRequest request, Pageable pageable) {
+        return SliceDto.create(clothesRepository.searchAllClosetByTag(request,pageable).map(this::GetSearchDtoResponse));
     }
-
 
     @Override
-    public List<ClothesDto.SearchResponse> searchByKeyword(ClothesDto.SearchKeywordRequest request) {
-        return clothesRepository.findByContentContaining(request.getKeyword())
-                .stream()
-                .map(this::GetSearchDtoResponse)
-                .collect(Collectors.toList());
+    public SliceDto<SearchResponse> searchByKeyword(SearchKeywordRequest request, Pageable pageable) {
+        return SliceDto.create(clothesRepository.findByContentContaining(request.getKeyword(), pageable).map(this::GetSearchDtoResponse));
     }
 
-
-    private ClothesDto.SearchResponse GetSearchDtoResponse(Clothes c){
-        return new ClothesDto.SearchResponse(
+    private SearchResponse GetSearchDtoResponse(Clothes c){
+        return new SearchResponse(
                 c.getCloset().getId(), c.getId(),
                 c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),

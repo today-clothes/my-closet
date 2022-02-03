@@ -4,15 +4,16 @@ import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.dto.ClothesResponseMessage;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.ResponseDto;
-import io.swagger.annotations.Api;
+import com.oclothes.global.dto.SliceDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadRequest;
 import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadResponse;
@@ -30,16 +31,24 @@ public class ClothesApiController {
         return ResponseEntity.status(CREATED).body(ResponseDto.create(ClothesResponseMessage.UPLOAD_SUCCESS.getMessage(), this.clothesService.save(request)));
     }
 
-    @ApiOperation(value = "옷 태그 필터링", notes = "옷 태그 필터링 API")
+    @ApiOperation(value = "옷 전체 태그 필터링", notes = "옷 전체 태그 필터링 API")
     @GetMapping("/search")
-    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> searchByTag(@Valid ClothesDto.SearchRequest request) {
-        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.UPLOAD_SUCCESS.getMessage(), this.clothesService.searchByTag(request)));
+    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchAllByTag(@Valid @RequestBody ClothesDto.SearchRequest request, @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.TAG_FILTER_SUCCESS.getMessage(), this.clothesService.searchAllClosetByTag(request, pageable)));
+    }
+
+    @ApiOperation(value = "옷 개별 태그 필터링", notes = "옷 개별 태그 필터링 API")
+    @GetMapping("/search/{closetId}")
+    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchByTag(@Valid @RequestBody ClothesDto.SearchRequest request,
+                                                                                        @PageableDefault Pageable pageable, @PathVariable("closetId") String id) {
+        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.TAG_FILTER_SUCCESS.getMessage(), this.clothesService.searchByTag(request, pageable)));
     }
 
     @ApiOperation(value = "옷 키워드 검색", notes = "옷 키워드로 검색 API")
     @GetMapping("/search/all")
-    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> searchByKeyword(@RequestParam String keyword) {
-        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.KEYWORD_SEARCH_SUCCESS.getMessage(), clothesService.searchByKeyword(new ClothesDto.SearchKeywordRequest(keyword))));
+    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchByKeyword(@RequestParam String keyword, @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.KEYWORD_SEARCH_SUCCESS.getMessage(),
+                clothesService.searchByKeyword(new ClothesDto.SearchKeywordRequest(keyword), pageable)));
     }
 
     @ApiOperation(value = "옷 이미지", notes = "옷 이미지 반환 API")

@@ -22,6 +22,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.mock.web.MockMultipartFile;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -129,65 +131,16 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         ClothesDto.SearchRequest req1 = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, null);
         ClothesDto.SearchRequest req2 = new ClothesDto.SearchRequest(result.getId(), null, null, searchMoodList);
         ClothesDto.SearchRequest req3 = new ClothesDto.SearchRequest(result.getId(), null, searchEventList, searchMoodList);
-        List<Clothes> result1 = clothesRepository.searchByTag(req1);
-        List<Clothes> result2 = clothesRepository.searchByTag(req2);
-        List<Clothes> result3 = clothesRepository.searchByTag(req3);
 
-        Assertions.assertThat(result1.size()).isEqualTo(2);
-        Assertions.assertThat(result2.size()).isEqualTo(1);
-        Assertions.assertThat(result3.size()).isEqualTo(4);
+        PageRequest pageRequest = PageRequest.of(0,5);
+        Slice<Clothes> result1 = clothesRepository.searchByTag(req1, pageRequest);
+        Slice<Clothes> result2 = clothesRepository.searchByTag(req2, pageRequest);
+        Slice<Clothes> result3 = clothesRepository.searchByTag(req3, pageRequest);
+
+        Assertions.assertThat(result1.getNumberOfElements()).isEqualTo(2);
+        Assertions.assertThat(result2.getNumberOfElements()).isEqualTo(1);
+        Assertions.assertThat(result3.getNumberOfElements()).isEqualTo(4);
     }
-
-
-    @Test
-    @DisplayName("전체 옷장 태그 필터링")
-    public void searchAllByTag(){
-        Closet closet = new Closet("c1", true, user);
-        Closet result = closetRepository.save(closet);
-
-        MoodTag mTag = new MoodTag("무드");
-        EventTag eTag = new EventTag("등산");
-        SeasonTag sTag = new SeasonTag("가을");
-        SeasonTag sTag2= new SeasonTag("봄");
-
-        MoodTag mood = moodTagRepository.save(mTag);
-        SeasonTag season = seasonTagRepository.save(sTag);
-        SeasonTag season2 = seasonTagRepository.save(sTag2);
-        EventTag event = eventTagRepository.save(eTag);
-
-        Clothes clothes1 = Clothes.builder()
-                .user(user)
-                .imgUrl("aa")
-                .closet(result).build();
-
-        Clothes clothes2 = Clothes.builder()
-                .user(user)
-                .imgUrl("bb")
-                .closet(result).build();
-
-        Clothes c1 = clothesRepository.save(clothes1);
-        Clothes c2 = clothesRepository.save(clothes2);
-
-        clothesSeasonTagRepository.save(new ClothesSeasonTag(c1, season));
-        clothesEventTagRepository.save(new ClothesEventTag(c1, event));
-
-        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season));
-        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season2));
-        clothesMoodTagRepository.save(new ClothesMoodTag(c2, mood));
-
-
-        List<Long> searchSeasonList = new ArrayList<>();
-        searchSeasonList.add(season.getId());
-
-        List<Long> searchMoodList = new ArrayList<>();
-        searchMoodList.add(mood.getId());
-
-        ClothesDto.SearchRequest searchRequest = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, searchMoodList);
-        List<Clothes> clothes = clothesRepository.searchAllClosetByTag(searchRequest);
-
-        Assertions.assertThat(clothes.size()).isEqualTo(2);
-    }
-
 
     @Test
     @DisplayName("전체 키워드로 옷 검색")
@@ -211,9 +164,8 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         Clothes c1 = clothesRepository.save(clothes1);
         Clothes c2 = clothesRepository.save(clothes2);
 
-        List<Clothes> clothes = clothesRepository.findByContentContaining("예시");
-        Assertions.assertThat(clothes.size()).isEqualTo(1);
+        PageRequest pageRequest = PageRequest.of(0,2);
+        Slice<Clothes> clothes = clothesRepository.findByContentContaining("예시", pageRequest);
+        Assertions.assertThat(clothes.getNumberOfElements()).isEqualTo(1);
     }
-
-
 }

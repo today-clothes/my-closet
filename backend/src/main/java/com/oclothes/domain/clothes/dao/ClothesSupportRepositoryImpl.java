@@ -1,7 +1,5 @@
 package com.oclothes.domain.clothes.dao;
 
-
-import com.oclothes.domain.clothes.domain.*;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.domain.clothes.domain.Clothes;
@@ -9,6 +7,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 import java.util.Collections;
 import java.util.List;
@@ -27,25 +28,43 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request){
-        return jpaQueryFactory.selectFrom(clothes).distinct()
+    public Slice<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request, Pageable pageable){
+        List<Clothes> content = jpaQueryFactory.selectFrom(clothes).distinct()
                 .leftJoin(clothes.seasonTags, clothesSeasonTag)
                 .leftJoin(clothes.eventTags, clothesEventTag)
                 .leftJoin(clothes.moodTags, clothesMoodTag)
                 .where(userEq(SecurityUtils.getLoggedInUser().getId()),
                         tagsEq(request.getSeasonTagIds(), request.getEventTagIds(), request.getMoodTagIds()))
+                .orderBy(clothes.updatedAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
+
+        return new SliceImpl<>(content, pageable, hasNextPage(content, pageable));
     }
 
     @Override
-    public List<Clothes> searchByTag(ClothesDto.SearchRequest request) {
-        return jpaQueryFactory.selectFrom(clothes).distinct()
+    public Slice<Clothes> searchByTag(ClothesDto.SearchRequest request, Pageable pageable) {
+        List<Clothes> content = jpaQueryFactory.selectFrom(clothes).distinct()
                 .leftJoin(clothes.seasonTags, clothesSeasonTag)
                 .leftJoin(clothes.eventTags, clothesEventTag)
                 .leftJoin(clothes.moodTags, clothesMoodTag)
                 .where(closetEq(request.getClosetId()),
                         tagsEq(request.getSeasonTagIds(), request.getEventTagIds(), request.getMoodTagIds()))
+                .orderBy(clothes.updatedAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        return new SliceImpl<>(content, pageable, hasNextPage(content, pageable));
+    }
+
+    private boolean hasNextPage(List<Clothes> content, Pageable pageable) {
+        if (content.size() > pageable.getPageSize()) {
+            content.remove(pageable.getPageSize());
+            return true;
+        }
+        return false;
     }
 
     private BooleanExpression closetEq(Long id){

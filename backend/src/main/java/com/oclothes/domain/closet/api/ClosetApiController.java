@@ -38,13 +38,13 @@ public class ClosetApiController {
     }
 
     @ApiOperation(value = "옷장 이름 업데이트", notes = "옷장 이름 변경 API")
-    @PutMapping("/{id}/name")
+    @PatchMapping("/{id}/name")
     public ResponseEntity<ResponseDto<DefaultResponse>> updateName(@PathVariable Long id, @Valid @RequestBody NameUpdateRequest response) {
         return ResponseEntity.ok(ResponseDto.create(CHANGE_NAME_SUCCESS.getMessage(), this.closetService.updateName(id, response)));
     }
 
     @ApiOperation(value="옷장 공개 여부", notes = "옷장 공개/비공개 요청 API")
-    @PutMapping("/{id}/locked")
+    @PatchMapping("/{id}/locked")
     public ResponseEntity<ResponseDto<DefaultResponse>> changeLockStatus(@PathVariable Long id) {
         return ResponseEntity.ok(ResponseDto.create(CHANGE_LOCKED_STATUS_SUCCESS.getMessage(), this.closetService.changeLockStatus(id)));
     }
@@ -55,5 +55,4 @@ public class ClosetApiController {
         this.closetService.delete(id);
         return ResponseEntity.ok(ResponseDto.create(DELETE_SUCCESS.getMessage()));
     }
-
 }
