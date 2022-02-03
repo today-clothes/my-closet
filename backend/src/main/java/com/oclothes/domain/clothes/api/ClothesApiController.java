@@ -33,20 +33,26 @@ public class ClothesApiController {
 
     @ApiOperation(value = "옷 전체 태그 필터링", notes = "옷 전체 태그 필터링 API")
     @GetMapping("/search")
-    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchAllByTag(@Valid @RequestBody ClothesDto.SearchRequest request, @PageableDefault Pageable pageable) {
+    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchAllByTag(
+            @Valid @RequestBody ClothesDto.SearchRequest request,
+            @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.TAG_FILTER_SUCCESS.getMessage(), this.clothesService.searchAllClosetByTag(request, pageable)));
     }
 
     @ApiOperation(value = "옷 개별 태그 필터링", notes = "옷 개별 태그 필터링 API")
     @GetMapping("/search/{closetId}")
-    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchByTag(@Valid @RequestBody ClothesDto.SearchRequest request,
-                                                                                        @PageableDefault Pageable pageable, @PathVariable("closetId") String id) {
+    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchByTag(
+            @Valid @RequestBody ClothesDto.SearchRequest request,
+            @PageableDefault Pageable pageable,
+            @PathVariable("closetId") String id) {
         return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.TAG_FILTER_SUCCESS.getMessage(), this.clothesService.searchByTag(request, pageable)));
     }
 
     @ApiOperation(value = "옷 키워드 검색", notes = "옷 키워드로 검색 API")
     @GetMapping("/search/all")
-    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchByKeyword(@RequestParam String keyword, @PageableDefault Pageable pageable) {
+    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchByKeyword(
+            @RequestParam String keyword,
+            @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.KEYWORD_SEARCH_SUCCESS.getMessage(),
                 clothesService.searchByKeyword(new ClothesDto.SearchKeywordRequest(keyword), pageable)));
     }

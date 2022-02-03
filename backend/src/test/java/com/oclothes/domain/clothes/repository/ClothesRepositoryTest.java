@@ -3,12 +3,14 @@ package com.oclothes.domain.clothes.repository;
 import com.oclothes.BaseDataJpaTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
-import com.oclothes.domain.clothes.dao.*;
+import com.oclothes.domain.clothes.dao.ClothesEventTagRepository;
+import com.oclothes.domain.clothes.dao.ClothesMoodTagRepository;
+import com.oclothes.domain.clothes.dao.ClothesRepository;
+import com.oclothes.domain.clothes.dao.ClothesSeasonTagRepository;
 import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.domain.ClothesEventTag;
 import com.oclothes.domain.clothes.domain.ClothesMoodTag;
 import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
-import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
@@ -17,32 +19,40 @@ import com.oclothes.domain.tag.domain.MoodTag;
 import com.oclothes.domain.tag.domain.SeasonTag;
 import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-import org.springframework.mock.web.MockMultipartFile;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.oclothes.domain.clothes.dto.ClothesDto.SearchRequest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ClothesRepositoryTest extends BaseDataJpaTest {
-    @Autowired private ClosetRepository closetRepository;
-    @Autowired private ClothesRepository clothesRepository;
-    @Autowired private EventTagRepository eventTagRepository;
-    @Autowired private MoodTagRepository moodTagRepository;
-    @Autowired private SeasonTagRepository seasonTagRepository;
-    @Autowired private ClothesSeasonTagRepository clothesSeasonTagRepository;
-    @Autowired private ClothesMoodTagRepository clothesMoodTagRepository;
-    @Autowired private ClothesEventTagRepository clothesEventTagRepository;
-    @PersistenceContext EntityManager em;
+    @Autowired
+    private ClosetRepository closetRepository;
+    @Autowired
+    private ClothesRepository clothesRepository;
+    @Autowired
+    private EventTagRepository eventTagRepository;
+    @Autowired
+    private MoodTagRepository moodTagRepository;
+    @Autowired
+    private SeasonTagRepository seasonTagRepository;
+    @Autowired
+    private ClothesSeasonTagRepository clothesSeasonTagRepository;
+    @Autowired
+    private ClothesMoodTagRepository clothesMoodTagRepository;
+    @Autowired
+    private ClothesEventTagRepository clothesEventTagRepository;
+    @PersistenceContext
+    EntityManager em;
 
     User user;
 
@@ -57,115 +67,92 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
     @DisplayName("개별 옷장 태그 필터링")
     @Test
     public void searchByTag() throws IOException {
-        MockMultipartFile file = new MockMultipartFile("file", new FileInputStream("./README.md"));
-
         //1.옷장 생성
-        Closet closet = new Closet("c1", true, user);
-        Closet result = closetRepository.save(closet);
+        Closet closet = closetRepository.save(new Closet("c1", true, user));
 
         //2.태그 생성
-        MoodTag mTag = new MoodTag("무드");
-        EventTag eTag = new EventTag("등산");
-        SeasonTag sTag = new SeasonTag("가을");
-        SeasonTag sTag2= new SeasonTag("봄");
-
-        MoodTag mood = moodTagRepository.save(mTag);
-        SeasonTag season = seasonTagRepository.save(sTag);
-        SeasonTag season2 = seasonTagRepository.save(sTag2);
-        EventTag event = eventTagRepository.save(eTag);
+        MoodTag moodTag1 = moodTagRepository.save(new MoodTag("무드1"));
+        EventTag eventTag1 = eventTagRepository.save(new EventTag("이벤트1"));
+        SeasonTag seasonTag1 = seasonTagRepository.save(new SeasonTag("계절1"));
+        SeasonTag seasonTag2 = seasonTagRepository.save(new SeasonTag("계절2"));
 
         //3. 옷 생성
-        Clothes clothes1 = Clothes.builder()
-                .user(user)
-                .imgUrl("aa")
-                .closet(result).build();
-
-        Clothes clothes2 = Clothes.builder()
-                .user(user)
-                .imgUrl("bb")
-                .closet(result).build();
-
-        Clothes clothes3 = Clothes.builder()
-                .user(user)
-                .imgUrl("cc")
-                .closet(result).build();
-
-        Clothes clothes4 = Clothes.builder()
-                .user(user)
-                .imgUrl("dd")
-                .closet(result).build();
-
-        Clothes c1 = clothesRepository.save(clothes1);
-        Clothes c2 = clothesRepository.save(clothes2);
-        Clothes c3 = clothesRepository.save(clothes3);
-        Clothes c4 = clothesRepository.save(clothes4);
+        Clothes clothes1 = clothesRepository.save(createClothes(closet, "a"));
+        Clothes clothes2 = clothesRepository.save(createClothes(closet, "b"));
+        Clothes clothes3 = clothesRepository.save(createClothes(closet, "c"));
+        Clothes clothes4 = clothesRepository.save(createClothes(closet, "d"));
 
         //4. 태그-옷 연결
-        //clothes1 - 가을 + 등산
-        clothesSeasonTagRepository.save(new ClothesSeasonTag(c1, season));
-        clothesEventTagRepository.save(new ClothesEventTag(c1, event));
+        //clothes1 - 계절1 + 이벤트1
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(clothes1, seasonTag1));
+        clothesEventTagRepository.save(new ClothesEventTag(clothes1, eventTag1));
 
-        //clothes2 - 가을 + 봄 + 무드
-        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season));
-        clothesSeasonTagRepository.save(new ClothesSeasonTag(c2, season2));
-        clothesMoodTagRepository.save(new ClothesMoodTag(c2, mood));
+        //clothes2 - 계절1 + 계절2 + 무드1
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(clothes2, seasonTag1));
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(clothes2, seasonTag2));
+        clothesMoodTagRepository.save(new ClothesMoodTag(clothes2, moodTag1));
 
-        //clothes - 봄 + 등산
-        clothesSeasonTagRepository.save(new ClothesSeasonTag(c3, season2));
-        clothesEventTagRepository.save(new ClothesEventTag(c3, event));
+        //clothes - 계절2 + 이벤트1
+        clothesSeasonTagRepository.save(new ClothesSeasonTag(clothes3, seasonTag2));
+        clothesEventTagRepository.save(new ClothesEventTag(clothes3, eventTag1));
 
-        //clothes - 무드 + 등산
-        clothesMoodTagRepository.save(new ClothesMoodTag(c4, mood));
-        clothesEventTagRepository.save(new ClothesEventTag(c4, event));
+        //clothes - 무드1 + 이벤트1
+        clothesMoodTagRepository.save(new ClothesMoodTag(clothes4, moodTag1));
+        clothesEventTagRepository.save(new ClothesEventTag(clothes4, eventTag1));
 
         //4.검색 객체 생성
-        List<Long> searchSeasonList = new ArrayList<>();
-        searchSeasonList.add(season.getId());
+        // 4.1) 조건. 옷장 전체
+        SearchRequest req1 = new SearchRequest(closet.getId(), null, null, null);
+        // 4.2) 조건. 옷장, 계절1
+        SearchRequest req2 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId()), null, null);
+        // 4.3) 조건. 옷장, 계절1 또는 계절2
+        SearchRequest req3 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId(), seasonTag2.getId()), null, null);
+        // 4.4) 조건. 옷장, 계절2
+        SearchRequest req4 = new SearchRequest(closet.getId(), List.of(seasonTag2.getId()), null, null);
+        // 4.5) 조건. 옷장, 계절1 그리고 무드1
+        SearchRequest req5 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId()), null, List.of(moodTag1.getId()));
+        // 4.6) 조건. 옷장, 계절1 그리고 무드1 그리고 이벤트1
+        SearchRequest req6 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId()), List.of(eventTag1.getId()), List.of(moodTag1.getId()));
+        // 4.7) 조건. 옷장, (계절1 or 계절2) and 이벤트1
+        SearchRequest req7 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId(), seasonTag2.getId()), List.of(eventTag1.getId()), null);
 
-        List<Long> searchMoodList = new ArrayList<>();
-        searchMoodList.add(mood.getId());
+        PageRequest pageRequest = PageRequest.of(0, 5);
 
-        List<Long> searchEventList = new ArrayList<>();
-        searchEventList.add(event.getId());
-
-        ClothesDto.SearchRequest req1 = new ClothesDto.SearchRequest(result.getId(), searchSeasonList, null, null);
-        ClothesDto.SearchRequest req2 = new ClothesDto.SearchRequest(result.getId(), null, null, searchMoodList);
-        ClothesDto.SearchRequest req3 = new ClothesDto.SearchRequest(result.getId(), null, searchEventList, searchMoodList);
-
-        PageRequest pageRequest = PageRequest.of(0,5);
         Slice<Clothes> result1 = clothesRepository.searchByTag(req1, pageRequest);
         Slice<Clothes> result2 = clothesRepository.searchByTag(req2, pageRequest);
         Slice<Clothes> result3 = clothesRepository.searchByTag(req3, pageRequest);
+        Slice<Clothes> result4 = clothesRepository.searchByTag(req4, pageRequest);
+        Slice<Clothes> result5 = clothesRepository.searchByTag(req5, pageRequest);
+        Slice<Clothes> result6 = clothesRepository.searchByTag(req6, pageRequest);
+        Slice<Clothes> result7 = clothesRepository.searchByTag(req7, pageRequest);
 
-        Assertions.assertThat(result1.getNumberOfElements()).isEqualTo(2);
-        Assertions.assertThat(result2.getNumberOfElements()).isEqualTo(1);
-        Assertions.assertThat(result3.getNumberOfElements()).isEqualTo(4);
+        assertEquals(4, result1.getNumberOfElements());
+        assertEquals(2, result2.getNumberOfElements());
+        assertEquals(3, result3.getNumberOfElements());
+        assertEquals(2, result4.getNumberOfElements());
+        assertEquals(1, result5.getNumberOfElements());
+        assertEquals(0, result6.getNumberOfElements());
+        assertEquals(2, result7.getNumberOfElements());
     }
 
     @Test
     @DisplayName("전체 키워드로 옷 검색")
-    public void searchByKeyword(){
+    public void searchByKeyword() {
         Closet closet = new Closet("c1", true, user);
         Closet result = closetRepository.save(closet);
-
-        Clothes clothes1 = Clothes.builder()
-                .user(user)
-                .imgUrl("aa")
-                .closet(result).build();
-
-        Clothes clothes2 = Clothes.builder()
-                .user(user)
-                .imgUrl("bb")
-                .closet(result).build();
-
+        Clothes clothes1 = createClothes(result, "aa");
+        Clothes clothes2 = createClothes(result, "bb");
         clothes1.setContent("ㅋ키키키예시");
         clothes2.setContent("기분좋은날옷");
-
         Clothes c1 = clothesRepository.save(clothes1);
         Clothes c2 = clothesRepository.save(clothes2);
+        PageRequest pageRequest = PageRequest.of(0, 2);
 
-        PageRequest pageRequest = PageRequest.of(0,2);
         Slice<Clothes> clothes = clothesRepository.findByContentContaining("예시", pageRequest);
-        Assertions.assertThat(clothes.getNumberOfElements()).isEqualTo(1);
+        assertEquals(1, clothes.getNumberOfElements());
+    }
+
+    private Clothes createClothes(Closet closet, String imgUrl) {
+        return Clothes.builder().user(user).imgUrl(imgUrl).closet(closet).build();
     }
 }
