@@ -1,8 +1,8 @@
 package com.oclothes.domain.clothes.dao;
 
+import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.global.config.security.util.SecurityUtils;
-import com.oclothes.domain.clothes.domain.Clothes;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,14 +11,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+
+import static com.oclothes.domain.clothes.domain.QClothes.clothes;
 import static com.oclothes.domain.clothes.domain.QClothesEventTag.clothesEventTag;
 import static com.oclothes.domain.clothes.domain.QClothesMoodTag.clothesMoodTag;
 import static com.oclothes.domain.clothes.domain.QClothesSeasonTag.clothesSeasonTag;
-import static com.oclothes.domain.clothes.domain.QClothes.clothes;
 
 
 
@@ -33,11 +36,13 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
                 .leftJoin(clothes.seasonTags, clothesSeasonTag)
                 .leftJoin(clothes.eventTags, clothesEventTag)
                 .leftJoin(clothes.moodTags, clothesMoodTag)
-                .where(userEq(SecurityUtils.getLoggedInUser().getId()),
-                        tagsEq(request.getSeasonTagIds(), request.getEventTagIds(), request.getMoodTagIds()))
+                .where(userIdEq(SecurityUtils.getLoggedInUser().getId()),
+                        tagsEq(request.getSeasonTagIds(), isSeasonTag),
+                        tagsEq(request.getEventTagIds(), isEventTag),
+                        tagsEq(request.getMoodTagIds(), isMoodTag))
                 .orderBy(clothes.updatedAt.desc())
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize())
                 .fetch();
 
         return new SliceImpl<>(content, pageable, hasNextPage(content, pageable));
@@ -49,8 +54,10 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
                 .leftJoin(clothes.seasonTags, clothesSeasonTag)
                 .leftJoin(clothes.eventTags, clothesEventTag)
                 .leftJoin(clothes.moodTags, clothesMoodTag)
-                .where(closetEq(request.getClosetId()),
-                        tagsEq(request.getSeasonTagIds(), request.getEventTagIds(), request.getMoodTagIds()))
+                .where(closetIdEq(request.getClosetId()),
+                        tagsEq(request.getSeasonTagIds(), isSeasonTag),
+                        tagsEq(request.getEventTagIds(), isEventTag),
+                        tagsEq(request.getMoodTagIds(), isMoodTag))
                 .orderBy(clothes.updatedAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -67,43 +74,35 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
         return false;
     }
 
-    private BooleanExpression closetEq(Long id){
+    private BooleanExpression closetIdEq(Long id){
         if (Objects.isNull(id)) return null;
         return clothes.closet.id.eq(id);
     }
 
 
-    private BooleanExpression userEq(Long id){
+    private BooleanExpression userIdEq(Long id){
         if (Objects.isNull(id)) return null;
         return clothes.user.id.eq(id);
     }
 
-    private BooleanBuilder tagsEq(List<Long> sids, List<Long> eids, List<Long> mids) {
+    private BooleanBuilder tagsEq(List<Long> ids, Function<Long, BooleanExpression> isTag) {
         BooleanBuilder builder = new BooleanBuilder();
-        Optional.ofNullable(sids).orElseGet(Collections::emptyList).stream()
-                .forEach(id -> builder.or(isSeasonTag(id)));
-
-        Optional.ofNullable(eids).orElseGet(Collections::emptyList).stream()
-                .forEach(id -> builder.or(isEventTag(id)));
-
-        Optional.ofNullable(mids).orElseGet(Collections::emptyList).stream()
-                .forEach(id -> builder.or(isMoodTag(id)));
+        Optional.ofNullable(ids).orElseGet(Collections::emptyList).forEach(id -> builder.or(isTag.apply(id)));
         return builder;
     }
 
-
-    private BooleanBuilder isSeasonTag(Long id){
+    private final Function<Long, BooleanExpression> isSeasonTag = id -> {
         if (Objects.isNull(id)) return null;
-        return new BooleanBuilder(clothesSeasonTag.tag.id.eq(id));
-    }
+        return clothesSeasonTag.tag.id.eq(id);
+    };
 
-    private BooleanBuilder isEventTag(Long id){
+    private final Function<Long, BooleanExpression> isEventTag = id -> {
         if (Objects.isNull(id)) return null;
-        return new BooleanBuilder(clothesEventTag.tag.id.eq(id));
-    }
+        return clothesEventTag.tag.id.eq(id);
+    };
 
-    private BooleanBuilder isMoodTag(Long id){
+    private final Function<Long, BooleanExpression> isMoodTag = id -> {
         if (Objects.isNull(id)) return null;
-        return new BooleanBuilder(clothesMoodTag.id.eq(id));
-    }
+        return clothesMoodTag.id.eq(id);
+    };
 }
