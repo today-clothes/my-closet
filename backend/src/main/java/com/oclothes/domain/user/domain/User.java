@@ -7,6 +7,7 @@ import com.oclothes.domain.user.exception.UserExceptionMessage;
 import com.oclothes.domain.user.exception.WrongEmailAuthenticationCodeException;
 import com.oclothes.global.entity.BaseEntity;
 import com.oclothes.global.error.exception.UserStatusException;
+import io.swagger.models.auth.In;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,12 +31,21 @@ public class User extends BaseEntity {
         ROLE_USER, ROLE_ADMIN
     }
 
+    public enum Gender {
+        MALE, FEMALE
+    }
+
     @Embedded
     private Email email;
 
     private String password;
 
     private String nickname;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private Integer age;
 
     private Integer height;
 
@@ -55,10 +65,12 @@ public class User extends BaseEntity {
     private EmailAuthenticationCode emailAuthenticationCode;
 
     @Builder
-    public User(Email email, String password, String nickname, Integer height, Integer weight, Status status, Role role) {
+    public User(Email email, String password, String nickname,Gender gender, Integer age, Integer height, Integer weight, Status status, Role role) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.gender = gender;
+        this.age = age;
         this.height = height;
         this.weight = weight;
         this.status = status;
@@ -101,5 +113,11 @@ public class User extends BaseEntity {
         return this;
     }
 
+    public User updateUserProfile(Gender gender, Integer age, Integer height, Integer weight){
+        this.gender = gender;
+        this.age = age;
+        this.height = height;
+        this.weight = weight;
+        return this;
+    }
 }
-

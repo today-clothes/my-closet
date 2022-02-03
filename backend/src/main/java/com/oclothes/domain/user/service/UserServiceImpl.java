@@ -67,4 +67,12 @@ public class UserServiceImpl implements UserService {
                 .authenticate(loginRequest.toAuthentication()));
     }
 
+    @Override
+    public UserDto.DefaultResponse updateProfile(Long id, UserDto.ProfileUpdateRequest request){
+        return userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request.getGender(), request.getAge(), request.getHeight(), request.getWeight()));
+    }
+
+    public User findById(Long id){
+        return this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
 }
