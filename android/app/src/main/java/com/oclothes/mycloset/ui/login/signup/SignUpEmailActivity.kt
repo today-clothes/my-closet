@@ -5,6 +5,8 @@ import android.view.View
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.User
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
+import com.oclothes.mycloset.data.entities.remote.auth.SignUpDto
+import com.oclothes.mycloset.data.entities.remote.auth.UserDto
 import com.oclothes.mycloset.databinding.ActivityEmailSignUpBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.main.MainActivity
@@ -49,15 +51,15 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
         } else if (binding.loginSignUpEditTextPasswordEt.text.toString() != binding.loginSignUpEditTextPasswordConfirmEt.text.toString()) {
             showToast("입력된 비밀번호가 같지 않습니다.")
         } else {
-            AuthService.signUp(this, getUser())
+            AuthService.signUp(this, getSignUpDto())
         }
     }
 
-    private fun getUser(): User {
+    private fun getSignUpDto(): SignUpDto {
         val email : String = binding.loginSignUpEditTextEmailEt.text.toString()
         val pw = binding.loginSignUpEditTextPasswordEt.text.toString()
         val nickname : String = binding.loginSignUpEditTextNickNameEt.text.toString()
-        return User(email, pw, nickname)
+        return SignUpDto(email, pw)
     }
 
     private fun checkLogic2() {
@@ -97,7 +99,7 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
 
     override fun onSignUpFailure(code: Int, message: String) {
         binding.loginSignUpLoadingPb.visibility = View.GONE
-        showToast("회원가입에 실패했습니다.")
+        showToast(code.toString() + "그리고" + message)
     }
 
 }

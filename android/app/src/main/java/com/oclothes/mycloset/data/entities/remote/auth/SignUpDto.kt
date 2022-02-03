@@ -1,9 +1,8 @@
-package com.oclothes.mycloset.data.entities
+package com.oclothes.mycloset.data.entities.remote.auth
 
 import com.google.gson.annotations.SerializedName
 
-data class User (
+data class SignUpDto(
     @SerializedName("email") val email: String,
     @SerializedName("password") val password: String,
-//    @SerializedName("nickname") val nickname: String = "이름없음",
 )

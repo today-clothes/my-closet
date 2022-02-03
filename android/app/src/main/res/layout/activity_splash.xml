@@ -5,17 +5,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/splash_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/splash_background"
+        android:src="@color/white"
         android:scaleType="fitXY"/>
     
     <ImageView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -31,6 +31,9 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
             binding.personalInfoNextBtnTv -> {
                 moveNextPage()
             }
+            binding.personalInfoCl -> {
+                hideKeyboard()
+            }
         }
     }
 

@@ -5,8 +5,10 @@ import android.os.Handler
 import android.os.Looper
 import com.oclothes.mycloset.ApplicationClass.Companion.X_ACCESS_TOKEN
 import com.oclothes.mycloset.ApplicationClass.Companion.mSharedPreferences
+import com.oclothes.mycloset.data.entities.remote.auth.AuthService
 import com.oclothes.mycloset.databinding.ActivitySplashBinding
 import com.oclothes.mycloset.ui.BaseActivity
+import com.oclothes.mycloset.ui.login.LoginActivity
 import com.oclothes.mycloset.ui.main.MainActivity
 
 class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) , SplashView {
@@ -14,17 +16,16 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
     override fun initAfterBinding() {
     Handler(Looper.getMainLooper()).postDelayed({
         autoLogin()
-    }, 1000)
+    }, 2000)
 }
 
     private fun autoLogin() {
-//        AuthService.autoLogin(this)
-        tempLogin()
-        startActivity(Intent(this, MainActivity::class.java))
+//        tempInit()
+        AuthService.autoLogin(this)
         finish()
     }
 
-    private fun tempLogin() {
+    private fun tempInit() {
         val editor = mSharedPreferences.edit()
         editor.putString(X_ACCESS_TOKEN, "1234")
         editor.putString("nickname", "허쟁")
@@ -40,6 +41,6 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
     }
 
     override fun onAutoLoginFailure(code: Int, message: String) {
-//        startActivityWithClear(LoginActivity::class.java)
+        startActivityWithClear(LoginActivity::class.java)
     }
 }
