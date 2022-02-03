@@ -10,12 +10,12 @@
         android:icon="@drawable/closet_selected"
         tools:ignore="AlwaysShowAction" />
     <item
-        android:id="@+id/lookFragment"
+        android:id="@+id/searchFragment"
         app:showAsAction="always"
         android:icon="@drawable/search_unselect"
         android:title=""/>
     <item
-        android:id="@+id/searchFragment"
+        android:id="@+id/myFragment"
         app:showAsAction="always"
         android:icon="@drawable/my_page_unselect"
         android:title="" />

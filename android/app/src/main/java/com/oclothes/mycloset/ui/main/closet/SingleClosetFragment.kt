@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.FragmentSingleClosetBinding
@@ -15,25 +16,53 @@ class SingleClosetFragment : BaseFragment<FragmentSingleClosetBinding>(FragmentS
 
     lateinit var styleList: ArrayList<Style>
     lateinit var tags : ArrayList<Tag>
-
+    private lateinit var tagListAdapter : SingleClosetTagListRvAdapter
+    private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
+    private lateinit var myLayoutManager: GridLayoutManager
 
     override fun initAfterBinding() {
         initStyleList()
         initTags()
-        val clothListAdapter = SingleClosetStyleListRVAdapter(styleList)
-        val myLayoutManager = GridLayoutManager(activity, 2)
+        clothListAdapter = SingleClosetStyleListRVAdapter(styleList)
+        clothListAdapter.setMyItemClickListener(object : SingleClosetStyleListRVAdapter.MyItemClickListener{
+            override fun onItemClick(style: Style) {
+                // 이건 상세보기 페이지로 넘어가야하는데 아직은 미구현
+            }
+
+            override fun onRemoveStyle(position: Int) {
+                //이것도 아직은 미구현. 롱클릭 이벤트 먼저 구현예정
+            }
+
+            override fun onItemLongClick(style: Style) {
+                //수정모드로 들어가면 될듯
+
+            }
+
+        })
+        myLayoutManager = GridLayoutManager(activity, 2)
         binding.singleClosetClothesListRv.layoutManager = myLayoutManager
         binding.singleClosetClothesListRv.adapter = clothListAdapter
 
 
-        val tagListAdapter = SingleClosetTagListRvAdapter(tags)
+        tagListAdapter = SingleClosetTagListRvAdapter(this, tags)
         binding.singleClosetFilterListRv.adapter = tagListAdapter
         binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        binding.singleClosetFilterCountTv.text = "0"
     }
 
     override fun onClick(v: View?) {
 
     }
+
+    fun updateList(selectedTag: HashMap<String, Tag>) {
+        clothListAdapter.updateByTag(selectedTag)
+    }
+
+    fun getBinding(): FragmentSingleClosetBinding {
+        return binding
+    }
+
     companion object {
 
         // TODO: Rename and change types and number of parameters
@@ -52,6 +81,11 @@ class SingleClosetFragment : BaseFragment<FragmentSingleClosetBinding>(FragmentS
         for(i in 1..15) {
             styleList.add(Style())
         }
+    }
+
+    fun setSingleCloset(closet : Closet){
+        binding.singleClosetTitleTv.text = closet.name
+        binding.singleClosetClothesCountTv.text = "내 옷장보기 " + styleList.size.toString()
     }
 
     private fun initTags(){
