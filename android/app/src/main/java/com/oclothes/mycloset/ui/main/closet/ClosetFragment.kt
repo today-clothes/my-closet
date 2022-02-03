@@ -1,47 +1,32 @@
 package com.oclothes.mycloset.ui.main.closet
 
-import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.oclothes.mycloset.ApplicationClass
-import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.databinding.FragmentClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
-import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.ClosetListRVAdapter
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class ClosetFragment (): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate) {
 
-
-class ClosetFragment : BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate) {
-
-    private var param1: String? = null
-    private var param2: String? = null
-
+    lateinit var f : Fragment
     lateinit var closetList : ArrayList<Closet>
     lateinit var nickName : String
-
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(f : Fragment) =
             ClosetFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+                this.f = f
             }
     }
 
     override fun initAfterBinding() {
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            //이곳에 번들에 넣을 것 생각하자. 또는 나중에 사용하자.
         }
-        initUser()
+        init()
         initClosetList()
         binding.closetAllClosetListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val closetRVAdapter = ClosetListRVAdapter(closetList)
@@ -56,28 +41,22 @@ class ClosetFragment : BaseFragment<FragmentClosetBinding>(FragmentClosetBinding
             }
         })
         binding.closetAllClosetListRv.adapter = closetRVAdapter
-
     }
 
-    private fun initUser() {
+    private fun init() {
         nickName = ApplicationClass.mSharedPreferences.getString("nickname", null).toString()
-        binding.closetInfoTv.text = "\'" + nickName + "\'님의 옷장"
+        binding.closetInfoTv.text = "\'$nickName\'님의 옷장"
     }
 
 
     private fun initClosetList(){
         closetList = ArrayList<Closet>()
         for(i in 1..7) {
-            closetList.add(Closet())
+            closetList.add(Closet("제주도옷"))
         }
     }
 
     fun startSingleClosetFragment(closet: Closet) {
-        (context as MainActivity).supportFragmentManager.beginTransaction()
-            .add(R.id.main_frm, SingleClosetFragment.newInstance())
-            .addToBackStack(null)
-            .hide(this)
-            .commit()
+        (f as MainFragment).openCloset(closet)
     }
-
 }

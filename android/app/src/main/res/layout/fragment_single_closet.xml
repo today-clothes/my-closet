@@ -64,16 +64,19 @@
         android:layout_marginEnd="13dp"
         />
     
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/single_closet_filter_list_rv"
+    <com.oclothes.mycloset.ui.main.closet.custom.NestedScrollableHost
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/single_closet_filter_image_iv"
         app:layout_constraintBottom_toBottomOf="@id/single_closet_filter_image_iv"
         app:layout_constraintStart_toEndOf="@id/single_closet_filter_image_iv"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="10dp"/>
-        
+        app:layout_constraintEnd_toEndOf="parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/single_closet_filter_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"/>
+    </com.oclothes.mycloset.ui.main.closet.custom.NestedScrollableHost>
     
     <TextView
         android:id="@+id/single_closet_clothes_count_tv"

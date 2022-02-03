@@ -5,13 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.oclothes.mycloset.data.entities.Style
+import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
+import java.util.*
 
 class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
-
+    private lateinit var tempList : ArrayList<Style>
+    private var editMode = false
     interface MyItemClickListener{
         fun onItemClick(style: Style)
         fun onRemoveStyle(position: Int)
+        fun onItemLongClick(style : Style)
     }
 
     private lateinit var mItemClickListener: SingleClosetStyleListRVAdapter.MyItemClickListener
@@ -26,18 +30,39 @@ class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) 
         viewType: Int
     ): SingleClosetStyleListRVAdapter.ViewHolder {
         val binding: ItemSingleClosetClothBinding = ItemSingleClosetClothBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        for (style in styleList) {
+            tempList.add(style)
+        }
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SingleClosetStyleListRVAdapter.ViewHolder, position: Int) {
         holder.bind(styleList[position])
-        holder.itemView.setOnClickListener {
-            mItemClickListener.onItemClick(styleList[position])
+
+        if(editMode) {
+            holder.itemView.setOnLongClickListener {
+                mItemClickListener.onItemLongClick(styleList[position])
+                true
+            }
+
+            holder.itemView.setOnClickListener {
+                mItemClickListener.onItemClick(styleList[position])
+            }
+        }else{
+
         }
+    }
+
+    fun setEditMode(status : Boolean){
+        editMode = status
     }
 
     override fun getItemCount(): Int {
         return styleList.size
+    }
+
+    fun updateByTag(selectedTag: HashMap<String, Tag>) {
+        //서버에서 리스트 받아와서 업데이트 하는걸로!!
     }
 
     inner class ViewHolder(val binding: ItemSingleClosetClothBinding): RecyclerView.ViewHolder(binding.root){
