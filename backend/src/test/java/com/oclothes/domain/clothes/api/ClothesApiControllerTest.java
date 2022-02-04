@@ -3,16 +3,21 @@ package com.oclothes.domain.clothes.api;
 import com.oclothes.BaseWebMvcTest;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.service.ClothesService;
+import com.oclothes.global.dto.SliceDto;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.LinkedMultiValueMap;
 
 import java.io.FileInputStream;
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -65,5 +70,59 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(String.format("%s;%s", MediaType.IMAGE_JPEG_VALUE, utf8)));
         verify(this.clothesService, atMostOnce()).getImage(any());
+    }
+
+    @DisplayName("옷 필터링 결과를 SliceDto 매핑해서 반환")
+    @WithMockUser
+    @Test
+    void getFilteringList() throws Exception {
+        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(),Collections.emptyList(),Collections.emptyList() );
+        final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
+
+        when(clothesService.searchByTag(any(), any())).thenReturn(dto);
+
+        mockMvc.perform(get("/clothes/search/1/?size=20")
+                    .content(objectMapper.writeValueAsString(req))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(Matchers.containsString("필터링된")))
+                .andDo(print());
+    }
+
+    @DisplayName("전체 옷장 필터링 결과를 SliceDto 매핑해서 반환")
+    @WithMockUser
+    @Test
+    void getAllFilteringList() throws Exception {
+        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(),Collections.emptyList(),Collections.emptyList() );
+        final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
+
+        when(clothesService.searchAllClosetByTag(any(), any())).thenReturn(dto);
+
+        mockMvc.perform(get("/clothes/search?size=20")
+                .content(objectMapper.writeValueAsString(req))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(Matchers.containsString("필터링된")))
+                .andDo(print());
+    }
+
+    @DisplayName("옷 검색 결과를 SliceDto 매핑해서 반환")
+    @WithMockUser
+    @Test
+    void getSearchKeywordList() throws Exception {
+        final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
+        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("keyword", "hi");
+        requestParams.add("size", "20");
+
+        when(clothesService.searchByKeyword(any(), any())).thenReturn(dto);
+
+        mockMvc.perform(get("/clothes/search/all")
+                    .params(requestParams))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(Matchers.containsString("일치하는")))
+                .andDo(print());
     }
 }

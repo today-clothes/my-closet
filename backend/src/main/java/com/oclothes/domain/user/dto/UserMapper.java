@@ -19,4 +19,6 @@ public interface UserMapper {
     @Mapping(target = "password", source = "request.password",  qualifiedByName = "passwordEncode")
     @Mapping(target = "role", expression = "java(User.Role.ROLE_USER)")
     User toEntity(UserDto.SignUpRequest request, User.Status status);
+
+    UserDto.DefaultResponse entityToDefaultResponse(User user);
 }
