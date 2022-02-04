@@ -1,6 +1,5 @@
 package com.oclothes.mycloset.ui.main.closet
 
-import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +11,7 @@ import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetStyleListRVAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter
 
-class SingleClosetFragment : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate) ,View.OnClickListener {
+class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate) ,View.OnClickListener {
 
     lateinit var styleList: ArrayList<Style>
     lateinit var tags : ArrayList<Tag>
@@ -23,9 +22,11 @@ class SingleClosetFragment : BaseFragment<FragmentSingleClosetBinding>(FragmentS
     override fun initAfterBinding() {
         initStyleList()
         initTags()
+        binding.singleClosetBackBtnIv.setOnClickListener(this)
+
         clothListAdapter = SingleClosetStyleListRVAdapter(styleList)
         clothListAdapter.setMyItemClickListener(object : SingleClosetStyleListRVAdapter.MyItemClickListener{
-            override fun onItemClick(style: Style) {
+            override fun onItemClick(style: Style, position : Int) {
                 // 이건 상세보기 페이지로 넘어가야하는데 아직은 미구현
             }
 
@@ -33,9 +34,7 @@ class SingleClosetFragment : BaseFragment<FragmentSingleClosetBinding>(FragmentS
                 //이것도 아직은 미구현. 롱클릭 이벤트 먼저 구현예정
             }
 
-            override fun onItemLongClick(style: Style) {
-                //수정모드로 들어가면 될듯
-
+            override fun onItemLongClick(style: Style){
             }
 
         })
@@ -52,7 +51,13 @@ class SingleClosetFragment : BaseFragment<FragmentSingleClosetBinding>(FragmentS
     }
 
     override fun onClick(v: View?) {
-
+        when(v){
+            binding.singleClosetBackBtnIv ->{
+                f.getBinding().mainFragmentVp.currentItem = 0
+                clothListAdapter.finishEditMode()
+                binding.singleClosetClothesListRv.layoutManager?.scrollToPosition(0)
+            }
+        }
     }
 
     fun updateList(selectedTag: HashMap<String, Tag>) {
@@ -62,19 +67,6 @@ class SingleClosetFragment : BaseFragment<FragmentSingleClosetBinding>(FragmentS
     fun getBinding(): FragmentSingleClosetBinding {
         return binding
     }
-
-    companion object {
-
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() =
-            SingleClosetFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
-    }
-
 
     private fun initStyleList(){
         styleList = ArrayList<Style>()

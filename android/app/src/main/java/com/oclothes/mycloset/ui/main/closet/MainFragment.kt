@@ -10,8 +10,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     lateinit var singleCloset : SingleClosetFragment
     lateinit var vpAdapter: MainFragmentVPAdapter
     override fun initAfterBinding() {
-        singleCloset = SingleClosetFragment()
-
+        singleCloset = SingleClosetFragment(this)
         vpAdapter = MainFragmentVPAdapter(this)
         vpAdapter.addFragment(ClosetFragment.newInstance(this))
         vpAdapter.addFragment(singleCloset)
@@ -23,6 +22,10 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         binding.mainFragmentVp.currentItem = 0
 
 
+    }
+
+    fun getBinding() : FragmentMainBinding{
+        return binding
     }
 
     fun openCloset(closet : Closet){

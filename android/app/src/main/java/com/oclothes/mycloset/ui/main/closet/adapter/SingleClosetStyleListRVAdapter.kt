@@ -1,6 +1,7 @@
 package com.oclothes.mycloset.ui.main.closet.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -8,11 +9,15 @@ import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
     private var editMode = false
+    private val editList = ArrayList<Int>()
+    private val viewList = ArrayList<ItemSingleClosetClothBinding>()
+
     interface MyItemClickListener{
-        fun onItemClick(style: Style)
+        fun onItemClick(style: Style, position : Int)
         fun onRemoveStyle(position: Int)
         fun onItemLongClick(style : Style)
     }
@@ -35,22 +40,50 @@ class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) 
     override fun onBindViewHolder(holder: SingleClosetStyleListRVAdapter.ViewHolder, position: Int) {
         holder.bind(styleList[position])
 
-        if(editMode) {
-            holder.itemView.setOnLongClickListener {
-                mItemClickListener.onItemLongClick(styleList[position])
-                true
+        if (editMode) {
+            if(styleList[position].isSelected){
+                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.VISIBLE
+            }else{
+                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.GONE
             }
+        }
 
-            holder.itemView.setOnClickListener {
-                mItemClickListener.onItemClick(styleList[position])
+        holder.itemView.setOnLongClickListener {
+            mItemClickListener.onItemLongClick(styleList[position])
+            if(!editMode){
+                editMode = true
+                styleList[position].isSelected = true
+                notifyItemChanged(position)
+            }else{
+                finishEditMode()
             }
-        }else{
-
+            true
+        }
+        holder.itemView.setOnClickListener {
+            mItemClickListener.onItemClick(styleList[position], position)
+            if(editMode){
+                styleList[position].isSelected = !styleList[position].isSelected
+            }
+            notifyItemChanged(position)
         }
     }
 
-    fun setEditMode(status : Boolean){
-        editMode = status
+    private fun deleteSelectedItem(){
+        for (style in styleList) {
+            if(style.isSelected){
+                //아무래도 여기서 삭제 API를 호출해 줘야 할 것 같다...
+                styleList.remove(style)
+            }
+            editMode = false
+        }
+    }
+
+    fun finishEditMode() {
+        editMode = false
+        for (style in styleList) {
+            style.isSelected = false
+        }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
