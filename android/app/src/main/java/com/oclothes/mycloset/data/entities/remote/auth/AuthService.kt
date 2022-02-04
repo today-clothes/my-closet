@@ -3,22 +3,21 @@ package com.oclothes.mycloset.data.entities.remote.auth
 import android.util.Log
 import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.ApplicationClass.Companion.retrofit
-import com.oclothes.mycloset.data.entities.User
 import com.oclothes.mycloset.ui.login.login.LoginView
 import com.oclothes.mycloset.ui.login.signup.SignUpView
 import com.oclothes.mycloset.ui.splash.SplashView
-import com.oclothes.mycloset.utils.getJwt
+import com.oclothes.mycloset.utils.getLogin
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 object AuthService {
-    fun signUp(signUpView: SignUpView, signUpDto: SignUpDto) {
+    fun signUp(signUpView: SignUpView, userDto: UserDto) {
         val authService = retrofit.create(AuthRetrofitInterface::class.java)
 
         signUpView.onSignUpLoading()
 
-        authService.signUp(signUpDto).enqueue(object : Callback<SignUpResponse> {
+        authService.signUp(userDto).enqueue(object : Callback<SignUpResponse> {
             override fun onResponse(
                 call: Call<SignUpResponse>,
                 response: Response<SignUpResponse>
@@ -48,12 +47,12 @@ object AuthService {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 val resp = response.body()!!
 
-                when(response.code()){
-                    200 -> loginView.onLoginSuccess(resp.jwt)
-                    else -> loginView.onLoginFailure(response.code(), resp.message)
+                if(response.isSuccessful) {
+                    loginView.onLoginSuccess(resp.data.jwt, userDto)
+                }else{
+                    loginView.onLoginFailure(response.code(), resp.message)
                 }
             }
-
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 Log.d("$TAG/API-ERROR", t.message.toString())
 
@@ -63,31 +62,32 @@ object AuthService {
     }
 
     fun autoLogin(splashView: SplashView) {
-//        val authService = retrofit.create(AuthRetrofitInterface::class.java)
+        val authService = retrofit.create(AuthRetrofitInterface::class.java)
 
         splashView.onAutoLoginLoading()
 
-//        authService.autoLogin().enqueue(object : Callback<AuthResponse> {
-//            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-//                val resp = response.body()!!
-//
-//                when(resp.code){
-//                    200 -> splashView.onAutoLoginSuccess()
-//                    else -> splashView.onAutoLoginFailure(resp.code, resp.message)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-//                Log.d("$TAG/API-ERROR", t.message.toString())
-//
-//                splashView.onAutoLoginFailure(400, "네트워크 오류가 발생했습니다.")
-//            }
-//        })
+        val userDto = getLogin()
 
-        if(getJwt() != null){
-            splashView.onAutoLoginSuccess()
-        }else{
-            splashView.onAutoLoginFailure(400, "자동로그인 실패")
+        userDto?.let {
+            authService.login(userDto).enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    val resp = response.body()!!
+
+                    if(response.isSuccessful) {
+                        splashView.onAutoLoginSuccess(resp.data.jwt)
+                        return
+                    }else{
+                        splashView.onAutoLoginFailure(response.code(), resp.message)
+                        return
+                    }
+                }
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    Log.d("$TAG/API-ERROR", t.message.toString())
+                    splashView.onAutoLoginFailure(400, "자동 로그인에 실패했습니다..")
+                }
+            })
         }
+
+        splashView.onAutoLoginFailure(1000, "")
     }
 }

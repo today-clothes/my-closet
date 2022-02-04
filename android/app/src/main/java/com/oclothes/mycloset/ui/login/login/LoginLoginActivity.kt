@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.User
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
 import com.oclothes.mycloset.data.entities.remote.auth.UserDto
 import com.oclothes.mycloset.databinding.ActivityLoginLoginBinding
@@ -13,7 +12,7 @@ import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.login.signup.SignUpEmailActivity
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.utils.saveJwt
-import org.w3c.dom.Text
+import com.oclothes.mycloset.utils.saveLogin
 
 class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLoginLoginBinding::inflate), LoginView, View.OnClickListener {
 
@@ -63,33 +62,32 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
     }
 
     private fun login() {
-//        when {
-//            binding.loginLoginEditTextEmailEt.text.toString().isEmpty() -> {
-//                showToast("이메일이 입력되지 않았습니다.")
-//            }
-//            else -> {
-//                val email = binding.loginLoginEditTextEmailEt.text.toString()
-//                val pw = binding.loginLoginEditTextPasswordEt.text.toString()
-//                val userDto = UserDto(email, pw)
-//                AuthService.login(this, userDto)
-//            }
-//        }
-        AuthService.login(this,UserDto("gjwodud119@gmail.com", "gj1109gj"))
+        when {
+            binding.loginLoginEditTextEmailEt.text.toString().isEmpty() -> {
+                showToast("이메일이 입력되지 않았습니다.")
+            }
+            else -> {
+                val email = binding.loginLoginEditTextEmailEt.text.toString()
+                val pw = binding.loginLoginEditTextPasswordEt.text.toString()
+                val userDto = UserDto(email, pw)
+                AuthService.login(this, userDto)
+            }
+        }
     }
 
     override fun onLoginLoading() {
         binding.loginLoginLoadingPb.visibility = View.VISIBLE
     }
 
-    override fun onLoginSuccess(jwt: String) {
+    override fun onLoginSuccess(jwt: String, userDto: UserDto) {
         binding.loginLoginLoadingPb.visibility = View.GONE
         saveJwt(jwt)
+        saveLogin(userDto)
         startActivityWithClear(MainActivity::class.java)
     }
 
     override fun onLoginFailure(code: Int, message: String) {
         binding.loginLoginLoadingPb.visibility = View.GONE
         binding.loginLoginEditTextPasswordEt.setText("")
-        showToast("로그인에 실패했습니다.")
     }
 }

@@ -10,7 +10,6 @@ import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
 import java.util.*
 
 class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
-    private lateinit var tempList : ArrayList<Style>
     private var editMode = false
     interface MyItemClickListener{
         fun onItemClick(style: Style)
@@ -30,9 +29,6 @@ class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) 
         viewType: Int
     ): SingleClosetStyleListRVAdapter.ViewHolder {
         val binding: ItemSingleClosetClothBinding = ItemSingleClosetClothBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-        for (style in styleList) {
-            tempList.add(style)
-        }
         return ViewHolder(binding)
     }
 

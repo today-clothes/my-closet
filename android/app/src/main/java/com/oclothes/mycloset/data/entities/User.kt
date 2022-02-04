@@ -1,9 +1,11 @@
 package com.oclothes.mycloset.data.entities
 
-import com.google.gson.annotations.SerializedName
-
 data class User (
-    @SerializedName("email") val email: String,
-    @SerializedName("password") val password: String,
-//    @SerializedName("nickname") val nickname: String = "이름없음",
+    val email: String,
+    val password: String,
+    val nickname: String,
+    val gender : Boolean,
+    val age : Int,
+    val weight : Int,
+    val height : Int,
 )

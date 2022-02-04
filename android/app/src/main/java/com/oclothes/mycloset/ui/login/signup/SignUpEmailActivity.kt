@@ -3,9 +3,7 @@ package com.oclothes.mycloset.ui.login.signup
 import android.graphics.Color
 import android.view.View
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.User
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
-import com.oclothes.mycloset.data.entities.remote.auth.SignUpDto
 import com.oclothes.mycloset.data.entities.remote.auth.UserDto
 import com.oclothes.mycloset.databinding.ActivityEmailSignUpBinding
 import com.oclothes.mycloset.ui.BaseActivity
@@ -51,15 +49,15 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
         } else if (binding.loginSignUpEditTextPasswordEt.text.toString() != binding.loginSignUpEditTextPasswordConfirmEt.text.toString()) {
             showToast("입력된 비밀번호가 같지 않습니다.")
         } else {
-            AuthService.signUp(this, getSignUpDto())
+            AuthService.signUp(this, getUserDto())
         }
     }
 
-    private fun getSignUpDto(): SignUpDto {
+    private fun getUserDto(): UserDto {
         val email : String = binding.loginSignUpEditTextEmailEt.text.toString()
         val pw = binding.loginSignUpEditTextPasswordEt.text.toString()
         val nickname : String = binding.loginSignUpEditTextNickNameEt.text.toString()
-        return SignUpDto(email, pw)
+        return UserDto(email, pw)
     }
 
     private fun checkLogic2() {

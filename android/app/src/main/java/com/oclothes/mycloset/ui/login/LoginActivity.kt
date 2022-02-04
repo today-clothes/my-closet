@@ -26,5 +26,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         binding.loginNaverBtn.setOnClickListener{
             startActivity(Intent(this, InfoSelectActivity::class.java))
         }
+
     }
 }
