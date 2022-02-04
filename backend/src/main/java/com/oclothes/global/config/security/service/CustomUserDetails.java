@@ -50,11 +50,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        if (this.user.getStatus().equals(User.Status.WAIT))
-            throw new UserStatusIsWaitException();
-        if (this.user.getStatus().equals(User.Status.WITHDRAW))
-            throw new UserStatusIsWithdrawException();
-        return true;
+        switch (this.user.getStatus()) {
+            case NORMAL: return true;
+            case WAIT: throw new UserStatusIsWaitException();
+            case WITHDRAW: throw new UserStatusIsWithdrawException();
+            default: return false;
+        }
     }
 
 }
