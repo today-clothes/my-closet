@@ -12,7 +12,8 @@ public enum UserExceptionMessage {
     USER_NOT_FOUND("이메일 또는 패스워드를 다시 확인해주세요."),
     USER_STATUS_IS_ALREADY_NORMAL("해당 이메일은 이미 인증이 완료 되었습니다."),
     EMAIL_AUTHENTICATION_CODE_NOT_FOUND("이메일 인증 요청을 해주세요."),
-    WRONG_EMAIL_AUTHENTICATION_CODE("인증번호가 틀립니다.");
+    WRONG_EMAIL_AUTHENTICATION_CODE("인증번호가 틀립니다."),
+    USER_STATUS_IS_WITHDRAW("탈퇴된 계정입니다.");
 
     private final String message;
 }
