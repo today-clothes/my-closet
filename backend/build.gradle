@@ -31,6 +31,9 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
 
+    // AWS
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.152'
+
     // QUERYDSL
     compileOnly 'com.querydsl:querydsl-core'
     compileOnly 'com.querydsl:querydsl-jpa'
@@ -62,7 +65,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline'
     testImplementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
 
-    // swagger
+    // SWAGGER
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
