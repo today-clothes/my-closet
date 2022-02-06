@@ -1,6 +1,8 @@
 package com.oclothes.global.config.security.service;
 
 import com.oclothes.domain.user.domain.User;
+import com.oclothes.domain.user.exception.UserStatusIsWaitException;
+import com.oclothes.domain.user.exception.UserStatusIsWithdrawException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,7 +50,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.getStatus().equals(User.Status.NORMAL);
+        switch (this.user.getStatus()) {
+            case NORMAL: return true;
+            case WAIT: throw new UserStatusIsWaitException();
+            case WITHDRAW: throw new UserStatusIsWithdrawException();
+            default: return false;
+        }
     }
 
 }
