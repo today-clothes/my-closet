@@ -254,3 +254,4 @@ application-jwt.yml
 application-prod.yml
 application-oauth.yml
 application-mail.yml
+application-aws.yml
