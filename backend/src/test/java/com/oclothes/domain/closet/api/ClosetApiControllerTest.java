@@ -73,21 +73,6 @@ class ClosetApiControllerTest extends BaseWebMvcTest {
         verify(this.closetService, atMostOnce()).updateName(id, request);
     }
 
-    @DisplayName("옷장 공개 상태 변경을 성공한다.")
-    @WithMockUser
-    @Test
-    void changeLockStatusTest() throws Exception {
-        final long id = 1L;
-        final String name = "test";
-        final ClosetDto.DefaultResponse dto = new ClosetDto.DefaultResponse(id, name, true);
-        when(this.closetService.changeLockStatus(any())).thenReturn(dto);
-        mockMvc.perform(put("/closets/{id}/locked", 1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(Matchers.containsString("완료")))
-                .andDo(print());
-        verify(this.closetService, atMostOnce()).changeLockStatus(id);
-    }
-
     @DisplayName("옷장 삭제를 성공한다.")
     @WithMockUser
     @Test

@@ -7,10 +7,12 @@ import com.oclothes.domain.clothes.domain.ClothesEventTag;
 import com.oclothes.domain.clothes.domain.ClothesMoodTag;
 import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
+import com.oclothes.domain.clothes.exception.ClothesNotFoundException;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
 import com.oclothes.domain.tag.dto.TagDto;
+import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.global.dto.SliceDto;
 import com.oclothes.infra.file.FileService;
 import lombok.RequiredArgsConstructor;
@@ -65,18 +67,19 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public SliceDto<SearchResponse> searchAllClosetByTag(SearchRequest request, Pageable pageable) {
-        return SliceDto.create(clothesRepository.searchAllClosetByTag(request, pageable).map(this::createSearchDtoResponse));
-    }
-
-    @Override
     public SliceDto<SearchResponse> searchByKeyword(SearchKeywordRequest request, Pageable pageable) {
         return SliceDto.create(clothesRepository.findByContentContaining(request.getKeyword(), pageable).map(this::createSearchDtoResponse));
     }
 
+    @Override
+    public DefaultResponse changeLockStatus(Long clothesId) {
+        Clothes clothes = clothesRepository.findByIdAndUser(clothesId, SecurityUtils.getLoggedInUser()).orElseThrow(ClothesNotFoundException::new);
+        return clothesMapper.toDefaultResponse(clothes.changeLockStatus());
+    }
+
     private SearchResponse createSearchDtoResponse(Clothes c) {
         return new SearchResponse(
-                c.getCloset().getId(), c.getId(),
+                c.getCloset().getId(), c.getId(), c.isLocked(),
                 c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),

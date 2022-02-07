@@ -19,8 +19,6 @@ public class Closet extends BaseEntity {
 
     private String name;
 
-    private boolean locked = false;
-
     @Setter(value = AccessLevel.NONE)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -30,9 +28,8 @@ public class Closet extends BaseEntity {
     private List<Clothes> clothes = new ArrayList<>();
 
     @Builder
-    public Closet(String name, boolean locked, User user) {
+    public Closet(String name, User user) {
         this.name = name;
-        this.locked = locked;
         this.user = user;
     }
 
@@ -42,10 +39,5 @@ public class Closet extends BaseEntity {
 
     public void deleteCloth(Clothes clothes) {
         this.clothes.remove(clothes);
-    }
-
-    public Closet changeLockedStatus() {
-        this.locked = !this.locked;
-        return this;
     }
 }

@@ -31,36 +31,19 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<Clothes> searchAllClosetByTag(ClothesDto.SearchRequest request, Pageable pageable){
-        List<Clothes> content = jpaQueryFactory.selectFrom(clothes).distinct()
-                .leftJoin(clothes.seasonTags, clothesSeasonTag)
-                .leftJoin(clothes.eventTags, clothesEventTag)
-                .leftJoin(clothes.moodTags, clothesMoodTag)
-                .where(userIdEq(SecurityUtils.getLoggedInUser().getId()),
-                        tagsEq(request.getSeasonTagIds(), isSeasonTag),
-                        tagsEq(request.getEventTagIds(), isEventTag),
-                        tagsEq(request.getMoodTagIds(), isMoodTag))
-                .orderBy(clothes.updatedAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        return new SliceImpl<>(content, pageable, hasNextPage(content, pageable));
-    }
-
-    @Override
     public Slice<Clothes> searchByTag(ClothesDto.SearchRequest request, Pageable pageable) {
         List<Clothes> content = jpaQueryFactory.selectFrom(clothes).distinct()
                 .leftJoin(clothes.seasonTags, clothesSeasonTag)
                 .leftJoin(clothes.eventTags, clothesEventTag)
                 .leftJoin(clothes.moodTags, clothesMoodTag)
-                .where(closetIdEq(request.getClosetId()),
+                .where( userIdEq(SecurityUtils.getLoggedInUser().getId()),
+                        closetIdEq(request.getClosetId()),
                         tagsEq(request.getSeasonTagIds(), isSeasonTag),
                         tagsEq(request.getEventTagIds(), isEventTag),
                         tagsEq(request.getMoodTagIds(), isMoodTag))
                 .orderBy(clothes.updatedAt.desc())
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
 
         return new SliceImpl<>(content, pageable, hasNextPage(content, pageable));

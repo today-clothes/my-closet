@@ -36,6 +36,8 @@ public class Clothes extends BaseEntity {
     @OneToMany(mappedBy = "clothes", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ClothesMoodTag> moodTags = new HashSet<>();
 
+    private boolean locked = false;
+
     private String styleTitle;
 
     private String content;
@@ -43,10 +45,11 @@ public class Clothes extends BaseEntity {
     private String imgUrl;
 
     @Builder
-    public Clothes(Closet closet, String imgUrl, User user) {
+    public Clothes(Closet closet, String imgUrl, User user, boolean locked) {
         this.closet = closet;
         this.imgUrl = imgUrl;
         this.user = user;
+        this.locked = locked;
     }
 
     public void setCloset(Closet closet) {
@@ -54,4 +57,8 @@ public class Clothes extends BaseEntity {
         this.closet = closet;
     }
 
+    public Clothes changeLockStatus(){
+        this.locked = !locked;
+        return this;
+    }
 }

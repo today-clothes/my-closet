@@ -1,6 +1,7 @@
 package com.oclothes.domain.clothes.service;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.global.dto.SliceDto;
 import org.springframework.data.domain.Pageable;
 
@@ -15,9 +16,9 @@ public interface ClothesService {
 
     SliceDto<SearchResponse> searchByTag(SearchRequest request, Pageable pageable);
 
-    SliceDto<SearchResponse> searchAllClosetByTag(SearchRequest request, Pageable pageable);
-
     SliceDto<SearchResponse> searchByKeyword(SearchKeywordRequest request, Pageable pageable);
+
+    DefaultResponse changeLockStatus(Long clothesId);
 
     byte[] getImage(String url);
 }

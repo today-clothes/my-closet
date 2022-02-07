@@ -62,7 +62,7 @@ class ClosetServiceImplTest extends BaseTest {
     void createTest() {
         final String name = "my-first-closet-1";
         final CreateRequest request = new CreateRequest(name, false);
-        final Closet closet = new Closet(name, false, null);
+        final Closet closet = new Closet(name,null);
         final User user = User.builder().build();
 
         securityUtilsMock.when(SecurityUtils::getLoggedInUser).thenReturn(user);
@@ -91,7 +91,7 @@ class ClosetServiceImplTest extends BaseTest {
     @Test
     void updateNameTest() {
         final long id = 1L;
-        final Closet closet = Closet.builder().name("beforeName").locked(true).build();
+        final Closet closet = Closet.builder().name("beforeName").build();
         final ClosetDto.NameUpdateRequest request = new ClosetDto.NameUpdateRequest(id, "test");
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
@@ -101,35 +101,11 @@ class ClosetServiceImplTest extends BaseTest {
         assertTrue(response.isLocked());
     }
 
-    @DisplayName("옷장 공개 상태가 true일 겨우 false로 변경한다.")
-    @Test
-    void changeLockStatusFalseTest() {
-        final long id = 1L;
-        final Closet closet = Closet.builder().locked(true).build();
-
-        when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
-
-        final ClosetDto.DefaultResponse response = this.closetService.changeLockStatus(1L);
-        assertFalse(response.isLocked());
-    }
-
-    @DisplayName("옷장 공개 상태가 false일 겨우 true로 변경한다.")
-    @Test
-    void changeLockStatusTrueTest() {
-        final long id = 1L;
-        final Closet closet = Closet.builder().locked(false).build();
-
-        when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
-
-        final ClosetDto.DefaultResponse response = this.closetService.changeLockStatus(1L);
-        assertTrue(response.isLocked());
-    }
-
     @DisplayName("옷장 안의 옷이 0보다 클 경우 ")
     @Test
     void whenClothesCountGreaterThenZeroThenDeleteFail() {
         final long id = 1L;
-        final Closet closet = Closet.builder().locked(false).build();
+        final Closet closet = Closet.builder().build();
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
         when(this.clothesService.getSizeByCloset(any())).thenReturn(1L);
@@ -141,7 +117,7 @@ class ClosetServiceImplTest extends BaseTest {
     @Test
     void deleteSuccess() {
         final long id = 1L;
-        final Closet closet = Closet.builder().locked(false).build();
+        final Closet closet = Closet.builder().build();
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
         when(this.clothesService.getSizeByCloset(any())).thenReturn(0L);

@@ -11,6 +11,8 @@ import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.domain.ClothesEventTag;
 import com.oclothes.domain.clothes.domain.ClothesMoodTag;
 import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
+import com.oclothes.domain.clothes.dto.ClothesDto;
+import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
@@ -19,6 +21,7 @@ import com.oclothes.domain.tag.domain.MoodTag;
 import com.oclothes.domain.tag.domain.SeasonTag;
 import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
+import com.oclothes.global.dto.SliceDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,7 +71,7 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
     @Test
     public void searchByTag() throws IOException {
         //1.옷장 생성
-        Closet closet = closetRepository.save(new Closet("c1", true, user));
+        Closet closet = closetRepository.save(new Closet("c1",  user));
 
         //2.태그 생성
         MoodTag moodTag1 = moodTagRepository.save(new MoodTag("무드1"));
@@ -77,10 +80,10 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         SeasonTag seasonTag2 = seasonTagRepository.save(new SeasonTag("계절2"));
 
         //3. 옷 생성
-        Clothes clothes1 = clothesRepository.save(createClothes(closet, "a"));
-        Clothes clothes2 = clothesRepository.save(createClothes(closet, "b"));
-        Clothes clothes3 = clothesRepository.save(createClothes(closet, "c"));
-        Clothes clothes4 = clothesRepository.save(createClothes(closet, "d"));
+        Clothes clothes1 = clothesRepository.save(createClothes(closet, "a", true));
+        Clothes clothes2 = clothesRepository.save(createClothes(closet, "b", false));
+        Clothes clothes3 = clothesRepository.save(createClothes(closet, "c", true));
+        Clothes clothes4 = clothesRepository.save(createClothes(closet, "d", true));
 
         //4. 태그-옷 연결
         //clothes1 - 계절1 + 이벤트1
@@ -138,12 +141,12 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
     @Test
     @DisplayName("전체 키워드로 옷 검색")
     public void searchByKeyword() {
-        Closet closet = new Closet("c1", true, user);
+        Closet closet = new Closet("c1",  user);
         Closet result = closetRepository.save(closet);
-        Clothes clothes1 = createClothes(result, "aa");
-        Clothes clothes2 = createClothes(result, "bb");
+        Clothes clothes1 = createClothes(result, "aa", true);
+        Clothes clothes2 = createClothes(result, "bb", false);
         clothes1.setContent("ㅋ키키키예시");
-        clothes2.setContent("기분좋은날옷");
+        clothes2.setContent("우왕");
         Clothes c1 = clothesRepository.save(clothes1);
         Clothes c2 = clothesRepository.save(clothes2);
         PageRequest pageRequest = PageRequest.of(0, 2);
@@ -152,7 +155,7 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         assertEquals(1, clothes.getNumberOfElements());
     }
 
-    private Clothes createClothes(Closet closet, String imgUrl) {
-        return Clothes.builder().user(user).imgUrl(imgUrl).closet(closet).build();
+    private Clothes createClothes(Closet closet, String imgUrl, boolean locked) {
+        return Clothes.builder().user(user).imgUrl(imgUrl).locked(locked).closet(closet).build();
     }
 }
