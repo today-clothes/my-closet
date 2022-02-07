@@ -1,8 +1,8 @@
 package com.oclothes.global.config.security.util;
 
 import com.oclothes.domain.user.domain.User;
+import com.oclothes.global.config.security.exception.RequiredLoggedInException;
 import com.oclothes.global.config.security.service.CustomUserDetails;
-import com.oclothes.global.config.security.util.exception.RequiredLoggedInException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
