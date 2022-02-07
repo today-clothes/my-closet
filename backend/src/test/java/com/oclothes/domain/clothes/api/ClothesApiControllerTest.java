@@ -4,7 +4,6 @@ import com.oclothes.BaseWebMvcTest;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.SliceDto;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,8 +22,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,17 +74,17 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @WithMockUser
     @Test
     void getFilteringList() throws Exception {
-        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(),Collections.emptyList(),Collections.emptyList() );
+        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
 
         when(clothesService.searchByTag(any(), any())).thenReturn(dto);
 
         mockMvc.perform(get("/clothes/search/1/?size=20")
-                    .content(objectMapper.writeValueAsString(req))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
+                        .content(objectMapper.writeValueAsString(req))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(Matchers.containsString("필터링된")))
+                .andExpect(jsonPath("$.message").value(containsString("필터링된")))
                 .andDo(print());
     }
 
@@ -94,17 +92,17 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @WithMockUser
     @Test
     void getAllFilteringList() throws Exception {
-        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(),Collections.emptyList(),Collections.emptyList() );
+        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
 
         when(clothesService.searchAllClosetByTag(any(), any())).thenReturn(dto);
 
         mockMvc.perform(get("/clothes/search?size=20")
-                .content(objectMapper.writeValueAsString(req))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .content(objectMapper.writeValueAsString(req))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(Matchers.containsString("필터링된")))
+                .andExpect(jsonPath("$.message").value(containsString("필터링된")))
                 .andDo(print());
     }
 
@@ -120,9 +118,21 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
         when(clothesService.searchByKeyword(any(), any())).thenReturn(dto);
 
         mockMvc.perform(get("/clothes/search/all")
-                    .params(requestParams))
+                        .params(requestParams))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(Matchers.containsString("일치하는")))
+                .andExpect(jsonPath("$.message").value(containsString("일치하는")))
+                .andDo(print());
+    }
+
+    @DisplayName("옷을 삭제한다.")
+    @WithMockUser
+    @Test
+    void deleteClothes() throws Exception {
+        doNothing().when(this.clothesService).deleteById(any());
+
+        this.mockMvc.perform(delete("/clothes/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(containsString("삭제")))
                 .andDo(print());
     }
 }

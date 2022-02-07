@@ -62,4 +62,12 @@ public class ClothesApiController {
     public ResponseEntity<byte[]> getImage(@PathVariable String url) {
         return ResponseEntity.ok(this.clothesService.getImage(url));
     }
+
+    @ApiOperation(value = "옷 삭제", notes = "옷 개별 삭제 API")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto<ResponseDto<Void>>> deleteById(@PathVariable Long id) {
+        this.clothesService.deleteById(id);
+        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.DELETE_SUCCESS.getMessage()));
+    }
+
 }

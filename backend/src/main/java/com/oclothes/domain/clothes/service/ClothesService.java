@@ -5,8 +5,6 @@ import com.oclothes.global.dto.SliceDto;
 import org.springframework.data.domain.Pageable;
 
 import static com.oclothes.domain.clothes.dto.ClothesDto.*;
-import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadRequest;
-import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadResponse;
 
 public interface ClothesService {
     long getSizeByCloset(Closet closet);
@@ -20,4 +18,6 @@ public interface ClothesService {
     SliceDto<SearchResponse> searchByKeyword(SearchKeywordRequest request, Pageable pageable);
 
     byte[] getImage(String url);
+
+    void deleteById(Long id);
 }

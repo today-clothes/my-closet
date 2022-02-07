@@ -59,4 +59,9 @@ public class AwsS3FileServiceImpl implements FileService {
             throw new IllegalArgumentException("파일 불러오기에 실패했습니다.");
         }
     }
+
+    @Override
+    public void delete(String key) {
+
+    }
 }
