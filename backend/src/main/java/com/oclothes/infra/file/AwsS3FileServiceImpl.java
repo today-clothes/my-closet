@@ -62,6 +62,6 @@ public class AwsS3FileServiceImpl implements FileService {
 
     @Override
     public void delete(String key) {
-
+        this.amazonS3Client.deleteObject(this.bucketName, key);
     }
 }
