@@ -26,8 +26,9 @@ class ClosetFragment (): BaseFragment<FragmentClosetBinding>(FragmentClosetBindi
         arguments?.let {
             //이곳에 번들에 넣을 것 생각하자. 또는 나중에 사용하자.
         }
-        init()
         initClosetList()
+
+        init()
         binding.closetAllClosetListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val closetRVAdapter = ClosetListRVAdapter(closetList)
 
@@ -44,15 +45,16 @@ class ClosetFragment (): BaseFragment<FragmentClosetBinding>(FragmentClosetBindi
     }
 
     private fun init() {
-        nickName = ApplicationClass.mSharedPreferences.getString("nickname", null).toString()
+        nickName = ApplicationClass.mSharedPreferences.getString("nickname", "사용자").toString()
         binding.closetInfoTv.text = "\'$nickName\'님의 옷장"
+        binding.closetAllClosetNumberTv.text = "${closetList.size.toString()} 개"
     }
 
 
     private fun initClosetList(){
         closetList = ArrayList<Closet>()
         for(i in 1..7) {
-            closetList.add(Closet("제주도옷"))
+            closetList.add(Closet("제주도옷 ${i.toString()}"))
         }
     }
 

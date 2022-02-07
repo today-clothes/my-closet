@@ -24,7 +24,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         initTags()
         binding.singleClosetBackBtnIv.setOnClickListener(this)
 
-        clothListAdapter = SingleClosetStyleListRVAdapter(styleList)
+        clothListAdapter = SingleClosetStyleListRVAdapter(this, styleList)
         clothListAdapter.setMyItemClickListener(object : SingleClosetStyleListRVAdapter.MyItemClickListener{
             override fun onItemClick(style: Style, position : Int) {
                 // 이건 상세보기 페이지로 넘어가야하는데 아직은 미구현
@@ -35,8 +35,8 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             }
 
             override fun onItemLongClick(style: Style){
-            }
 
+            }
         })
         myLayoutManager = GridLayoutManager(activity, 2)
         binding.singleClosetClothesListRv.layoutManager = myLayoutManager
@@ -48,6 +48,9 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         binding.singleClosetFilterCountTv.text = "0"
+        binding.singleClosetScissorsIv.setOnClickListener(this)
+
+
     }
 
     override fun onClick(v: View?) {
@@ -57,7 +60,17 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
                 clothListAdapter.finishEditMode()
                 binding.singleClosetClothesListRv.layoutManager?.scrollToPosition(0)
             }
+
+            binding.singleClosetScissorsIv ->{
+                if(clothListAdapter.initEditMode(-1)){
+                    initEditMode()
+                }
+            }
         }
+    }
+
+    private fun initEditMode() {
+
     }
 
     fun updateList(selectedTag: HashMap<String, Tag>) {

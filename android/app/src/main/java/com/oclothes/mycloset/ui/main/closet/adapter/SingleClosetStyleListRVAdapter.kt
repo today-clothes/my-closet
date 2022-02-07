@@ -8,12 +8,12 @@ import com.bumptech.glide.Glide
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
+import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
+class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
     private var editMode = false
-    private val editList = ArrayList<Int>()
     private val viewList = ArrayList<ItemSingleClosetClothBinding>()
 
     interface MyItemClickListener{
@@ -34,29 +34,19 @@ class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) 
         viewType: Int
     ): SingleClosetStyleListRVAdapter.ViewHolder {
         val binding: ItemSingleClosetClothBinding = ItemSingleClosetClothBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        viewList.add(binding)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SingleClosetStyleListRVAdapter.ViewHolder, position: Int) {
         holder.bind(styleList[position])
 
-        if (editMode) {
-            if(styleList[position].isSelected){
-                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.VISIBLE
-            }else{
-                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.GONE
-            }
-        }
+        setBackground(position, holder)
 
         holder.itemView.setOnLongClickListener {
             mItemClickListener.onItemLongClick(styleList[position])
-            if(!editMode){
-                editMode = true
-                styleList[position].isSelected = true
-                notifyItemChanged(position)
-            }else{
-                finishEditMode()
-            }
+            initEditMode(position)
+            setBackground(position, holder)
             true
         }
         holder.itemView.setOnClickListener {
@@ -64,24 +54,61 @@ class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) 
             if(editMode){
                 styleList[position].isSelected = !styleList[position].isSelected
             }
+            setBackground(position, holder)
             notifyItemChanged(position)
         }
     }
 
-    private fun deleteSelectedItem(){
+    private fun setBackground(
+        position: Int,
+        holder: ViewHolder
+    ) {
+        if (editMode) {
+            if (styleList[position].isSelected) {
+                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.VISIBLE
+                holder.binding.singleClosetClothSelectedBtnIv.visibility = View.VISIBLE
+            } else {
+                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.GONE
+                holder.binding.singleClosetClothSelectedBtnIv.visibility = View.GONE
+            }
+        }
+    }
+
+    fun initEditMode(position: Int) : Boolean{
+        if (!editMode) {
+            editMode = true
+
+            if(position != -1) {
+                styleList[position].isSelected = true
+                notifyItemChanged(position)
+            }
+
+        } else {
+            finishEditMode()
+        }
+
+        return editMode
+    }
+
+    fun deleteSelectedItem(){
         for (style in styleList) {
             if(style.isSelected){
                 //아무래도 여기서 삭제 API를 호출해 줘야 할 것 같다...
                 styleList.remove(style)
             }
-            editMode = false
         }
+        editMode = false
+        notifyDataSetChanged()
     }
 
     fun finishEditMode() {
         editMode = false
         for (style in styleList) {
             style.isSelected = false
+        }
+        for (itemSingleClosetClothBinding in viewList) {
+            itemSingleClosetClothBinding.singleClosetClothEditBackgroundTv.visibility = View.GONE
+            itemSingleClosetClothBinding.singleClosetClothSelectedBtnIv.visibility = View.GONE
         }
         notifyDataSetChanged()
     }
