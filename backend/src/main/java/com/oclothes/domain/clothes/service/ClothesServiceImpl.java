@@ -63,17 +63,17 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public SliceDto<SearchResponse> searchByTag(SearchRequest request, Pageable pageable) {
-        return SliceDto.create(clothesRepository.searchByTag(request, pageable).map(this::createSearchDtoResponse));
+        return SliceDto.create(this.clothesRepository.searchByTag(request, pageable).map(this::createSearchDtoResponse));
     }
 
     @Override
-    public SliceDto<SearchResponse> searchByKeyword(SearchKeywordRequest request, Pageable pageable) {
-        return SliceDto.create(clothesRepository.findByContentContaining(request.getKeyword(), pageable).map(this::createSearchDtoResponse));
+    public SliceDto<SearchResponse> searchByKeyword(String keyword, Pageable pageable) {
+        return SliceDto.create(this.clothesRepository.findByContentContaining(keyword, pageable).map(this::createSearchDtoResponse));
     }
 
     @Override
     public DefaultResponse changeLockStatus(Long clothesId) {
-        Clothes clothes = clothesRepository.findByIdAndUser(clothesId, SecurityUtils.getLoggedInUser()).orElseThrow(ClothesNotFoundException::new);
+        Clothes clothes = this.clothesRepository.findByIdAndUser(clothesId, SecurityUtils.getLoggedInUser()).orElseThrow(ClothesNotFoundException::new);
         return clothesMapper.toDefaultResponse(clothes.changeLockStatus());
     }
 

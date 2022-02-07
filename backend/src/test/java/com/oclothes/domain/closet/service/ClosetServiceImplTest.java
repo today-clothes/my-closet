@@ -62,7 +62,7 @@ class ClosetServiceImplTest extends BaseTest {
     void createTest() {
         final String name = "my-first-closet-1";
         final CreateRequest request = new CreateRequest(name, false);
-        final Closet closet = new Closet(name,null);
+        final Closet closet = new Closet(name, null);
         final User user = User.builder().build();
 
         securityUtilsMock.when(SecurityUtils::getLoggedInUser).thenReturn(user);

@@ -53,12 +53,6 @@ public abstract class ClothesDto {
 
     @Getter
     @RequiredArgsConstructor
-    public static class SearchKeywordRequest{
-        private final String keyword;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
     public static class DefaultResponse {
         private final Long clothesId;
         private final boolean locked;

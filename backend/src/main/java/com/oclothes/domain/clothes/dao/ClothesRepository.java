@@ -13,7 +13,9 @@ import java.util.Optional;
 
 public interface ClothesRepository extends JpaRepository<Clothes, Long>, ClothesSupportRepository {
     List<Clothes> findAllByCloset(Closet closet);
+
     Optional<Clothes> findByIdAndUser(Long id, @NonNull User user);
+
     Slice<Clothes> findByContentContaining(String keyword, Pageable pageable);
 
     long countByCloset(@NonNull Closet closet);

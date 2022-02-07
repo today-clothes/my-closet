@@ -45,11 +45,11 @@ public class ClothesApiController {
             @RequestParam String keyword,
             @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(ResponseDto.create(KEYWORD_SEARCH_SUCCESS.getMessage(),
-                clothesService.searchByKeyword(new ClothesDto.SearchKeywordRequest(keyword), pageable)));
+                clothesService.searchByKeyword(keyword, pageable)));
     }
 
     @ApiOperation(value="옷 공개 여부", notes = "옷 공개/비공개 요청 API")
-    @PatchMapping("/{clothesId}/locked")
+    @PatchMapping("/{id}/locked")
     public ResponseEntity<ResponseDto<ClothesDto.DefaultResponse>> changeLockStatus(@PathVariable Long clothesId) {
         return ResponseEntity.ok(ResponseDto.create(CHANGE_LOCKED_STATUS_SUCCESS.getMessage(), clothesService.changeLockStatus(clothesId)));
     }

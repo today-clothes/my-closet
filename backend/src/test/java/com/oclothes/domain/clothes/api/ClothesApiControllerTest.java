@@ -117,7 +117,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
 
         when(clothesService.changeLockStatus(any())).thenReturn(dto);
 
-        mockMvc.perform(patch("/clothes/{clothesId}/locked", 1))
+        mockMvc.perform(patch("/clothes/{id}/locked", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(Matchers.containsString("완료")))
                 .andDo(print());

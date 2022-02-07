@@ -36,7 +36,7 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
                 .leftJoin(clothes.seasonTags, clothesSeasonTag)
                 .leftJoin(clothes.eventTags, clothesEventTag)
                 .leftJoin(clothes.moodTags, clothesMoodTag)
-                .where( userIdEq(SecurityUtils.getLoggedInUser().getId()),
+                .where(userIdEq(SecurityUtils.getLoggedInUser().getId()),
                         closetIdEq(request.getClosetId()),
                         tagsEq(request.getSeasonTagIds(), isSeasonTag),
                         tagsEq(request.getEventTagIds(), isEventTag),
