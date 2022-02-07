@@ -1,4 +1,4 @@
-package com.oclothes.global.config.security.util.exception;
+package com.oclothes.global.config.security.exception;
 
 public class RequiredLoggedInException extends IllegalArgumentException {
     public RequiredLoggedInException() {

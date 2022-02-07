@@ -3,6 +3,7 @@ package com.oclothes.infra.email;
 import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.EmailSubject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -25,6 +27,7 @@ public class EmailServiceImpl implements EmailService {
             messageHelper.setSubject(subject.getSubject());
             messageHelper.setText(message, true);
         } catch (MessagingException e) {
+            log.info(e.getMessage());
         }
         this.javaMailSender.send(mimeMessage);
     }
