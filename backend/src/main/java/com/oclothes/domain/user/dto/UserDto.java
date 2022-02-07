@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 public abstract class UserDto {
     @Getter
@@ -54,6 +51,9 @@ public abstract class UserDto {
     public static class ProfileUpdateRequest{
         @NotNull(message = "회원 id를 입력해주세요.")
         private final Long id;
+        @Size(min = 1, max = 20, message = "닉네임은 1자 이상 20자 이하로 입력해주세요.")
+        @NotNull(message = "닉네임을 입력해주세요.")
+        private final String nickname;
         @NotNull(message = "성별을 선택해주세요.")
         private final User.Gender gender;
         @Min(value = 0, message = "나이는 0보다 작을 수 없습니다.")
@@ -71,6 +71,7 @@ public abstract class UserDto {
     @RequiredArgsConstructor
     public static class DefaultResponse {
         private final Long id;
+        private final String nickname;
         private final User.Gender gender;
         private final Integer age;
         private final Integer height;

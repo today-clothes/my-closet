@@ -7,7 +7,6 @@ import com.oclothes.domain.user.exception.UserExceptionMessage;
 import com.oclothes.domain.user.exception.WrongEmailAuthenticationCodeException;
 import com.oclothes.global.entity.BaseEntity;
 import com.oclothes.global.error.exception.UserStatusException;
-import io.swagger.models.auth.In;
 import lombok.*;
 
 import javax.persistence.*;
@@ -113,7 +112,8 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public User updateUserProfile(Gender gender, Integer age, Integer height, Integer weight){
+    public User updateUserProfile(String nickname, Gender gender, Integer age, Integer height, Integer weight){
+        this.nickname = nickname;
         this.gender = gender;
         this.age = age;
         this.height = height;
