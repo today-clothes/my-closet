@@ -59,23 +59,22 @@ public class ClothesServiceImpl implements ClothesService {
         return this.fileService.getImage(url);
     }
 
-
     @Override
     public SliceDto<SearchResponse> searchByTag(SearchRequest request, Pageable pageable) {
-        return SliceDto.create(clothesRepository.searchByTag(request, pageable).map(this::GetSearchDtoResponse));
+        return SliceDto.create(clothesRepository.searchByTag(request, pageable).map(this::createSearchDtoResponse));
     }
 
     @Override
     public SliceDto<SearchResponse> searchAllClosetByTag(SearchRequest request, Pageable pageable) {
-        return SliceDto.create(clothesRepository.searchAllClosetByTag(request, pageable).map(this::GetSearchDtoResponse));
+        return SliceDto.create(clothesRepository.searchAllClosetByTag(request, pageable).map(this::createSearchDtoResponse));
     }
 
     @Override
     public SliceDto<SearchResponse> searchByKeyword(SearchKeywordRequest request, Pageable pageable) {
-        return SliceDto.create(clothesRepository.findByContentContaining(request.getKeyword(), pageable).map(this::GetSearchDtoResponse));
+        return SliceDto.create(clothesRepository.findByContentContaining(request.getKeyword(), pageable).map(this::createSearchDtoResponse));
     }
 
-    private SearchResponse GetSearchDtoResponse(Clothes c) {
+    private SearchResponse createSearchDtoResponse(Clothes c) {
         return new SearchResponse(
                 c.getCloset().getId(), c.getId(),
                 c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
