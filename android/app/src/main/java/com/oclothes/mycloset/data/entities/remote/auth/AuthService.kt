@@ -2,8 +2,10 @@ package com.oclothes.mycloset.data.entities.remote.auth
 
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.ApplicationClass.Companion.retrofit
+import com.oclothes.mycloset.data.entities.ErrorBody
 import com.oclothes.mycloset.ui.login.login.LoginView
 import com.oclothes.mycloset.ui.login.signup.SignUpView
 import com.oclothes.mycloset.ui.splash.SplashView
@@ -11,10 +13,11 @@ import com.oclothes.mycloset.utils.getLogin
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.sign
 
 object AuthService {
     val gson = Gson()
-
+    val type = object : TypeToken<ErrorBody>() {}.type
     fun signUp(signUpView: SignUpView, userDto: UserDto) {
 
         val authService = retrofit.create(AuthRetrofitInterface::class.java)
@@ -28,14 +31,16 @@ object AuthService {
             ) {
 
                 if (response.isSuccessful){
-                    val resp = response.body()!!
                     signUpView.onSignUpSuccess()
                 }else{
-
-                    signUpView.onSignUpFailure(response.code(), resp.message)
+                    var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
+                    if (errorBody != null) {
+                        signUpView.onSignUpFailure(response.code(), errorBody.errorMessage)
+                        return
+                    }
+                    signUpView.onSignUpFailure(400, "뭔가 에러가 발생한 것 같습니다.")
                 }
             }
-
             override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
                 signUpView.onSignUpFailure(400, t.message!!)
             }
@@ -55,9 +60,22 @@ object AuthService {
                     val resp = response.body()!!
                     loginView.onLoginSuccess(resp.data.jwt, userDto)
                 }else{
-                    gson.fromJson()
+                    when(response.code()){
+                        401 ->{
+                            loginView.onLoginFailure(response.code(), "로그인 미인증 에러")
+                        }
 
-                    loginView.onLoginFailure(response.code(), )
+                        else->{
+                            var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
+                            if (errorBody != null) {
+                                loginView.onLoginFailure(response.code(), errorBody.errorMessage)
+                                return
+                            }
+                            loginView.onLoginFailure(400, "알 수 없는 오류")
+
+                        }
+
+                    }
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {

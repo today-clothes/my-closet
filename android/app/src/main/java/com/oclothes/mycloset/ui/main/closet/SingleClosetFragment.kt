@@ -24,6 +24,8 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         initStyleList()
         initTags()
         binding.singleClosetBackBtnIv.setOnClickListener(this)
+        binding.singleClosetScissorsIv.setOnClickListener(this)
+        binding.singleClosetPlusIv.setOnClickListener(this)
 
         clothListAdapter = SingleClosetStyleListRVAdapter(this, styleList)
         clothListAdapter.setMyItemClickListener(object : SingleClosetStyleListRVAdapter.MyItemClickListener{
@@ -49,10 +51,6 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         binding.singleClosetFilterCountTv.text = "0"
-        binding.singleClosetScissorsIv.setOnClickListener(this)
-        binding.singleClosetPlusIv.setOnClickListener(this)
-
-
     }
 
     override fun onClick(v: View?) {

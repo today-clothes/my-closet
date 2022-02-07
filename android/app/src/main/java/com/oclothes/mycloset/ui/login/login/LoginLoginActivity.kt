@@ -92,17 +92,10 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
             401 ->{
                 startActivity(Intent(this, EmailAuthActivity::class.java))
             }
-
-            403 ->{
-                binding.loginLoginLoadingPb.visibility = View.GONE
-                binding.loginLoginEditTextPasswordEt.setText("")
-            }
-
-            400 ->{
+            else ->{
                 binding.loginLoginLoadingPb.visibility = View.GONE
                 binding.loginLoginEditTextPasswordEt.setText("")
             }
         }
-
     }
 }
