@@ -43,12 +43,6 @@ public class ClosetApiController {
         return ResponseEntity.ok(ResponseDto.create(CHANGE_NAME_SUCCESS.getMessage(), this.closetService.updateName(id, response)));
     }
 
-    @ApiOperation(value="옷장 공개 여부", notes = "옷장 공개/비공개 요청 API")
-    @PatchMapping("/{id}/locked")
-    public ResponseEntity<ResponseDto<DefaultResponse>> changeLockStatus(@PathVariable Long id) {
-        return ResponseEntity.ok(ResponseDto.create(CHANGE_LOCKED_STATUS_SUCCESS.getMessage(), this.closetService.changeLockStatus(id)));
-    }
-
     @ApiOperation(value = "옷장 삭제", notes = "옷장 삭제 API")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<?>> delete(@PathVariable Long id) {
