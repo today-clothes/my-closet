@@ -10,10 +10,11 @@ import com.oclothes.mycloset.databinding.FragmentSingleClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetStyleListRVAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter
+import java.util.concurrent.CopyOnWriteArrayList
 
 class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate) ,View.OnClickListener {
 
-    lateinit var styleList: ArrayList<Style>
+    lateinit var styleList: CopyOnWriteArrayList<Style>
     lateinit var tags : ArrayList<Tag>
     private lateinit var tagListAdapter : SingleClosetTagListRvAdapter
     private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
@@ -49,6 +50,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
         binding.singleClosetFilterCountTv.text = "0"
         binding.singleClosetScissorsIv.setOnClickListener(this)
+        binding.singleClosetPlusIv.setOnClickListener(this)
 
 
     }
@@ -64,6 +66,12 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             binding.singleClosetScissorsIv ->{
                 if(clothListAdapter.initEditMode(-1)){
                     initEditMode()
+                }
+            }
+
+            binding.singleClosetPlusIv ->{
+                if(clothListAdapter.getEditMode()){
+                    clothListAdapter.deleteSelectedItem()
                 }
             }
         }
@@ -82,9 +90,11 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     }
 
     private fun initStyleList(){
-        styleList = ArrayList<Style>()
-        for(i in 1..15) {
-            styleList.add(Style())
+        styleList = CopyOnWriteArrayList<Style>()
+        for(i in 1..10) {
+            styleList.add(Style("1일번"))
+            styleList.add(Style("2이번"))
+
         }
     }
 

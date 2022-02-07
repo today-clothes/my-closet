@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 class ApplicationClass : Application() {
     companion object{
-        const val X_ACCESS_TOKEN: String = "accessToken"         // JWT Token Key
+        const val X_ACCESS_TOKEN: String = "Authorization"         // JWT Token Key
         const val TAG: String = "MYCLOSET-APP"                      // Log, SharedPreference
         const val APP_DATABASE = "$TAG-DB"
 

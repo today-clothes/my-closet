@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/email_auth_back_btn_iv"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/btn_arrow_black"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이메일 인증"
+        app:layout_constraintStart_toEndOf="@id/email_auth_back_btn_iv"
+        app:layout_constraintTop_toTopOf="@id/email_auth_back_btn_iv"
+        app:layout_constraintBottom_toBottomOf="@id/email_auth_back_btn_iv"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="25dp"
+        android:textColor="@color/black"
+        />
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="인증메일을 보냈습니다. 확인점..."
+        app:layout_constraintTop_toBottomOf="@id/email_auth_back_btn_iv"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:textSize="20dp"
+        />
+        
+    
+    
+    <TextView
+        android:id="@+id/email_auth_login_btn_tv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/basic_theme_button_active"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        android:text="Login"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="20dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

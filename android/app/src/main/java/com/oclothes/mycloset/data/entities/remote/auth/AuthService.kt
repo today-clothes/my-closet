@@ -1,6 +1,7 @@
 package com.oclothes.mycloset.data.entities.remote.auth
 
 import android.util.Log
+import com.google.gson.Gson
 import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.ApplicationClass.Companion.retrofit
 import com.oclothes.mycloset.ui.login.login.LoginView
@@ -12,7 +13,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 object AuthService {
+    val gson = Gson()
+
     fun signUp(signUpView: SignUpView, userDto: UserDto) {
+
         val authService = retrofit.create(AuthRetrofitInterface::class.java)
 
         signUpView.onSignUpLoading()
@@ -22,11 +26,12 @@ object AuthService {
                 call: Call<SignUpResponse>,
                 response: Response<SignUpResponse>
             ) {
-                val resp = response.body()!!
 
                 if (response.isSuccessful){
+                    val resp = response.body()!!
                     signUpView.onSignUpSuccess()
                 }else{
+
                     signUpView.onSignUpFailure(response.code(), resp.message)
                 }
             }
@@ -45,12 +50,14 @@ object AuthService {
 
         authService.login(userDto).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                val resp = response.body()!!
 
                 if(response.isSuccessful) {
+                    val resp = response.body()!!
                     loginView.onLoginSuccess(resp.data.jwt, userDto)
                 }else{
-                    loginView.onLoginFailure(response.code(), resp.message)
+                    gson.fromJson()
+
+                    loginView.onLoginFailure(response.code(), )
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
@@ -69,7 +76,7 @@ object AuthService {
         val userDto = getLogin()
 
         userDto?.let {
-            authService.login(userDto).enqueue(object : Callback<LoginResponse> {
+            authService.autoLogin(userDto).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     val resp = response.body()!!
 

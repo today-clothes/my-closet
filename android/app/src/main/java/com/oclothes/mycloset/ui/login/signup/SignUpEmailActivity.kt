@@ -7,7 +7,7 @@ import com.oclothes.mycloset.data.entities.remote.auth.AuthService
 import com.oclothes.mycloset.data.entities.remote.auth.UserDto
 import com.oclothes.mycloset.databinding.ActivityEmailSignUpBinding
 import com.oclothes.mycloset.ui.BaseActivity
-import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.ui.login.LoginActivity
 
 class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEmailSignUpBinding::inflate), SignUpView, View.OnClickListener {
     override fun initAfterBinding() {
@@ -92,7 +92,7 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
 
     override fun onSignUpSuccess() {
         binding.loginSignUpLoadingPb.visibility = View.GONE
-        startActivityWithClear(MainActivity::class.java)
+        startActivityWithClear(LoginActivity::class.java)
     }
 
     override fun onSignUpFailure(code: Int, message: String) {

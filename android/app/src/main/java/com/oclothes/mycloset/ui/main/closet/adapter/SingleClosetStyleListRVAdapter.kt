@@ -10,9 +10,10 @@ import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
 import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
-class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
+class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : CopyOnWriteArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
     private var editMode = false
     private val viewList = ArrayList<ItemSingleClosetClothBinding>()
 
@@ -59,6 +60,8 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
         }
     }
 
+    fun getEditMode() = editMode
+
     private fun setBackground(
         position: Int,
         holder: ViewHolder
@@ -97,8 +100,7 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
                 styleList.remove(style)
             }
         }
-        editMode = false
-        notifyDataSetChanged()
+        finishEditMode()
     }
 
     fun finishEditMode() {

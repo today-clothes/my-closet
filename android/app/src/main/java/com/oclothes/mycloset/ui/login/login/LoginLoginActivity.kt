@@ -9,6 +9,7 @@ import com.oclothes.mycloset.data.entities.remote.auth.AuthService
 import com.oclothes.mycloset.data.entities.remote.auth.UserDto
 import com.oclothes.mycloset.databinding.ActivityLoginLoginBinding
 import com.oclothes.mycloset.ui.BaseActivity
+import com.oclothes.mycloset.ui.login.EmailAuthActivity
 import com.oclothes.mycloset.ui.login.signup.SignUpEmailActivity
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.utils.saveJwt
@@ -87,7 +88,21 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
     }
 
     override fun onLoginFailure(code: Int, message: String) {
-        binding.loginLoginLoadingPb.visibility = View.GONE
-        binding.loginLoginEditTextPasswordEt.setText("")
+        when(code){
+            401 ->{
+                startActivity(Intent(this, EmailAuthActivity::class.java))
+            }
+
+            403 ->{
+                binding.loginLoginLoadingPb.visibility = View.GONE
+                binding.loginLoginEditTextPasswordEt.setText("")
+            }
+
+            400 ->{
+                binding.loginLoginLoadingPb.visibility = View.GONE
+                binding.loginLoginEditTextPasswordEt.setText("")
+            }
+        }
+
     }
 }
