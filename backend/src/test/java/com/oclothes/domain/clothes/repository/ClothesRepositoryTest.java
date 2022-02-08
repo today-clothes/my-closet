@@ -19,9 +19,10 @@ import com.oclothes.domain.tag.domain.MoodTag;
 import com.oclothes.domain.tag.domain.SeasonTag;
 import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.oclothes.global.config.security.util.SecurityUtils;
+import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -56,19 +57,32 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
 
     User user;
 
+    private static MockedStatic<SecurityUtils> securityUtils;
+
+    @BeforeAll
+    static void beforeAll() {
+        securityUtils = Mockito.mockStatic(SecurityUtils.class);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        securityUtils.close();
+    }
+
     @BeforeEach
     public void init() {
         //1.회원
         Email email = new Email("sks@naver.com");
         user = User.builder().email(email).height(10).nickname("semi").password("10").weight(1).build();
         em.persist(user);
+        securityUtils.when(SecurityUtils::getLoggedInUser).thenReturn(user);
     }
 
     @DisplayName("개별 옷장 태그 필터링")
     @Test
     public void searchByTag() throws IOException {
         //1.옷장 생성
-        Closet closet = closetRepository.save(new Closet("c1", true, user));
+        Closet closet = closetRepository.save(new Closet("c1", user));
 
         //2.태그 생성
         MoodTag moodTag1 = moodTagRepository.save(new MoodTag("무드1"));
@@ -77,10 +91,10 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         SeasonTag seasonTag2 = seasonTagRepository.save(new SeasonTag("계절2"));
 
         //3. 옷 생성
-        Clothes clothes1 = clothesRepository.save(createClothes(closet, "a"));
-        Clothes clothes2 = clothesRepository.save(createClothes(closet, "b"));
-        Clothes clothes3 = clothesRepository.save(createClothes(closet, "c"));
-        Clothes clothes4 = clothesRepository.save(createClothes(closet, "d"));
+        Clothes clothes1 = clothesRepository.save(createClothes(closet, "a", true));
+        Clothes clothes2 = clothesRepository.save(createClothes(closet, "b", false));
+        Clothes clothes3 = clothesRepository.save(createClothes(closet, "c", true));
+        Clothes clothes4 = clothesRepository.save(createClothes(closet, "d", true));
 
         //4. 태그-옷 연결
         //clothes1 - 계절1 + 이벤트1
@@ -137,22 +151,22 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
 
     @Test
     @DisplayName("전체 키워드로 옷 검색")
-    public void searchByKeyword() {
-        Closet closet = new Closet("c1", true, user);
-        Closet result = closetRepository.save(closet);
-        Clothes clothes1 = createClothes(result, "aa");
-        Clothes clothes2 = createClothes(result, "bb");
+    public void findByContentContainingAndLockedIsFalseTest() {
+        Closet closet = new Closet("c1", user);
+        Closet result = this.closetRepository.save(closet);
+        Clothes clothes1 = this.createClothes(result, "aa", true);
+        Clothes clothes2 = this.createClothes(result, "bb", false);
         clothes1.setContent("ㅋ키키키예시");
-        clothes2.setContent("기분좋은날옷");
-        Clothes c1 = clothesRepository.save(clothes1);
-        Clothes c2 = clothesRepository.save(clothes2);
+        clothes2.setContent("우왕");
+        this.clothesRepository.save(clothes1);
+        this.clothesRepository.save(clothes2);
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        Slice<Clothes> clothes = clothesRepository.findByContentContaining("예시", pageRequest);
+        Slice<Clothes> clothes = this.clothesRepository.findByContentContainingAndLockedIsFalse("우", pageRequest);
         assertEquals(1, clothes.getNumberOfElements());
     }
 
-    private Clothes createClothes(Closet closet, String imgUrl) {
-        return Clothes.builder().user(user).imgUrl(imgUrl).closet(closet).build();
+    private Clothes createClothes(Closet closet, String imgUrl, boolean locked) {
+        return Clothes.builder().user(user).imgUrl(imgUrl).locked(locked).closet(closet).build();
     }
 }

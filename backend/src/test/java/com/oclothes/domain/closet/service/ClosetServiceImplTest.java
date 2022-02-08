@@ -4,6 +4,7 @@ import com.oclothes.BaseTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.closet.dto.ClosetDto;
+import com.oclothes.domain.closet.dto.ClosetDto.DefaultResponse;
 import com.oclothes.domain.closet.dto.ClosetMapper;
 import com.oclothes.domain.closet.exception.ClosetNotEmptyException;
 import com.oclothes.domain.clothes.service.ClothesService;
@@ -26,7 +27,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.oclothes.domain.closet.dto.ClosetDto.CreateRequest;
-import static com.oclothes.domain.closet.dto.ClosetDto.CreateResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -61,16 +61,15 @@ class ClosetServiceImplTest extends BaseTest {
     @Test
     void createTest() {
         final String name = "my-first-closet-1";
-        final CreateRequest request = new CreateRequest(name, false);
-        final Closet closet = new Closet(name, false, null);
+        final CreateRequest request = new CreateRequest(name);
+        final Closet closet = new Closet(name, null);
         final User user = User.builder().build();
 
         securityUtilsMock.when(SecurityUtils::getLoggedInUser).thenReturn(user);
         when(this.closetRepository.save(any())).thenReturn(closet);
 
-        CreateResponse response = this.closetService.create(request);
+        DefaultResponse response = this.closetService.create(request);
         assertEquals(name, response.getName());
-        assertFalse(response.isLocked());
     }
 
     @DisplayName("옷장을 리스트를 SliceDto로 반환 성공한다.")
@@ -82,7 +81,7 @@ class ClosetServiceImplTest extends BaseTest {
 
         when(this.closetRepository.findAllSliceByUser(any(), any())).thenReturn(slice);
 
-        final SliceDto<ClosetDto.DefaultResponse> response = this.closetService.findAllSliceByUser(pageRequest);
+        final SliceDto<DefaultResponse> response = this.closetService.findAllSliceByUser(pageRequest);
         assertFalse(response.hasNext());
         assertTrue(response.isEmpty());
     }
@@ -91,45 +90,20 @@ class ClosetServiceImplTest extends BaseTest {
     @Test
     void updateNameTest() {
         final long id = 1L;
-        final Closet closet = Closet.builder().name("beforeName").locked(true).build();
+        final Closet closet = Closet.builder().name("beforeName").build();
         final ClosetDto.NameUpdateRequest request = new ClosetDto.NameUpdateRequest(id, "test");
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
 
-        final ClosetDto.DefaultResponse response = this.closetService.updateName(id, request);
+        final DefaultResponse response = this.closetService.updateName(id, request);
         assertEquals("test", response.getName());
-        assertTrue(response.isLocked());
-    }
-
-    @DisplayName("옷장 공개 상태가 true일 겨우 false로 변경한다.")
-    @Test
-    void changeLockStatusFalseTest() {
-        final long id = 1L;
-        final Closet closet = Closet.builder().locked(true).build();
-
-        when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
-
-        final ClosetDto.DefaultResponse response = this.closetService.changeLockStatus(1L);
-        assertFalse(response.isLocked());
-    }
-
-    @DisplayName("옷장 공개 상태가 false일 겨우 true로 변경한다.")
-    @Test
-    void changeLockStatusTrueTest() {
-        final long id = 1L;
-        final Closet closet = Closet.builder().locked(false).build();
-
-        when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
-
-        final ClosetDto.DefaultResponse response = this.closetService.changeLockStatus(1L);
-        assertTrue(response.isLocked());
     }
 
     @DisplayName("옷장 안의 옷이 0보다 클 경우 ")
     @Test
     void whenClothesCountGreaterThenZeroThenDeleteFail() {
         final long id = 1L;
-        final Closet closet = Closet.builder().locked(false).build();
+        final Closet closet = Closet.builder().build();
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
         when(this.clothesService.getSizeByCloset(any())).thenReturn(1L);
@@ -141,7 +115,7 @@ class ClosetServiceImplTest extends BaseTest {
     @Test
     void deleteSuccess() {
         final long id = 1L;
-        final Closet closet = Closet.builder().locked(false).build();
+        final Closet closet = Closet.builder().build();
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
         when(this.clothesService.getSizeByCloset(any())).thenReturn(0L);

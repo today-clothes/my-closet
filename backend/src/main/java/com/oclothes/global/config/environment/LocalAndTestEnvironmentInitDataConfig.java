@@ -28,7 +28,6 @@ import java.util.List;
 @Profile("local")
 @Configuration
 public class LocalAndTestEnvironmentInitDataConfig implements ApplicationRunner, DisposableBean {
-
     private final UserRepository userRepository;
     private final ClosetRepository closetRepository;
     private final PasswordEncoder passwordEncoder;
@@ -40,7 +39,8 @@ public class LocalAndTestEnvironmentInitDataConfig implements ApplicationRunner,
     public void run(ApplicationArguments args) throws Exception {
         this.userRepository.save(this.createUser("admin@test.com", User.Role.ROLE_ADMIN));
         final User user = this.userRepository.save(this.createUser("user@test.com", User.Role.ROLE_USER));
-        final Closet c1 = this.closetRepository.save(new Closet("c1", false, user));
+        final Closet c1 = this.closetRepository.save(new Closet("c1",  user));
+
         this.seasonTagRepository.saveAll(List.of(
                 new SeasonTag("봄"),
                 new SeasonTag("여름"),

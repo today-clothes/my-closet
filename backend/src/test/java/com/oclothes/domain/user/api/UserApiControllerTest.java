@@ -83,12 +83,13 @@ class UserApiControllerTest extends BaseWebMvcTest {
     @Test
     void updateProfileTest() throws Exception{
         final Long id = 1L;
+        final String nickname = "test";
         final User.Gender gender = User.Gender.MALE;
         final Integer age = 25;
         final Integer height = 200;
         final Integer weight = 100;
-        final UserDto.ProfileUpdateRequest request = new UserDto.ProfileUpdateRequest(id, gender, age, height, weight);
-        final UserDto.DefaultResponse response = new UserDto.DefaultResponse(id, gender, age, height, weight);
+        final UserDto.ProfileUpdateRequest request = new UserDto.ProfileUpdateRequest(id, nickname, gender, age, height, weight);
+        final UserDto.DefaultResponse response = new UserDto.DefaultResponse(id, nickname, gender, age, height, weight);
         when(this.userService.updateProfile(any(), any())).thenReturn(response);
         mockMvc.perform(patch("/users/{id}/profile", 1)
                 .contentType(MediaType.APPLICATION_JSON)

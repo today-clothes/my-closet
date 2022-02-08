@@ -1,6 +1,7 @@
 package com.oclothes.infra.file;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Profile;
@@ -33,13 +34,22 @@ public class LocalFileServiceImpl implements FileService {
     }
 
     @Override
-    public byte[] getImage(String url) {
-        try (final BufferedInputStream bis = new BufferedInputStream(new FileInputStream(IMAGE_PATH + url))) {
+    public byte[] getImage(String key) {
+        try (final BufferedInputStream bis = new BufferedInputStream(new FileInputStream(IMAGE_PATH + key))) {
             return IOUtils.toByteArray(bis);
         } catch (FileNotFoundException e) {
             throw new ImageNotFoundException();
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void delete(String key) {
+        try {
+            FileUtils.forceDeleteOnExit(new File(IMAGE_PATH + key));
+        } catch (IOException e) {
+            log.info(e.getMessage());
         }
     }
 }

@@ -33,7 +33,6 @@ public abstract class ClothesDto {
     @Getter
     @RequiredArgsConstructor
     public static class SearchRequest {
-        @NotNull(message = "옷장(closet) ID를 입력해주세요.")
         private final Long closetId;
         private final List<Long> seasonTagIds;
         private final List<Long> eventTagIds;
@@ -45,6 +44,7 @@ public abstract class ClothesDto {
     public static class SearchResponse {
         private final Long closetId;
         private final Long clothesId;
+        private final boolean locked;
         private final Set<TagDto.Response> seasonTags;
         private final Set<TagDto.Response> eventTags;
         private final Set<TagDto.Response> moodTags;
@@ -53,9 +53,8 @@ public abstract class ClothesDto {
 
     @Getter
     @RequiredArgsConstructor
-    public static class SearchKeywordRequest{
-        private final String keyword;
+    public static class DefaultResponse {
+        private final Long clothesId;
+        private final boolean locked;
     }
-
-
 }

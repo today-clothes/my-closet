@@ -39,4 +39,5 @@ public class SliceDto<T> {
                 .contents(slice.getContent())
                 .build();
     }
+
 }

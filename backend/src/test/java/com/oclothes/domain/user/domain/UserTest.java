@@ -48,7 +48,7 @@ class UserTest extends BaseDataJpaTest {
     @Test
     void addClosetTest() {
         User savedUser = this.userRepository.save(user);
-        savedUser.addCloset(new Closet("my first closet", true, user));
+        savedUser.addCloset(new Closet("my first closet", user));
         Closet closet = this.closetRepository.findAllByUser(savedUser).get(0);
         log.info("closet id: {}", closet.getId());
         assertNotNull(closet.getId());

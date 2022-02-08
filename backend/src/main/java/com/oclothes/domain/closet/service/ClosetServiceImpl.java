@@ -25,8 +25,8 @@ public class ClosetServiceImpl implements ClosetService {
     private final ClothesService clothesService;
 
     @Override
-    public CreateResponse create(CreateRequest request) {
-        return this.closetMapper.entityToCreateResponse(this.closetRepository.save(this.closetMapper.toEntity(request)));
+    public DefaultResponse create(CreateRequest request) {
+        return this.closetMapper.entityToDefaultResponse(this.closetRepository.save(this.closetMapper.toEntity(request)));
     }
 
     @Override
@@ -37,11 +37,6 @@ public class ClosetServiceImpl implements ClosetService {
     @Override
     public DefaultResponse updateName(Long id, NameUpdateRequest request) {
         return this.closetMapper.entityToDefaultResponse(this.findByUserAndClosetId(id).setName(request.getName()));
-    }
-
-    @Override
-    public DefaultResponse changeLockStatus(Long id) {
-        return this.closetMapper.entityToDefaultResponse(this.findByUserAndClosetId(id).changeLockedStatus());
     }
 
     @Override
