@@ -32,6 +32,10 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -108,4 +112,5 @@ class ClothesServiceImplTest extends BaseTest {
         final ClothesDto.DefaultResponse response = this.clothesService.changeLockStatus(1L);
         assertTrue(response.isLocked());
     }
+
 }

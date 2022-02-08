@@ -83,7 +83,6 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                     .content(objectMapper.writeValueAsString(req))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
-
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(containsString("필터링된")))
                 .andDo(print());
