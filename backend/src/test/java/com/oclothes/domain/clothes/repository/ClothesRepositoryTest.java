@@ -151,18 +151,18 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
 
     @Test
     @DisplayName("전체 키워드로 옷 검색")
-    public void searchByKeyword() {
+    public void findByContentContainingAndLockedIsFalseTest() {
         Closet closet = new Closet("c1", user);
-        Closet result = closetRepository.save(closet);
-        Clothes clothes1 = createClothes(result, "aa", true);
-        Clothes clothes2 = createClothes(result, "bb", false);
+        Closet result = this.closetRepository.save(closet);
+        Clothes clothes1 = this.createClothes(result, "aa", true);
+        Clothes clothes2 = this.createClothes(result, "bb", false);
         clothes1.setContent("ㅋ키키키예시");
         clothes2.setContent("우왕");
-        Clothes c1 = clothesRepository.save(clothes1);
-        Clothes c2 = clothesRepository.save(clothes2);
+        this.clothesRepository.save(clothes1);
+        this.clothesRepository.save(clothes2);
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        Slice<Clothes> clothes = clothesRepository.findByContentContaining("예시", pageRequest);
+        Slice<Clothes> clothes = this.clothesRepository.findByContentContainingAndLockedIsFalse("우", pageRequest);
         assertEquals(1, clothes.getNumberOfElements());
     }
 

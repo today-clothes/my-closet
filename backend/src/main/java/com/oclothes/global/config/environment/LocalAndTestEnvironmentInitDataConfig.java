@@ -40,6 +40,7 @@ public class LocalAndTestEnvironmentInitDataConfig implements ApplicationRunner,
         this.userRepository.save(this.createUser("admin@test.com", User.Role.ROLE_ADMIN));
         final User user = this.userRepository.save(this.createUser("user@test.com", User.Role.ROLE_USER));
         final Closet c1 = this.closetRepository.save(new Closet("c1",  user));
+
         this.seasonTagRepository.saveAll(List.of(
                 new SeasonTag("봄"),
                 new SeasonTag("여름"),

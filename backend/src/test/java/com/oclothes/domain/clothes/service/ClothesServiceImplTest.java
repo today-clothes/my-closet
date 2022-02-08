@@ -4,38 +4,28 @@ import com.oclothes.BaseTest;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.domain.clothes.domain.Clothes;
-
-import com.oclothes.domain.clothes.dto.ClothesMapper;
-import com.oclothes.infra.file.FileService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
 import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.global.dto.SliceDto;
-import org.junit.jupiter.api.*;
+import com.oclothes.infra.file.FileService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Spy;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -113,4 +103,21 @@ class ClothesServiceImplTest extends BaseTest {
         assertTrue(response.isLocked());
     }
 
+    @DisplayName("옷 공개 상태만 검색 결과에서 반환한다.")
+    @Test
+    void showNonLockedClothes() throws NoSuchFieldException, IllegalAccessException {
+        final Closet closet = Closet.builder().build();
+        final Field closetId = closet.getClass().getSuperclass().getDeclaredField("id");
+        closetId.setAccessible(true);
+        closetId.set(closet, 1L);
+        final Clothes clothes1 = Clothes.builder().closet(closet).locked(true).build();
+        final PageRequest pageRequest = PageRequest.of(0, 2);
+        SliceImpl<Clothes> slice = new SliceImpl<>(List.of(clothes1), pageRequest, true);
+
+        when(this.clothesRepository.findByContentContainingAndLockedIsFalse(any(), any())).thenReturn(slice);
+
+        final SliceDto<ClothesDto.SearchResponse> result = this.clothesService.searchByKeyword("예시", pageRequest);
+        verify(this.clothesRepository, atMostOnce()).findByContentContainingAndLockedIsFalse(any(), any());
+        assertEquals(1, result.getContentsCount());
+    }
 }

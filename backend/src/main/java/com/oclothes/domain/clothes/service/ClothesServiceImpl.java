@@ -57,33 +57,26 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public byte[] getImage(String url) {
-        return this.fileService.getImage(url);
-    }
-
-    @Override
     public SliceDto<SearchResponse> searchByTag(SearchRequest request, Pageable pageable) {
         return SliceDto.create(this.clothesRepository.searchByTag(request, pageable).map(this::createSearchDtoResponse));
     }
 
     @Override
     public SliceDto<SearchResponse> searchByKeyword(String keyword, Pageable pageable) {
-        return SliceDto.create(this.clothesRepository.findByContentContaining(keyword, pageable).map(this::createSearchDtoResponse));
+        return SliceDto.create(this.clothesRepository
+                .findByContentContainingAndLockedIsFalse(keyword, pageable)
+                .map(this::createSearchDtoResponse));
     }
 
     @Override
     public DefaultResponse changeLockStatus(Long id) {
         Clothes clothes = this.clothesRepository.findByIdAndUser(id, SecurityUtils.getLoggedInUser()).orElseThrow(ClothesNotFoundException::new);
-        return clothesMapper.toDefaultResponse(clothes.changeLockStatus());
+        return this.clothesMapper.toDefaultResponse(clothes.changeLockStatus());
     }
 
-    private SearchResponse createSearchDtoResponse(Clothes c) {
-        return new SearchResponse(
-                c.getCloset().getId(), c.getId(), c.isLocked(),
-                c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
-                c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
-                c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
-                c.getImgUrl());
+    @Override
+    public byte[] getImage(String url) {
+        return this.fileService.getImage(url);
     }
 
     @Override
@@ -95,4 +88,16 @@ public class ClothesServiceImpl implements ClothesService {
     public Clothes findById(Long id) {
         return this.clothesRepository.findById(id).orElseThrow(ClothesNotFoundException::new);
     }
+
+    private SearchResponse createSearchDtoResponse(Clothes c) {
+        return new SearchResponse(
+                c.getCloset().getId(),
+                c.getId(),
+                c.isLocked(),
+                c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
+                c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
+                c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
+                c.getImgUrl());
+    }
+
 }
