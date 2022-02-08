@@ -16,7 +16,7 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long>, Clothes
 
     Optional<Clothes> findByIdAndUser(Long id, @NonNull User user);
 
-    Slice<Clothes> findByContentContaining(String keyword, Pageable pageable);
+    Slice<Clothes> findByContentContainingAndLockedIsFalse(String keyword, Pageable pageable);
 
     long countByCloset(@NonNull Closet closet);
 }

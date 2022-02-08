@@ -58,7 +58,7 @@ public class Clothes extends BaseEntity {
     }
 
     public Clothes changeLockStatus(){
-        this.locked = !locked;
+        this.locked = !this.locked;
         return this;
     }
 }

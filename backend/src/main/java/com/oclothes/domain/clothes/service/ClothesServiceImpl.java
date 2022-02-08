@@ -17,12 +17,9 @@ import com.oclothes.global.dto.SliceDto;
 import com.oclothes.infra.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,10 +63,9 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public SliceDto<SearchResponse> searchByKeyword(String keyword, Pageable pageable) {
-        Slice<Clothes> sliceEntity = this.clothesRepository.findByContentContaining(keyword, pageable);
-        List<Clothes> clothes = new ArrayList<>(sliceEntity.getContent());
-        clothes.removeIf(Clothes::isLocked);
-        return SliceDto.create(new SliceImpl<>(clothes, pageable, sliceEntity.hasNext()).map(this::createSearchDtoResponse));
+        return SliceDto.create(this.clothesRepository
+                .findByContentContainingAndLockedIsFalse(keyword, pageable)
+                .map(this::createSearchDtoResponse));
     }
 
     @Override
@@ -95,7 +91,9 @@ public class ClothesServiceImpl implements ClothesService {
 
     private SearchResponse createSearchDtoResponse(Clothes c) {
         return new SearchResponse(
-                c.getCloset().getId(), c.getId(), c.isLocked(),
+                c.getCloset().getId(),
+                c.getId(),
+                c.isLocked(),
                 c.getSeasonTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getEventTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
