@@ -1,6 +1,7 @@
 package com.oclothes.domain.user.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.exception.EmailAuthenticationCodeNotFoundException;
 import com.oclothes.domain.user.exception.EmailAuthenticationCodeTooManyRequestException;
 import com.oclothes.domain.user.exception.UserExceptionMessage;
@@ -112,12 +113,12 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public User updateUserProfile(String nickname, Gender gender, Integer age, Integer height, Integer weight){
-        this.nickname = nickname;
-        this.gender = gender;
-        this.age = age;
-        this.height = height;
-        this.weight = weight;
+    public User updateUserProfile(UserDto.ProfileUpdateRequest request){
+        this.nickname = request.getNickname();
+        this.gender = request.getGender();
+        this.age = request.getAge();
+        this.height = request.getHeight();
+        this.weight = request.getWeight();
         return this;
     }
 }

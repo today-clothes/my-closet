@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto.DefaultResponse updateProfile(Long id, UserDto.ProfileUpdateRequest request){
         this.validateAlreadyExistsNickname(request);
-        return userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request.getNickname(), request.getGender(), request.getAge(), request.getHeight(), request.getWeight()));
+        return this.userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request));
     }
 
     public User findById(Long id){
