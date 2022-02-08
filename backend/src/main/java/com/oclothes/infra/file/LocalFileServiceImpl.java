@@ -5,7 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Slf4j
 @Profile("local")
-@Component
+@Service
 public class LocalFileServiceImpl implements FileService {
     private static final String IMAGE_PATH = "./images/";
 

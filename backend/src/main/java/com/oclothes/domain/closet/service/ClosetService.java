@@ -12,7 +12,5 @@ public interface ClosetService {
 
     DefaultResponse updateName(Long id, NameUpdateRequest request);
 
-    DefaultResponse changeLockStatus(Long id);
-
     void delete(Long id);
 }

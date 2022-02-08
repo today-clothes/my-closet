@@ -13,12 +13,16 @@ import java.io.IOException;
 
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String message = "다시 로그인 해주세요.";
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException authException
+    ) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        response.getWriter().println(objectMapper.writeValueAsString(ExceptionResponse.create(message)));
+        response.getWriter().println(objectMapper.writeValueAsString(
+                ExceptionResponse.create(SecurityExceptionMessage.NO_AUTHENTICATION.getMessage())));
     }
 }

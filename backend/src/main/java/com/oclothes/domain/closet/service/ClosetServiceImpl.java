@@ -40,11 +40,6 @@ public class ClosetServiceImpl implements ClosetService {
     }
 
     @Override
-    public DefaultResponse changeLockStatus(Long id) {
-        return this.closetMapper.entityToDefaultResponse(this.findByUserAndClosetId(id).changeLockedStatus());
-    }
-
-    @Override
     public void delete(Long id) {
         final Closet closet = this.findByUserAndClosetId(id);
         this.validateClothesIsEmpty(closet);
