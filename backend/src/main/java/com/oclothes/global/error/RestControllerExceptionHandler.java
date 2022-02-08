@@ -25,7 +25,7 @@ public class RestControllerExceptionHandler {
                         .collect(Collectors.toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage))));
     }
 
-    @ExceptionHandler({AlreadyExistsException.class, UserStatusException.class, NotFoundException.class, FileExtensionException.class})
+    @ExceptionHandler({AlreadyExistsException.class, NotFoundException.class, FileExtensionException.class})
     public ResponseEntity<ExceptionResponse> alreadyExistsExceptionHandle(Exception exception) {
         return ResponseEntity.badRequest().body(ExceptionResponse.create(exception.getMessage()));
     }
@@ -35,7 +35,7 @@ public class RestControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ExceptionResponse.create(exception.getMessage()));
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
+    @ExceptionHandler({ExpiredJwtException.class, UserStatusException.class})
     public ResponseEntity<ExceptionResponse> expiredJwtExceptionHandle(Exception exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionResponse.create(exception.getMessage()));
     }
