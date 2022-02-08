@@ -4,6 +4,7 @@ import com.oclothes.BaseWebMvcTest;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.SliceDto;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -80,25 +81,6 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
         when(clothesService.searchByTag(any(), any())).thenReturn(dto);
 
         mockMvc.perform(get("/clothes/search/?size=20")
-                    .content(objectMapper.writeValueAsString(req))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(containsString("필터링된")))
-                .andDo(print());
-    }
-
-
-    @DisplayName("전체 옷장 필터링 결과를 SliceDto 매핑해서 반환")
-    @WithMockUser
-    @Test
-    void getAllFilteringList() throws Exception {
-        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
-
-        when(clothesService.searchAllClosetByTag(any(), any())).thenReturn(dto);
-
-        mockMvc.perform(get("/clothes/search?size=20")
                         .content(objectMapper.writeValueAsString(req))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -106,7 +88,6 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                 .andExpect(jsonPath("$.message").value(containsString("필터링된")))
                 .andDo(print());
     }
-
 
     @DisplayName("옷 검색 결과를 SliceDto 매핑해서 반환")
     @WithMockUser

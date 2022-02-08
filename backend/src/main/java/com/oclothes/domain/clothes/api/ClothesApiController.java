@@ -1,6 +1,7 @@
 package com.oclothes.domain.clothes.api;
 
 import com.oclothes.domain.clothes.dto.ClothesDto;
+import com.oclothes.domain.clothes.dto.ClothesResponseMessage;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.ResponseDto;
 import com.oclothes.global.dto.SliceDto;
@@ -48,10 +49,10 @@ public class ClothesApiController {
                 clothesService.searchByKeyword(keyword, pageable)));
     }
 
-    @ApiOperation(value="옷 공개 여부", notes = "옷 공개/비공개 요청 API")
+    @ApiOperation(value = "옷 공개 여부", notes = "옷 공개/비공개 요청 API")
     @PatchMapping("/{id}/locked")
-    public ResponseEntity<ResponseDto<ClothesDto.DefaultResponse>> changeLockStatus(@PathVariable Long clothesId) {
-        return ResponseEntity.ok(ResponseDto.create(CHANGE_LOCKED_STATUS_SUCCESS.getMessage(), clothesService.changeLockStatus(clothesId)));
+    public ResponseEntity<ResponseDto<ClothesDto.DefaultResponse>> changeLockStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(ResponseDto.create(CHANGE_LOCKED_STATUS_SUCCESS.getMessage(), clothesService.changeLockStatus(id)));
     }
 
     @ApiOperation(value = "옷 이미지", notes = "옷 이미지 반환 API")

@@ -28,7 +28,6 @@ import java.util.List;
 @Profile("local")
 @Configuration
 public class LocalAndTestEnvironmentInitDataConfig implements ApplicationRunner, DisposableBean {
-
     private final UserRepository userRepository;
     private final ClosetRepository closetRepository;
     private final PasswordEncoder passwordEncoder;
