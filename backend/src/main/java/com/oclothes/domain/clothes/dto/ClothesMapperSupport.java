@@ -3,6 +3,7 @@ package com.oclothes.domain.clothes.dto;
 import com.oclothes.domain.closet.dao.ClosetRepository;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.closet.exception.ClosetNotFoundException;
+import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.infra.file.FileService;
 import lombok.RequiredArgsConstructor;

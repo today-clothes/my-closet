@@ -79,14 +79,16 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
 
         when(clothesService.searchByTag(any(), any())).thenReturn(dto);
 
-        mockMvc.perform(get("/clothes/search/1/?size=20")
-                        .content(objectMapper.writeValueAsString(req))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/clothes/search/?size=20")
+                    .content(objectMapper.writeValueAsString(req))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(containsString("필터링된")))
                 .andDo(print());
     }
+
 
     @DisplayName("전체 옷장 필터링 결과를 SliceDto 매핑해서 반환")
     @WithMockUser
@@ -105,6 +107,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                 .andExpect(jsonPath("$.message").value(containsString("필터링된")))
                 .andDo(print());
     }
+
 
     @DisplayName("옷 검색 결과를 SliceDto 매핑해서 반환")
     @WithMockUser
@@ -135,4 +138,23 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                 .andExpect(jsonPath("$.message").value(containsString("삭제")))
                 .andDo(print());
     }
+
+    @DisplayName("옷 공개 상태 변경")
+    @WithMockUser
+    @Test
+    void changeLockStatusTest() throws Exception {
+        final long id = 1L;
+        final String name = "test";
+        final ClothesDto.DefaultResponse dto = new ClothesDto.DefaultResponse(id, true);
+
+        when(clothesService.changeLockStatus(any())).thenReturn(dto);
+
+        mockMvc.perform(patch("/clothes/{id}/locked", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(Matchers.containsString("완료")))
+                .andDo(print());
+
+        verify(clothesService, atMostOnce()).changeLockStatus(id);
+    }
+
 }

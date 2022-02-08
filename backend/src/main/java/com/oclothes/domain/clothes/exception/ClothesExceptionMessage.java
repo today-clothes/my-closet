@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ClothesExceptionMessage {
-    NOT_FOUND("해당 옷이 존재하지 않습니다.");
+    NOT_FOUND("해당 옷이 존재하지 않습니다."),
+    CLOTHES_NOT_FOUND("해당 옷이 존재하지 않습니다.");
 
     private final String message;
 }
