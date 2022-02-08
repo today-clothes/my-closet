@@ -85,4 +85,14 @@ public class ClothesServiceImpl implements ClothesService {
                 c.getMoodTags().stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet()),
                 c.getImgUrl());
     }
+
+    @Override
+    public void deleteById(Long id) {
+        this.fileService.delete(this.findById(id).getImgUrl());
+        this.clothesRepository.deleteById(id);
+    }
+
+    public Clothes findById(Long id) {
+        return this.clothesRepository.findById(id).orElseThrow(ClothesNotFoundException::new);
+    }
 }
