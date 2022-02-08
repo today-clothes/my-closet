@@ -1,13 +1,13 @@
 package com.oclothes.domain.user.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.exception.EmailAuthenticationCodeNotFoundException;
 import com.oclothes.domain.user.exception.EmailAuthenticationCodeTooManyRequestException;
 import com.oclothes.domain.user.exception.UserExceptionMessage;
 import com.oclothes.domain.user.exception.WrongEmailAuthenticationCodeException;
 import com.oclothes.global.entity.BaseEntity;
 import com.oclothes.global.error.exception.UserStatusException;
-import io.swagger.models.auth.In;
 import lombok.*;
 
 import javax.persistence.*;
@@ -113,11 +113,12 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public User updateUserProfile(Gender gender, Integer age, Integer height, Integer weight){
-        this.gender = gender;
-        this.age = age;
-        this.height = height;
-        this.weight = weight;
+    public User updateUserProfile(UserDto.ProfileUpdateRequest request){
+        this.nickname = request.getNickname();
+        this.gender = request.getGender();
+        this.age = request.getAge();
+        this.height = request.getHeight();
+        this.weight = request.getWeight();
         return this;
     }
 }

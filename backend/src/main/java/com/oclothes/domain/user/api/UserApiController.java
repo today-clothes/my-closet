@@ -4,7 +4,6 @@ import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.dto.UserResponseMessage;
 import com.oclothes.domain.user.service.UserService;
 import com.oclothes.global.dto.ResponseDto;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,7 @@ public class UserApiController {
         return ResponseEntity.ok(ResponseDto.create(UserResponseMessage.LOGIN_SUCCESS.getMessage(), this.userService.login(loginRequest)));
     }
 
-    @ApiOperation(value = "프로필 업데이트", notes = "프로필 업데이트 API")
+    @ApiOperation(value = "전체 프로필 업데이트", notes = "전체 프로필 업데이트 API")
     @PatchMapping("/{id}/profile")
     public ResponseEntity<ResponseDto<UserDto.DefaultResponse>> updateProfile(@PathVariable Long id, @Valid @RequestBody UserDto.ProfileUpdateRequest request){
         return ResponseEntity.ok(ResponseDto.create(UPDATE_USER_PROFILE_SUCCESS.getMessage(), this.userService.updateProfile(id, request)));

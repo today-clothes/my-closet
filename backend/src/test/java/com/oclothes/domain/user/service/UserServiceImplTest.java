@@ -129,6 +129,7 @@ class UserServiceImplTest extends BaseTest {
     @Test
     void updateProfileTest() {
         final Long id = 1L;
+        final String nickname = "test";
         final User.Gender gender = User.Gender.MALE;
         final Integer age = 25;
         final Integer height = 200;
@@ -139,14 +140,24 @@ class UserServiceImplTest extends BaseTest {
                 .height(1)
                 .weight(1)
                 .build();
-        final UserDto.ProfileUpdateRequest request = new UserDto.ProfileUpdateRequest(id, gender, age, height, weight);
+        final UserDto.ProfileUpdateRequest request = new UserDto.ProfileUpdateRequest(id, nickname, gender, age, height, weight);
 
         when(this.userRepository.findById(any())).thenReturn(Optional.of(user));
 
         final UserDto.DefaultResponse response = this.userService.updateProfile(id, request);
+        assertEquals(nickname, response.getNickname());
         assertEquals(gender, response.getGender());
         assertEquals(age, response.getAge());
         assertEquals(height, response.getHeight());
         assertEquals(weight, response.getWeight());
+    }
+
+    @DisplayName("닉네임이 중복될 경우 AlreadyExitsNicknameException이 발생한다.")
+    @Test
+    void alreadyExistsNicknameThrowTest(){
+        final UserDto.ProfileUpdateRequest request = new UserDto.ProfileUpdateRequest(1L, "test1", User.Gender.MALE, 25, 200, 100);
+        when(this.userRepository.existsByNickname(any())).thenReturn(true);
+        assertThrows(AlreadyExistsNicknameException.class, () -> this.userService.updateProfile(1L, request));
+        verify(this.userRepository, atMostOnce()).existsByNickname(any());
     }
 }

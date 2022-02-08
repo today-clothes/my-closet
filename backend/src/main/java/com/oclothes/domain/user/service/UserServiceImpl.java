@@ -7,6 +7,7 @@ import com.oclothes.domain.user.domain.User;
 import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.dto.UserMapper;
 import com.oclothes.domain.user.exception.AlreadyExistsEmailException;
+import com.oclothes.domain.user.exception.AlreadyExistsNicknameException;
 import com.oclothes.domain.user.exception.UserNotFoundException;
 import com.oclothes.domain.user.exception.UserStatusIsWaitException;
 import com.oclothes.domain.user.util.EmailAuthenticationCodeGenerator;
@@ -69,10 +70,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto.DefaultResponse updateProfile(Long id, UserDto.ProfileUpdateRequest request){
-        return userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request.getGender(), request.getAge(), request.getHeight(), request.getWeight()));
+        this.validateAlreadyExistsNickname(request);
+        return this.userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request));
     }
 
     public User findById(Long id){
         return this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    private void validateAlreadyExistsNickname(UserDto.ProfileUpdateRequest request){
+        if (this.userRepository.existsByNickname(request.getNickname())) throw new AlreadyExistsNicknameException();
     }
 }
