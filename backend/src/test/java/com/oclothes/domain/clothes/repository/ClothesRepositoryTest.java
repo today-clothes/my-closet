@@ -11,8 +11,6 @@ import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.domain.ClothesEventTag;
 import com.oclothes.domain.clothes.domain.ClothesMoodTag;
 import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
-import com.oclothes.domain.clothes.dto.ClothesDto;
-import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
@@ -21,10 +19,10 @@ import com.oclothes.domain.tag.domain.MoodTag;
 import com.oclothes.domain.tag.domain.SeasonTag;
 import com.oclothes.domain.user.domain.Email;
 import com.oclothes.domain.user.domain.User;
-import com.oclothes.global.dto.SliceDto;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.oclothes.global.config.security.util.SecurityUtils;
+import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -59,19 +57,32 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
 
     User user;
 
+    private static MockedStatic<SecurityUtils> securityUtils;
+
+    @BeforeAll
+    static void beforeAll() {
+        securityUtils = Mockito.mockStatic(SecurityUtils.class);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        securityUtils.close();
+    }
+
     @BeforeEach
     public void init() {
         //1.회원
         Email email = new Email("sks@naver.com");
         user = User.builder().email(email).height(10).nickname("semi").password("10").weight(1).build();
         em.persist(user);
+        securityUtils.when(SecurityUtils::getLoggedInUser).thenReturn(user);
     }
 
     @DisplayName("개별 옷장 태그 필터링")
     @Test
     public void searchByTag() throws IOException {
         //1.옷장 생성
-        Closet closet = closetRepository.save(new Closet("c1",  user));
+        Closet closet = closetRepository.save(new Closet("c1", user));
 
         //2.태그 생성
         MoodTag moodTag1 = moodTagRepository.save(new MoodTag("무드1"));
@@ -141,7 +152,7 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
     @Test
     @DisplayName("전체 키워드로 옷 검색")
     public void searchByKeyword() {
-        Closet closet = new Closet("c1",  user);
+        Closet closet = new Closet("c1", user);
         Closet result = closetRepository.save(closet);
         Clothes clothes1 = createClothes(result, "aa", true);
         Clothes clothes2 = createClothes(result, "bb", false);

@@ -25,8 +25,8 @@ public class ClosetServiceImpl implements ClosetService {
     private final ClothesService clothesService;
 
     @Override
-    public CreateResponse create(CreateRequest request) {
-        return this.closetMapper.entityToCreateResponse(this.closetRepository.save(this.closetMapper.toEntity(request)));
+    public DefaultResponse create(CreateRequest request) {
+        return this.closetMapper.entityToDefaultResponse(this.closetRepository.save(this.closetMapper.toEntity(request)));
     }
 
     @Override

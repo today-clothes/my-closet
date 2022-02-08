@@ -3,7 +3,6 @@ package com.oclothes.domain.closet.api;
 import com.oclothes.domain.closet.service.ClosetService;
 import com.oclothes.global.dto.ResponseDto;
 import com.oclothes.global.dto.SliceDto;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +25,7 @@ public class ClosetApiController {
 
     @ApiOperation(value = "옷장 생성", notes = "옷장 생성 API")
     @PostMapping
-    public ResponseEntity<ResponseDto<CreateResponse>> create(@Valid @RequestBody CreateRequest request) {
+    public ResponseEntity<ResponseDto<DefaultResponse>> create(@Valid @RequestBody CreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.create(CREATE_SUCCESS.getMessage(), this.closetService.create(request)));
     }
@@ -39,7 +38,10 @@ public class ClosetApiController {
 
     @ApiOperation(value = "옷장 이름 업데이트", notes = "옷장 이름 변경 API")
     @PatchMapping("/{id}/name")
-    public ResponseEntity<ResponseDto<DefaultResponse>> updateName(@PathVariable Long id, @Valid @RequestBody NameUpdateRequest response) {
+    public ResponseEntity<ResponseDto<DefaultResponse>> updateName(
+            @PathVariable Long id,
+            @Valid @RequestBody NameUpdateRequest response
+    ) {
         return ResponseEntity.ok(ResponseDto.create(CHANGE_NAME_SUCCESS.getMessage(), this.closetService.updateName(id, response)));
     }
 

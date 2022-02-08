@@ -33,11 +33,11 @@ public class Closet extends BaseEntity {
         this.user = user;
     }
 
-    public void addCloth(Clothes clothes) {
+    public void addClothes(Clothes clothes) {
         this.clothes.add(clothes);
     }
 
-    public void deleteCloth(Clothes clothes) {
+    public void deleteClothes(Clothes clothes) {
         this.clothes.remove(clothes);
     }
 }

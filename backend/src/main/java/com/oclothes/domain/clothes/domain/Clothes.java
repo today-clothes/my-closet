@@ -53,7 +53,7 @@ public class Clothes extends BaseEntity {
     }
 
     public void setCloset(Closet closet) {
-        if (Objects.nonNull(this.closet)) this.closet.deleteCloth(this);
+        if (Objects.nonNull(this.closet)) this.closet.deleteClothes(this);
         this.closet = closet;
     }
 

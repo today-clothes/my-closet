@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import static com.oclothes.domain.closet.dto.ClosetDto.*;
 
 public interface ClosetService {
-    CreateResponse create(CreateRequest request);
+    DefaultResponse create(CreateRequest request);
 
     SliceDto<DefaultResponse> findAllSliceByUser(Pageable pageable);
 

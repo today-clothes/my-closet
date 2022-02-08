@@ -14,24 +14,14 @@ public abstract class ClosetDto {
     public static class DefaultResponse {
         private final Long id;
         private final String name;
-        private final boolean locked;
     }
 
     @Getter
-    @RequiredArgsConstructor
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class CreateRequest {
         @NotBlank(message = "옷장 이름을 입력해주세요.")
-        private final String name;
-        @NotNull(message = "옷장 공개 여부를 설정해주세요.")
-        private final Boolean locked;
-    }
-
-    @Getter
-    @RequiredArgsConstructor
-    public static class CreateResponse {
-        private final Long id;
-        private final boolean locked;
-        private final String name;
+        private String name;
     }
 
     @Getter

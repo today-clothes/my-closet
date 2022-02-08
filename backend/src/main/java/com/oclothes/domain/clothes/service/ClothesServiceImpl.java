@@ -72,8 +72,8 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public DefaultResponse changeLockStatus(Long clothesId) {
-        Clothes clothes = this.clothesRepository.findByIdAndUser(clothesId, SecurityUtils.getLoggedInUser()).orElseThrow(ClothesNotFoundException::new);
+    public DefaultResponse changeLockStatus(Long id) {
+        Clothes clothes = this.clothesRepository.findByIdAndUser(id, SecurityUtils.getLoggedInUser()).orElseThrow(ClothesNotFoundException::new);
         return clothesMapper.toDefaultResponse(clothes.changeLockStatus());
     }
 
