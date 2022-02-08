@@ -11,10 +11,12 @@ import com.oclothes.mycloset.ui.main.search.SearchFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
-
     lateinit var closet : MainFragment
     lateinit var search : SearchFragment
     lateinit var mypage : MyPageFragment
+    private var backPressedTime: Long = 0
+    var currentPage = 0
+    val TIME_INTERVAL: Long = 2000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,9 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.homeFragment -> {
                     showFragment(closet)
+                    if(currentPage == 0){
+                        closet.getBinding().mainFragmentVp.currentItem = 0
+                    }
                     return@setOnItemSelectedListener true
                 }
 
@@ -59,8 +64,49 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun showFragment(f : Fragment){
+    private fun showFragment(f : Fragment){
+        when(f){
+            is MainFragment-> {
+                currentPage = 0
+            }
+            is SearchFragment->{
+                currentPage = 1
+            }
+
+            is MyPageFragment->{
+                currentPage = 2
+            }
+        }
         supportFragmentManager.beginTransaction().hide(closet).hide(search).hide(mypage).commit()
         supportFragmentManager.beginTransaction().show(f).commit()
+    }
+
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        val intervalTime = currentTime - backPressedTime
+
+
+        when(currentPage){
+            0->{
+                if(closet.backPressed()){
+                    val currentTime = System.currentTimeMillis()
+                    val intervalTime = currentTime - backPressedTime
+                    if (intervalTime in 0..TIME_INTERVAL) {
+                        finish()
+                    }
+                    else{
+                        backPressedTime = currentTime
+                    }
+                }
+            }
+
+            1->{
+                search.backPressed()
+            }
+
+            2->{
+                mypage.backPressed()
+            }
+        }
     }
 }

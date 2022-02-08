@@ -60,4 +60,8 @@ class SearchFragment : Fragment() {
                 }
             }
     }
+
+    fun backPressed() {
+
+    }
 }

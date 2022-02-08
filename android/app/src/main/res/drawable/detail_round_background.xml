@@ -21,23 +21,23 @@
         </shape> </item>
     <item>
 
-    <shape>
-        <padding android:top="0.5dp" />
-        <corners
+        <shape>
+            <padding android:top="0.5dp" />
+            <corners
                 android:topLeftRadius="18dp"
                 android:topRightRadius="18dp" />
-        <solid android:color="#09CCCCCC" />
-    </shape>
+            <solid android:color="#09CCCCCC" />
+        </shape>
     </item>
     <item>
 
-    <shape>
-        <padding android:top="0.5dp" />
-        <corners
+        <shape>
+            <padding android:top="0.5dp" />
+            <corners
                 android:topLeftRadius="18dp"
                 android:topRightRadius="18dp" />
-        <solid android:color="#0BCCCCCC" />
-    </shape>
+            <solid android:color="#0BCCCCCC" />
+        </shape>
     </item>
     <item>
 
@@ -51,13 +51,13 @@
     </item>
     <item>
 
-    <shape>
-        <padding android:top="0.5dp" />
-        <corners
+        <shape>
+            <padding android:top="0.5dp" />
+            <corners
                 android:topLeftRadius="18dp"
                 android:topRightRadius="18dp" />
-        <solid android:color="#10CCCCCC" />
-    </shape>
+            <solid android:color="#10CCCCCC" />
+        </shape>
     </item>
     <item>
         <shape>
@@ -66,13 +66,13 @@
     </item>
     <item>
 
-    <shape>
-        <padding android:top="0.5dp" />
-        <corners
+        <shape>
+            <padding android:top="0.5dp" />
+            <corners
                 android:topLeftRadius="18dp"
                 android:topRightRadius="18dp" />
-        <solid android:color="#15CCCCCC" />
-    </shape>
+            <solid android:color="#15CCCCCC" />
+        </shape>
     </item>
     <item>
 
@@ -87,7 +87,7 @@
     <item>
 
         <shape>
-    <padding android:top="0.5dp" />
+            <padding android:top="0.5dp" />
             <corners
                 android:topLeftRadius="18dp"
                 android:topRightRadius="18dp" />
@@ -95,7 +95,7 @@
         </shape>
     </item>
 
-    
+
     <item>
         <shape>
             <corners

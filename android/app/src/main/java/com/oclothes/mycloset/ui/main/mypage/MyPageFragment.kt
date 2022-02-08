@@ -60,4 +60,8 @@ class MyPageFragment : Fragment() {
                 }
             }
     }
+
+    fun backPressed() {
+
+    }
 }

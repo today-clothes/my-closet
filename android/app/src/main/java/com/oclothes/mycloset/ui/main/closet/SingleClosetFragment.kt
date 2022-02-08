@@ -1,5 +1,6 @@
 package com.oclothes.mycloset.ui.main.closet
 
+import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +31,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         clothListAdapter = SingleClosetStyleListRVAdapter(this, styleList)
         clothListAdapter.setMyItemClickListener(object : SingleClosetStyleListRVAdapter.MyItemClickListener{
             override fun onItemClick(style: Style, position : Int) {
-                // 이건 상세보기 페이지로 넘어가야하는데 아직은 미구현
+                f.getBinding().mainFragmentVp.currentItem = 2
             }
 
             override fun onRemoveStyle(position: Int) {
