@@ -1,21 +1,19 @@
 package com.oclothes.domain.user.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.tag.domain.MoodTag;
 import com.oclothes.domain.user.dto.UserDto;
-import com.oclothes.domain.user.exception.EmailAuthenticationCodeNotFoundException;
-import com.oclothes.domain.user.exception.EmailAuthenticationCodeTooManyRequestException;
-import com.oclothes.domain.user.exception.UserExceptionMessage;
-import com.oclothes.domain.user.exception.WrongEmailAuthenticationCodeException;
 import com.oclothes.global.entity.BaseEntity;
-import com.oclothes.global.error.exception.UserStatusException;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.oclothes.domain.user.domain.UserPersonalInformation.Gender;
 
 @Getter
 @Setter
@@ -31,10 +29,6 @@ public class User extends BaseEntity {
         ROLE_USER, ROLE_ADMIN
     }
 
-    public enum Gender {
-        MALE, FEMALE
-    }
-
     @Embedded
     private Email email;
 
@@ -42,14 +36,8 @@ public class User extends BaseEntity {
 
     private String nickname;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    private Integer age;
-
-    private Integer height;
-
-    private Integer weight;
+    @Embedded
+    private UserPersonalInformation personalInformation = new UserPersonalInformation();
 
     @Setter(AccessLevel.NONE)
     @Enumerated(EnumType.STRING)
@@ -59,22 +47,38 @@ public class User extends BaseEntity {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserMoodTag> moodTags = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Closet> closets = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    private EmailAuthenticationCode emailAuthenticationCode;
-
     @Builder
-    public User(Email email, String password, String nickname,Gender gender, Integer age, Integer height, Integer weight, Status status, Role role) {
+    public User(
+            Email email,
+            String password,
+            String nickname,
+            Gender gender,
+            Integer age,
+            Integer height,
+            Integer weight,
+            Status status,
+            Role role
+    ) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.gender = gender;
-        this.age = age;
-        this.height = height;
-        this.weight = weight;
+        this.personalInformation.setGender(gender);
+        this.personalInformation.setAge(age);
+        this.personalInformation.setHeight(height);
+        this.personalInformation.setWeight(weight);
         this.status = status;
         this.role = role;
+    }
+
+    public User emailAuthenticationSuccess() {
+        this.status = Status.NORMAL;
+        this.addCloset(new Closet("나의 첫 옷장", this));
+        return this;
     }
 
     public void addCloset(Closet closet) {
@@ -85,40 +89,17 @@ public class User extends BaseEntity {
         this.closets.remove(closet);
     }
 
-    public void setEmailAuthenticationCode(EmailAuthenticationCode emailAuthenticationCode) {
-        if (Objects.nonNull(this.emailAuthenticationCode)) {
-            final int retryLimitMinutes = 3;
-            if (ChronoUnit.MINUTES.between(this.emailAuthenticationCode.getUpdatedAt(), LocalDateTime.now()) < retryLimitMinutes)
-                throw new EmailAuthenticationCodeTooManyRequestException();
-        }
-        this.emailAuthenticationCode = emailAuthenticationCode;
-    }
-
-    public User emailAuthentication(String code) {
-        if (!this.getEmailAuthenticationCode().getCode().equals(code)) throw new WrongEmailAuthenticationCodeException();
-        return this.successEmailAuthentication();
-    }
-
-    private EmailAuthenticationCode getEmailAuthenticationCode() {
-        if (this.status.equals(User.Status.NORMAL))
-            throw new UserStatusException(UserExceptionMessage.USER_STATUS_IS_ALREADY_NORMAL.getMessage());
-        if (Objects.isNull(this.emailAuthenticationCode)) throw new EmailAuthenticationCodeNotFoundException();
-        return emailAuthenticationCode;
-    }
-
-    private User successEmailAuthentication() {
-        this.status = Status.NORMAL;
-        this.emailAuthenticationCode = null;
-        this.addCloset(new Closet("나의 첫 옷장",this));
+    public User updateUserProfile(UserDto.ProfileUpdateRequest request) {
+        this.nickname = request.getNickname();
+        this.personalInformation.setGender(request.getGender());
+        this.personalInformation.setAge(request.getAge());
+        this.personalInformation.setHeight(request.getHeight());
+        this.personalInformation.setWeight(request.getWeight());
         return this;
     }
 
-    public User updateUserProfile(UserDto.ProfileUpdateRequest request){
-        this.nickname = request.getNickname();
-        this.gender = request.getGender();
-        this.age = request.getAge();
-        this.height = request.getHeight();
-        this.weight = request.getWeight();
+    public User addAllMoodTags(List<MoodTag> moodTags) {
+        this.moodTags.addAll(moodTags.stream().map(tag -> new UserMoodTag(this, tag)).collect(Collectors.toSet()));
         return this;
     }
 }

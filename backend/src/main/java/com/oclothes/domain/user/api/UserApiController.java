@@ -1,6 +1,5 @@
 package com.oclothes.domain.user.api;
 
-import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.dto.UserResponseMessage;
 import com.oclothes.domain.user.service.UserService;
 import com.oclothes.global.dto.ResponseDto;
@@ -11,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
-import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
+import static com.oclothes.domain.user.dto.UserDto.*;
 import static com.oclothes.domain.user.dto.UserResponseMessage.UPDATE_USER_PROFILE_SUCCESS;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -20,7 +18,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @RequestMapping("/users")
 public class UserApiController {
-
     private final UserService userService;
 
     @ApiOperation(value = "회원가입", notes = "회원가입 API")
@@ -31,13 +28,13 @@ public class UserApiController {
 
     @ApiOperation(value = "로그인", notes = "로그인 API")
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto<UserDto.LoginResponse>> login(@Valid @RequestBody UserDto.LoginRequest loginRequest) {
+    public ResponseEntity<ResponseDto<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(ResponseDto.create(UserResponseMessage.LOGIN_SUCCESS.getMessage(), this.userService.login(loginRequest)));
     }
 
     @ApiOperation(value = "전체 프로필 업데이트", notes = "전체 프로필 업데이트 API")
     @PatchMapping("/{id}/profile")
-    public ResponseEntity<ResponseDto<UserDto.DefaultResponse>> updateProfile(@PathVariable Long id, @Valid @RequestBody UserDto.ProfileUpdateRequest request){
+    public ResponseEntity<ResponseDto<DefaultResponse>> updateProfile(@PathVariable Long id, @Valid @RequestBody ProfileUpdateRequest request){
         return ResponseEntity.ok(ResponseDto.create(UPDATE_USER_PROFILE_SUCCESS.getMessage(), this.userService.updateProfile(id, request)));
     }
 }

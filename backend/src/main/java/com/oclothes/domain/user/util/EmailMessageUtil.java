@@ -16,7 +16,7 @@ public class EmailMessageUtil {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(new ClassPathResource("mail/sign-up.html").getFile())));
             StringBuilder stringBuilder = new StringBuilder();
             while (bufferedReader.ready()) stringBuilder.append(bufferedReader.readLine());
-            return stringBuilder.toString().replace("{email}", email.getValue()).replace("{authCode}", authenticationCode);
+            return stringBuilder.toString().replace("{email}", email.getValue()).replace("{code}", authenticationCode);
         } catch (IOException e) {
             throw new IllegalArgumentException("회원가입 인증 메일 가져오는 도중 엑셉션 발생");
         }
