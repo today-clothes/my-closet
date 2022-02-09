@@ -19,7 +19,8 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
 
     private fun autoLogin() {
 
-        AuthService.autoLogin(this)
+//        AuthService.autoLogin(this)
+        startActivityWithClear(LoginActivity::class.java)
         finish()
     }
 

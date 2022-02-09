@@ -4,29 +4,21 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.data.entities.Closet
+import com.oclothes.mycloset.data.entities.remote.closet.ClosetService
 import com.oclothes.mycloset.databinding.FragmentClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.closet.adapter.ClosetListRVAdapter
 
 
-class ClosetFragment (): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate) {
-
+class ClosetFragment (f : MainFragment): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate), ClosetView {
     lateinit var f : Fragment
     lateinit var closetList : ArrayList<Closet>
     lateinit var nickName : String
-    companion object {
-        @JvmStatic
-        fun newInstance(f : Fragment) =
-            ClosetFragment().apply {
-                this.f = f
-            }
-    }
 
     override fun initAfterBinding() {
         arguments?.let {
             //이곳에 번들에 넣을 것 생각하자. 또는 나중에 사용하자.
         }
-        initClosetList()
 
         init()
         binding.closetAllClosetListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -48,17 +40,17 @@ class ClosetFragment (): BaseFragment<FragmentClosetBinding>(FragmentClosetBindi
         nickName = ApplicationClass.mSharedPreferences.getString("nickname", "사용자").toString()
         binding.closetInfoTv.text = "\'$nickName\'님의 옷장"
         binding.closetAllClosetNumberTv.text = "${closetList.size.toString()} 개"
-    }
-
-
-    private fun initClosetList(){
-        closetList = ArrayList<Closet>()
-        for(i in 1..7) {
-            closetList.add(Closet("제주도옷 ${i.toString()}"))
-        }
+        ClosetService.getClosets(this)
     }
 
     fun startSingleClosetFragment(closet: Closet) {
         (f as MainFragment).openCloset(closet)
+    }
+
+    override fun onGetClosetsSuccess(data: ArrayList<Closet>) {
+        closetList = data
+    }
+
+    override fun onGetClosetsFailure(code: Int, message: String) {
     }
 }

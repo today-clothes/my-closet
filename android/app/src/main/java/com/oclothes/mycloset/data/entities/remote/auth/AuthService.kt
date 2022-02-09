@@ -7,24 +7,24 @@ import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.ApplicationClass.Companion.retrofit
 import com.oclothes.mycloset.data.entities.ErrorBody
 import com.oclothes.mycloset.ui.login.login.LoginView
-import com.oclothes.mycloset.ui.login.signup.SignUpView
+import com.oclothes.mycloset.ui.info.SignUpView
 import com.oclothes.mycloset.ui.splash.SplashView
 import com.oclothes.mycloset.utils.getLogin
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.sign
 
 object AuthService {
     val gson = Gson()
     val type = object : TypeToken<ErrorBody>() {}.type
-    fun signUp(signUpView: SignUpView, userDto: UserDto) {
+
+    fun signUp(signUpView: SignUpView, signUpDto: SignUpDto) {
 
         val authService = retrofit.create(AuthRetrofitInterface::class.java)
 
         signUpView.onSignUpLoading()
 
-        authService.signUp(userDto).enqueue(object : Callback<SignUpResponse> {
+        authService.signUp(signUpDto).enqueue(object : Callback<SignUpResponse> {
             override fun onResponse(
                 call: Call<SignUpResponse>,
                 response: Response<SignUpResponse>
@@ -55,27 +55,29 @@ object AuthService {
 
         authService.login(userDto).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-
+                Log.d("LOGIN", response.code().toString())
                 if(response.isSuccessful) {
-                    val resp = response.body()!!
-                    loginView.onLoginSuccess(resp.data.jwt, userDto)
-                }else{
-                    when(response.code()){
-                        401 ->{
-                            loginView.onLoginFailure(response.code(), "로그인 미인증 에러")
-                        }
-
-                        else->{
-                            var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
-                            if (errorBody != null) {
-                                loginView.onLoginFailure(response.code(), errorBody.errorMessage)
-                                return
-                            }
-                            loginView.onLoginFailure(400, "알 수 없는 오류")
-
-                        }
-
-                    }
+//                    when(response.code()){
+//                        200->{
+                            val resp = response.body()!!
+                            loginView.onLoginSuccess(resp.data.jwt, userDto)
+                            return
+//                        }
+//                        401 ->{
+//                            loginView.onLoginFailure(response.code(), "로그인 미인증 에러")
+//                        }
+//
+//                        else->{
+//                            var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
+//                            if (errorBody != null) {
+//                                loginView.onLoginFailure(response.code(), errorBody.errorMessage)
+//                                return
+//                            }
+//                            loginView.onLoginFailure(400, "알 수 없는 오류")
+//
+//                        }
+//
+//                    }
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {

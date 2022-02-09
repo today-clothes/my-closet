@@ -33,16 +33,20 @@ class MainActivity : AppCompatActivity() {
                     if(currentPage == 0){
                         closet.getBinding().mainFragmentVp.currentItem = 0
                     }
+                    currentPage = 0
+
                     return@setOnItemSelectedListener true
                 }
 
                 R.id.searchFragment -> {
                     showFragment(search)
+                    currentPage = 1
                     return@setOnItemSelectedListener true
                 }
 
                 R.id.myFragment -> {
                     showFragment(mypage)
+                    currentPage = 2
                     return@setOnItemSelectedListener true
                 }
             }
@@ -54,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     private fun initFragment() {
         mypage = MyPageFragment()
         closet = MainFragment()
-        search = SearchFragment()
+        search = SearchFragment(this)
     }
 
     private fun initNavigation() {
@@ -64,19 +68,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showFragment(f : Fragment){
-        when(f){
-            is MainFragment-> {
-                currentPage = 0
-            }
-            is SearchFragment->{
-                currentPage = 1
-            }
-
-            is MyPageFragment->{
-                currentPage = 2
-            }
-        }
+    fun showFragment(f : Fragment){
         supportFragmentManager.beginTransaction().hide(closet).hide(search).hide(mypage).commit()
         supportFragmentManager.beginTransaction().show(f).commit()
     }
@@ -101,11 +93,29 @@ class MainActivity : AppCompatActivity() {
             }
 
             1->{
-                search.backPressed()
+                if(search.backPressed()){
+                    val currentTime = System.currentTimeMillis()
+                    val intervalTime = currentTime - backPressedTime
+                    if (intervalTime in 0..TIME_INTERVAL) {
+                        finish()
+                    }
+                    else{
+                        backPressedTime = currentTime
+                    }
+                }
             }
 
             2->{
-                mypage.backPressed()
+                if(mypage.backPressed()){
+                    val currentTime = System.currentTimeMillis()
+                    val intervalTime = currentTime - backPressedTime
+                    if (intervalTime in 0..TIME_INTERVAL) {
+                        finish()
+                    }
+                    else{
+                        backPressedTime = currentTime
+                    }
+                }
             }
         }
     }

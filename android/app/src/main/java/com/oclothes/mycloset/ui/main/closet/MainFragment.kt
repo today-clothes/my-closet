@@ -16,7 +16,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         detail = DetailFragment(this)
         singleCloset = SingleClosetFragment(this)
         vpAdapter = MainFragmentVPAdapter(this)
-        vpAdapter.addFragment(ClosetFragment.newInstance(this))
+        vpAdapter.addFragment(ClosetFragment(this))
         vpAdapter.addFragment(singleCloset)
         vpAdapter.addFragment(detail)
 

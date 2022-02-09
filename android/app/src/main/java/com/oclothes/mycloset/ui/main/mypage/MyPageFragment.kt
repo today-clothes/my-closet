@@ -13,11 +13,6 @@ import com.oclothes.mycloset.databinding.FragmentMyPageBinding
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MyPageFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MyPageFragment : Fragment() {
     lateinit var binding : FragmentMyPageBinding
     // TODO: Rename and change types of parameters
@@ -61,7 +56,7 @@ class MyPageFragment : Fragment() {
             }
     }
 
-    fun backPressed() {
-
+    fun backPressed() : Boolean {
+        return true
     }
 }

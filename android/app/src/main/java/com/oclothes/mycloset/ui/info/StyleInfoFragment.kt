@@ -1,12 +1,14 @@
 package com.oclothes.mycloset.ui.info
 
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentStyleInfoBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.info.adapter.InfoStyleRvAdapter
 
-class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleInfoBinding::inflate){
+class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleInfoBinding::inflate), TagView{
     lateinit var tags : ArrayList<Tag>
     lateinit var rvAdapter: InfoStyleRvAdapter
 
@@ -28,16 +30,18 @@ class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleIn
     }
 
     private fun initTags(){
-        tags = ArrayList<Tag>()
-        tags.add(Tag("봄", "계절"))
-        tags.add(Tag("여름", "계절"))
-        tags.add(Tag("가을", "계절"))
-        tags.add(Tag("겨울", "계절"))
-        tags.add(Tag("스트릿", "계절"))
-        tags.add(Tag("미니멀", "계절"))
-        tags.add(Tag("포멀", "계절"))
-        tags.add(Tag("인포멀", "계절"))
-        tags.add(Tag("컬러풀", "계절"))
-        tags.add(Tag("모던", "계절"))
+        TagService.getTags(this)
+    }
+
+    override fun onGetTagsSuccess(
+        eventTags: java.util.ArrayList<Tag>,
+        moodTags: java.util.ArrayList<Tag>,
+        seasonTags: java.util.ArrayList<Tag>
+    ) {
+        tags = moodTags
+    }
+
+    override fun onGetClosetsFailure(code: Int, message: String) {
+
     }
 }

@@ -11,8 +11,10 @@ import com.oclothes.mycloset.ui.BaseFragment
 
 class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentPersonalInfoBinding::inflate), View.OnClickListener{
     private var gender = 0
+    lateinit var myActivity : InfoSelectActivity
     override fun initAfterBinding() {
         initListener()
+        myActivity = requireActivity() as InfoSelectActivity
     }
 
     override fun onClick(v: View?) {
@@ -29,6 +31,7 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
                 hideKeyboard()
             }
             binding.personalInfoNextBtnTv -> {
+                setInfo()
                 moveNextPage()
             }
             binding.personalInfoCl -> {
@@ -37,8 +40,15 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
         }
     }
 
+    private fun setInfo() {
+        myActivity.gender = gender
+        myActivity.age = binding.personalInfoEditTextAgeEt.text.toString().toInt()
+        myActivity.height = binding.personalInfoEditTextHeightEt.text.toString().toInt()
+        myActivity.weight = binding.personalInfoEditTextWeightEt.text.toString().toInt()
+        myActivity.nickname = binding.personalInfoEditTextNicknameEt.toString()
+    }
+
     private fun moveNextPage() {
-        val myActivity = requireActivity() as InfoSelectActivity
         myActivity.getBinding().infoContentVp.currentItem = 1
     }
 
@@ -68,11 +78,6 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
                 || binding.personalInfoEditTextWeightEt.text.toString().isEmpty()
                 || gender == 0)
     }
-
-
-
-
-
 
     private fun womanButtonFun() {
         if (gender != WOMAN) {

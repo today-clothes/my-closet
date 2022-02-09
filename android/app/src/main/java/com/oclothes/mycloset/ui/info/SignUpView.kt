@@ -1,4 +1,4 @@
-package com.oclothes.mycloset.ui.login.signup
+package com.oclothes.mycloset.ui.info
 
 interface SignUpView {
     fun onSignUpLoading()

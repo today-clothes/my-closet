@@ -95,6 +95,7 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
             else ->{
                 binding.loginLoginLoadingPb.visibility = View.GONE
                 binding.loginLoginEditTextPasswordEt.setText("")
+                showToast("아이디와 비밀번호를 확인하세요.")
             }
         }
     }
