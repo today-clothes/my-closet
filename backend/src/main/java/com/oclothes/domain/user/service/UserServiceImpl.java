@@ -1,5 +1,7 @@
 package com.oclothes.domain.user.service;
 
+import com.oclothes.domain.tag.domain.MoodTag;
+import com.oclothes.domain.tag.service.TagService;
 import com.oclothes.domain.user.dao.UserRepository;
 import com.oclothes.domain.user.domain.EmailAuthenticationCode;
 import com.oclothes.domain.user.domain.EmailSubject;
@@ -7,6 +9,7 @@ import com.oclothes.domain.user.domain.User;
 import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.dto.UserMapper;
 import com.oclothes.domain.user.exception.AlreadyExistsEmailException;
+import com.oclothes.domain.user.exception.AlreadyExistsNicknameException;
 import com.oclothes.domain.user.exception.UserNotFoundException;
 import com.oclothes.domain.user.exception.UserStatusIsWaitException;
 import com.oclothes.domain.user.util.EmailAuthenticationCodeGenerator;
@@ -18,6 +21,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
 import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 
@@ -25,27 +30,25 @@ import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final EmailAuthenticationCodeService emailAuthenticationCodeService;
     private final EmailService emailService;
+    private final TagService tagService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
 
     @Override
     public SignUpResponse signUp(SignUpRequest requestDto) {
         this.validateAlreadyExistsEmail(requestDto);
-        User savedUser = this.userRepository.save(this.userMapper.toEntity(requestDto));
+        this.validateAlreadyExistsNickname(requestDto.getNickname());
+        final List<MoodTag> moodTags = this.tagService.findAllByMoodTagIds(requestDto.getMoodTags());
+        User user = this.userRepository.save(this.userMapper.toEntity(requestDto))
+                .addAllMoodTags(moodTags);
         String authenticationCode = EmailAuthenticationCodeGenerator.generateAuthCode();
-        savedUser.setEmailAuthenticationCode(this.emailAuthenticationCodeService.save(new EmailAuthenticationCode(authenticationCode)));
-        this.emailService.sendEmail(savedUser.getEmail(), EmailSubject.SIGN_UP, EmailMessageUtil.getSignUpEmailMessage(savedUser.getEmail(), authenticationCode));
-        return new SignUpResponse(savedUser.getEmail().getValue());
-    }
-
-    @Override
-    public SignUpResponse emailAuthentication(String email, String code) {
-        return new SignUpResponse(this.findByEmail(email).emailAuthentication(code).getEmail().getValue());
+        this.emailAuthenticationCodeService.save(new EmailAuthenticationCode(user, authenticationCode));
+        this.emailService.sendEmail(user.getEmail(), EmailSubject.SIGN_UP, EmailMessageUtil.getSignUpEmailMessage(user.getEmail(), authenticationCode));
+        return new SignUpResponse(user.getEmail().getValue());
     }
 
     public User findByEmail(String email) {
@@ -69,10 +72,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto.DefaultResponse updateProfile(Long id, UserDto.ProfileUpdateRequest request){
-        return userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request.getGender(), request.getAge(), request.getHeight(), request.getWeight()));
+        this.validateAlreadyExistsNickname(request.getNickname());
+        return this.userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request));
     }
 
     public User findById(Long id){
         return this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    private void validateAlreadyExistsNickname(String nickname){
+        if (this.userRepository.existsByNickname(nickname)) throw new AlreadyExistsNicknameException();
     }
 }
