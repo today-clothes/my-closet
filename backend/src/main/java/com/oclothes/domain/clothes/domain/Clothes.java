@@ -40,15 +40,17 @@ public class Clothes extends BaseEntity {
 
     private String styleTitle;
 
+    @Column(length = 500)
     private String content;
 
     private String imgUrl;
 
     @Builder
-    public Clothes(Closet closet, User user, boolean locked, String imgUrl) {
+    public Clothes(Closet closet, User user, boolean locked, String content, String imgUrl) {
         this.closet = closet;
         this.user = user;
         this.locked = locked;
+        this.content = content;
         this.imgUrl = imgUrl;
     }
 
