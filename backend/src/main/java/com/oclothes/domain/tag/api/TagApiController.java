@@ -10,27 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.oclothes.domain.tag.dto.TagResponseMessage.ALL_RESPONSE_SUCCESS;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/tag")
+@RequestMapping("/tags")
 public class TagApiController {
     private final TagService tagService;
 
-    @ApiOperation(value = "시즌 태그 리스트")
-    @GetMapping("/season")
-    public ResponseEntity<ResponseDto<TagDto.Response>> findAllSeasons() {
-        return ResponseEntity.ok(null);
-    }
-
-    @ApiOperation(value = "이벤트 태그 리스트")
-    @GetMapping("/event")
-    public ResponseEntity<ResponseDto<TagDto.Response>> findAllEvents() {
-        return ResponseEntity.ok(null);
-    }
-
-    @ApiOperation(value = "무드 태그 리스트")
-    @GetMapping("/mood")
-    public ResponseEntity<ResponseDto<TagDto.Response>> findAllMoods() {
-        return ResponseEntity.ok(null);
+    @ApiOperation(value = "전체 태그 리스트")
+    @GetMapping
+    public ResponseEntity<ResponseDto<TagDto.AllResponse>> findAllSeasons() {
+        return ResponseEntity.ok(ResponseDto.create(ALL_RESPONSE_SUCCESS.getMessage(), this.tagService.getAll()));
     }
 }
