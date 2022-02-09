@@ -1,8 +1,10 @@
 package com.oclothes.domain.clothes.dto;
 
 import com.oclothes.domain.tag.dto.TagDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
@@ -11,15 +13,17 @@ import java.util.Set;
 
 public abstract class ClothesDto {
     @Getter
-    @RequiredArgsConstructor
+    @AllArgsConstructor
     public static class ClothesUploadRequest {
         @NotNull(message = "옷장(closet) ID를 입력해주세요.")
-        private final Long closetId;
-        private final List<Long> seasonIds;
-        private final List<Long> eventIds;
-        private final List<Long> moodIds;
+        private Long closetId;
+        @Length(max = 500, message = "내용은 500자를 초과할 수 없습니다.")
+        private String content;
+        private List<Long> seasonIds;
+        private List<Long> eventIds;
+        private List<Long> moodIds;
         @NotNull(message = "저장할 이미지는 null일 수 없습니다.")
-        private final MultipartFile file;
+        private MultipartFile file;
     }
 
     @Getter

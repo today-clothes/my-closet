@@ -46,6 +46,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
         mockMvc.perform(multipart("/clothes")
                         .file(file)
                         .param("closetId", "1")
+                        .param("content", "haha")
                         .param("seasonIds", "1,2")
                         .param("eventIds", "1")
                         .param("moodIds", "1"))
