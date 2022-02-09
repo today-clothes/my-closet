@@ -7,16 +7,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentSingleClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
+import com.oclothes.mycloset.ui.info.TagView
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetStyleListRVAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter
 import java.util.concurrent.CopyOnWriteArrayList
 
-class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate) ,View.OnClickListener {
+class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate) ,View.OnClickListener , TagView{
 
     lateinit var styleList: CopyOnWriteArrayList<Style>
-    lateinit var tags : ArrayList<Tag>
+    lateinit var eventTags : ArrayList<Tag>
+    lateinit var moodTags : ArrayList<Tag>
+    lateinit var seasonTags : ArrayList<Tag>
+    lateinit var allTags : ArrayList<Tag>
     private lateinit var tagListAdapter : SingleClosetTagListRvAdapter
     private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
     private lateinit var myLayoutManager: GridLayoutManager
@@ -47,7 +52,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         binding.singleClosetClothesListRv.adapter = clothListAdapter
 
 
-        tagListAdapter = SingleClosetTagListRvAdapter(this, tags)
+        tagListAdapter = SingleClosetTagListRvAdapter(this, allTags)
         binding.singleClosetFilterListRv.adapter = tagListAdapter
         binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
@@ -103,16 +108,23 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     }
 
     private fun initTags(){
-        tags = ArrayList<Tag>()
-        tags.add(Tag("봄", "계절"))
-        tags.add(Tag("여름", "계절"))
-        tags.add(Tag("가을", "계절"))
-        tags.add(Tag("겨울", "계절"))
-        tags.add(Tag("스트릿", "계절"))
-        tags.add(Tag("미니멀", "계절"))
-        tags.add(Tag("포멀", "계절"))
-        tags.add(Tag("인포멀", "계절"))
-        tags.add(Tag("컬러풀", "계절"))
-        tags.add(Tag("모던", "계절"))
+        TagService.getTags(this)
+    }
+
+    override fun onGetTagsSuccess(
+        eventTags: java.util.ArrayList<Tag>,
+        moodTags: java.util.ArrayList<Tag>,
+        seasonTags: java.util.ArrayList<Tag>
+    ) {
+        this.eventTags = eventTags
+        this.moodTags = moodTags
+        this.seasonTags = seasonTags
+        allTags = ArrayList<Tag>()
+        allTags.addAll(eventTags)
+        allTags.addAll(moodTags)
+        allTags.addAll(seasonTags)
+    }
+
+    override fun onGetTagsFailure(code: Int, message: String) {
     }
 }

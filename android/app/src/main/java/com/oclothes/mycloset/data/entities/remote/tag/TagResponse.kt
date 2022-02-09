@@ -8,12 +8,12 @@ data class TagResponse(
 )
 
 data class TagResponseData(
-    @SerializedName("seasonTags") val seasonTags : List<TagList>,
-    @SerializedName("moodTags") val moodTags : List<TagList>,
-    @SerializedName("eventTags") val eventTags : List<TagList>
+    @SerializedName("seasonTags") val seasonTags : List<Tag>,
+    @SerializedName("moodTags") val moodTags : List<Tag>,
+    @SerializedName("eventTags") val eventTags : List<Tag>
 )
 
-data class TagList(
+data class Tag(
     @SerializedName("id") val id : Int,
     @SerializedName("name") val name : String
 )

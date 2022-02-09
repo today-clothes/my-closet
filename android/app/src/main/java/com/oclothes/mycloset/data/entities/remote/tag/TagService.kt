@@ -20,9 +20,9 @@ object TagService {
 
         tagService.getTags().enqueue(object : Callback<TagResponse>{
             override fun onResponse(call: Call<TagResponse>, response: Response<TagResponse>) {
-                val resp = response.body()!!
                 when(response.code()){
                     200 -> {
+                        val resp = response.body()!!
                         val eventTags = ArrayList<Tag>()
                         val moodTags = ArrayList<Tag>()
                         val seasonTags = ArrayList<Tag>()
@@ -39,17 +39,21 @@ object TagService {
                             seasonTags.add(tag)
                         }
 
-
                         tagView.onGetTagsSuccess(eventTags, moodTags, seasonTags)
                     }
-                    else -> tagView.onGetClosetsFailure(response.code(), resp.message)
+                    else -> {
+                        var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
+                            if (errorBody != null) {
+                                tagView.onGetTagsFailure(response.code(), errorBody.errorMessage)
+                                return
+                            }
+                    }
                 }
             }
 
             override fun onFailure(call: Call<TagResponse>, t: Throwable) {
-
+                tagView.onGetTagsFailure(400 ,"알 수 없는 오류가 발생했습니다.")
             }
-
         })
 
 

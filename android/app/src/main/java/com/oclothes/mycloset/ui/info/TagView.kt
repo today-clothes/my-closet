@@ -9,5 +9,5 @@ interface TagView {
         moodTags: ArrayList<Tag>,
         seasonTags: ArrayList<Tag>
     )
-    fun onGetClosetsFailure(code: Int, message: String)
+    fun onGetTagsFailure(code: Int, message: String)
 }

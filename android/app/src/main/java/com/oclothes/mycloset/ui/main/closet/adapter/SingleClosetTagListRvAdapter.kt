@@ -21,8 +21,6 @@ class SingleClosetTagListRvAdapter (val fragment : Fragment, private val tagList
         return ViewHolder(binding)
     }
 
-
-
     override fun onBindViewHolder(holder: SingleClosetTagListRvAdapter.ViewHolder, position: Int) {
         holder.bind(tagList[position])
     }

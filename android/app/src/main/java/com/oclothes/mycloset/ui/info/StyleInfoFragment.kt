@@ -9,17 +9,15 @@ import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.info.adapter.InfoStyleRvAdapter
 
 class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleInfoBinding::inflate), TagView{
-    lateinit var tags : ArrayList<Tag>
+    private lateinit var tags : ArrayList<Tag>
     lateinit var rvAdapter: InfoStyleRvAdapter
 
     override fun initAfterBinding() {
-        initTags()
+        init()
         initRvAdapter()
     }
 
     private fun initRvAdapter() {
-        rvAdapter = InfoStyleRvAdapter(tags)
-
         binding.styleInfoNextBtnTv.setOnClickListener {
             rvAdapter.getSelectedTags()
         }
@@ -29,7 +27,9 @@ class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleIn
         binding.styleInfoTagListRv.layoutManager = gridLayoutManager
     }
 
-    private fun initTags(){
+    private fun init(){
+        tags = ArrayList<Tag>()
+        rvAdapter = InfoStyleRvAdapter(tags)
         TagService.getTags(this)
     }
 
@@ -38,10 +38,13 @@ class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleIn
         moodTags: java.util.ArrayList<Tag>,
         seasonTags: java.util.ArrayList<Tag>
     ) {
-        tags = moodTags
+        tags.addAll(moodTags)
+        rvAdapter.notifyDataSetChanged()
     }
 
-    override fun onGetClosetsFailure(code: Int, message: String) {
-
+    override fun onGetTagsFailure(code: Int, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+
+
 }
