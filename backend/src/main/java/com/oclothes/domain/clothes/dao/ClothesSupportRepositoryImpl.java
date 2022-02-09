@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -22,7 +21,7 @@ import static com.oclothes.domain.clothes.domain.QClothes.clothes;
 import static com.oclothes.domain.clothes.domain.QClothesEventTag.clothesEventTag;
 import static com.oclothes.domain.clothes.domain.QClothesMoodTag.clothesMoodTag;
 import static com.oclothes.domain.clothes.domain.QClothesSeasonTag.clothesSeasonTag;
-
+import static java.util.Objects.isNull;
 
 
 @RequiredArgsConstructor
@@ -57,15 +56,13 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
         return false;
     }
 
-    private BooleanExpression closetIdEq(Long id){
-        if (Objects.isNull(id)) return null;
-        return clothes.closet.id.eq(id);
+    private BooleanExpression closetIdEq(Long id) {
+        return isNull(id) ? null : clothes.closet.id.eq(id);
     }
 
 
-    private BooleanExpression userIdEq(Long id){
-        if (Objects.isNull(id)) return null;
-        return clothes.user.id.eq(id);
+    private BooleanExpression userIdEq(Long id) {
+        return isNull(id) ? null : clothes.user.id.eq(id);
     }
 
     private BooleanBuilder tagsEq(List<Long> ids, Function<Long, BooleanExpression> isTag) {
@@ -74,18 +71,12 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
         return builder;
     }
 
-    private final Function<Long, BooleanExpression> isSeasonTag = id -> {
-        if (Objects.isNull(id)) return null;
-        return clothesSeasonTag.tag.id.eq(id);
-    };
+    private final Function<Long, BooleanExpression> isSeasonTag = id ->
+            isNull(id) ? null : clothesSeasonTag.tag.id.eq(id);
 
-    private final Function<Long, BooleanExpression> isEventTag = id -> {
-        if (Objects.isNull(id)) return null;
-        return clothesEventTag.tag.id.eq(id);
-    };
+    private final Function<Long, BooleanExpression> isEventTag = id ->
+            isNull(id) ? null : clothesEventTag.tag.id.eq(id);
 
-    private final Function<Long, BooleanExpression> isMoodTag = id -> {
-        if (Objects.isNull(id)) return null;
-        return clothesMoodTag.id.eq(id);
-    };
+    private final Function<Long, BooleanExpression> isMoodTag = id ->
+            isNull(id) ? null : clothesMoodTag.id.eq(id);
 }
