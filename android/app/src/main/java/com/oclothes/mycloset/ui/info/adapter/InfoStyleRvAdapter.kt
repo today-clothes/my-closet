@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemStyleInfoTagBinding
+import com.oclothes.mycloset.ui.info.StyleInfoFragment
+import kotlinx.coroutines.selects.select
 
-class InfoStyleRvAdapter(private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<InfoStyleRvAdapter.ViewHolder>(){
+class InfoStyleRvAdapter(private val tagList : ArrayList<Tag>, val f : StyleInfoFragment) : RecyclerView.Adapter<InfoStyleRvAdapter.ViewHolder>(){
 
-    private val selectedTag : HashMap<String, Tag> = HashMap<String, Tag>()
+    private val selectedTag = ArrayList<Tag>()
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -24,30 +26,9 @@ class InfoStyleRvAdapter(private val tagList : ArrayList<Tag>) : RecyclerView.Ad
         holder.bind(tagList[position])
     }
 
-    fun addItems(albums: ArrayList<Tag>) {
-        tagList.clear()
-        tagList.addAll(albums)
-        notifyDataSetChanged()
-    }
-
-    fun addItem(album: Tag) {
-        tagList.add(album)
-        notifyDataSetChanged()
-    }
-
-    fun removeItems() {
-        tagList.clear()
-        notifyDataSetChanged()
-    }
-
-    fun removeItem(position: Int) {
-        tagList.removeAt(position)
-        notifyDataSetChanged()
-    }
-
     override fun getItemCount() = tagList.size
 
-    fun getSelectedTags() : HashMap<String, Tag> {
+    fun getSelectedTags() : ArrayList<Tag> {
         return selectedTag
     }
 
@@ -58,15 +39,22 @@ class InfoStyleRvAdapter(private val tagList : ArrayList<Tag>) : RecyclerView.Ad
             binding.styleInfoItemTagNameTv.text = tag.name
 
             binding.styleInfoTagBtnCl.setOnClickListener {
-                if(selectedTag.contains(tag.name)){
-                    selectedTag.remove(tag.name)
+                if(selectedTag.contains(tag)){
+                    selectedTag.remove(tag)
                     binding.styleInfoTagBtnCl.setBackgroundResource(R.drawable.style_info_tag_background_inactive)
                     binding.styleInfoItemTagNameTv.setTextColor(Color.BLACK)
 
                 }else{
-                    selectedTag[tag.name] = tag
+                    selectedTag.add(tag)
                     binding.styleInfoTagBtnCl.setBackgroundResource(R.drawable.style_info_tag_background_active)
                     binding.styleInfoItemTagNameTv.setTextColor(Color.WHITE)
+                }
+                if(selectedTag.size > 1) {
+                    f.getBinding().styleInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
+                    f.getBinding().styleInfoNextBtnTv.isEnabled = true
+                }else{
+                    f.getBinding().styleInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
+                    f.getBinding().styleInfoNextBtnTv.isEnabled = false
                 }
             }
         }

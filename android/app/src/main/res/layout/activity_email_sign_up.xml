@@ -80,28 +80,14 @@
         android:paddingEnd="10dp"
         />
     
-    <EditText
-        android:id="@+id/login_sign_up_edit_text_nick_name_et"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toBottomOf="@id/login_sign_up_edit_text_password_confirm_et"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/login_sign_up_edit_text_background"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:hint="Nickname"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        />
+
     
     <CheckBox
         android:id="@+id/login_sign_up_agree_all_cb"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        app:layout_constraintTop_toBottomOf="@id/login_sign_up_edit_text_nick_name_et"
-        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_nick_name_et"
+        app:layout_constraintTop_toBottomOf="@id/login_sign_up_edit_text_password_confirm_et"
+        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_password_confirm_et"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:text="약관 전체 동의"
@@ -112,7 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         app:layout_constraintTop_toBottomOf="@id/login_sign_up_agree_all_cb"
-        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_nick_name_et"
+        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_password_confirm_et"
         android:layout_marginStart="40dp"
         android:text="이용약관 동의"/>
     
@@ -121,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         app:layout_constraintTop_toBottomOf="@id/login_sign_up_agree_1_cb"
-        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_nick_name_et"
+        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_password_confirm_et"
         android:layout_marginStart="40dp"
         android:text="개인정보 취급방침 동의"/>
     
@@ -130,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         app:layout_constraintTop_toBottomOf="@id/login_sign_up_agree_2_cb"
-        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_nick_name_et"
+        app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_password_confirm_et"
         android:layout_marginStart="40dp"
         android:text="마케팅 정보 수신 동의"/>
     
@@ -146,7 +132,7 @@
         android:gravity="center"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:text="sign up"
+        android:text="Next"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -154,7 +140,7 @@
         app:layout_constraintStart_toStartOf="parent" />
     
     <ProgressBar
-        android:id="@+id/login_sign_up_loading_pb"
+        android:id="@+id/loading_pb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

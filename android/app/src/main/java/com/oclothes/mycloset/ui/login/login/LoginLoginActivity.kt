@@ -92,17 +92,11 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
             401 ->{
                 startActivity(Intent(this, EmailAuthActivity::class.java))
             }
-
-            403 ->{
+            else ->{
                 binding.loginLoginLoadingPb.visibility = View.GONE
                 binding.loginLoginEditTextPasswordEt.setText("")
-            }
-
-            400 ->{
-                binding.loginLoginLoadingPb.visibility = View.GONE
-                binding.loginLoginEditTextPasswordEt.setText("")
+                showToast("아이디와 비밀번호를 확인하세요.")
             }
         }
-
     }
 }

@@ -25,8 +25,6 @@ class ApplicationClass : Application() {
         //여기서부터는 각 클래스에서 사용할 상수 선언
         const val MAN : Int = 1
         const val WOMAN : Int = 2
-
-
     }
 
     override fun onCreate() {

@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="예시요"
         android:textStyle="bold"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:textColor="@color/black"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,63 +1,73 @@
 package com.oclothes.mycloset.ui.main.search
 
-import android.os.Bundle
-import android.view.LayoutInflater
+import android.content.Context
+import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.view.inputmethod.InputMethodManager
+import androidx.recyclerview.widget.GridLayoutManager
+import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.databinding.FragmentSearchBinding
+import com.oclothes.mycloset.ui.BaseFragment
+import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.ui.main.search.adapter.SearchStyleListRVAdapter
+import java.util.concurrent.CopyOnWriteArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SearchFragment : Fragment() {
-    lateinit var binding : FragmentSearchBinding
+class SearchFragment(val a : MainActivity) : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate) {
+    lateinit var searchAdapter : SearchStyleListRVAdapter
+    lateinit var styleList: CopyOnWriteArrayList<Style>
+    private lateinit var myLayoutManager: GridLayoutManager
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun initAfterBinding() {
+        initStyleList()
+        searchAdapter = SearchStyleListRVAdapter(this, styleList)
+        searchAdapter.setMyItemClickListener(object : SearchStyleListRVAdapter.MyItemClickListener{
+            override fun onItemClick(style: Style, position: Int) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            }
+        })
+
+        binding.searchMainRv.setOnClickListener{
+            hideKeyboard()
+        }
+
+        binding.searchBackground.setOnClickListener{
+            hideKeyboard()
+        }
+
+
+        myLayoutManager = GridLayoutManager(activity, 2)
+        binding.searchMainRv.adapter = searchAdapter
+        binding.searchMainRv.layoutManager = myLayoutManager
+        binding.searchMainEt.setOnKeyListener(object : View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if((keyCode == KeyEvent.KEYCODE_ENTER)){
+                    hideKeyboard()
+                    return true
+                }
+                return false
+            }
+        })
+    }
+
+    fun backPressed() : Boolean {
+        return true
+    }
+
+    private fun initStyleList(){
+        styleList = CopyOnWriteArrayList<Style>()
+        for(i in 1..10) {
+            styleList.add(Style("1일번"))
+            styleList.add(Style("2이번"))
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding.root
+    private fun hideKeyboard (){
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    fun getBinding(): FragmentSearchBinding {
+        return binding
     }
 }

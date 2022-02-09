@@ -8,7 +8,12 @@ import com.oclothes.mycloset.ui.login.login.LoginLoginActivity
 class EmailAuthActivity : BaseActivity<ActivityEmailAuthBinding>(ActivityEmailAuthBinding::inflate) {
     override fun initAfterBinding() {
         binding.emailAuthLoginBtnTv.setOnClickListener {
-            startActivity(Intent(this, LoginLoginActivity::class.java))
+            startActivityWithClear(LoginActivity::class.java)
+
+        }
+
+        binding.emailAuthBackBtnIv.setOnClickListener{
+            startActivityWithClear(LoginActivity::class.java)
         }
     }
 }
