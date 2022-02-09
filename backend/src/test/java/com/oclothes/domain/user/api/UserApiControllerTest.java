@@ -1,7 +1,7 @@
 package com.oclothes.domain.user.api;
 
 import com.oclothes.BaseWebMvcTest;
-import com.oclothes.domain.user.domain.User;
+import com.oclothes.domain.user.domain.UserPersonalInformation;
 import com.oclothes.domain.user.dto.UserDto;
 import com.oclothes.domain.user.service.UserService;
 import org.hamcrest.Matchers;
@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+
+import java.util.Set;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
 import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
@@ -37,7 +39,7 @@ class UserApiControllerTest extends BaseWebMvcTest {
         String password = "123456";
         SignUpResponse signUpResponse = new SignUpResponse(email);
         when(this.userService.signUp(any())).thenReturn(signUpResponse);
-        SignUpRequest signUpRequest = new SignUpRequest(email, password);
+        SignUpRequest signUpRequest = this.createSignUpRequest(email, password);
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signUpRequest)))
@@ -52,7 +54,7 @@ class UserApiControllerTest extends BaseWebMvcTest {
     void invalidSignUpRequestTest(String email, String password) throws Exception {
         SignUpResponse signUpResponse = new SignUpResponse(email);
         when(this.userService.signUp(any())).thenReturn(signUpResponse);
-        SignUpRequest signUpRequest = new SignUpRequest(email, password);
+        SignUpRequest signUpRequest = this.createSignUpRequest(email, password);
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signUpRequest)))
@@ -81,10 +83,10 @@ class UserApiControllerTest extends BaseWebMvcTest {
     @DisplayName("회원 프로필 변경에 성공한다.")
     @WithMockUser
     @Test
-    void updateProfileTest() throws Exception{
+    void updateProfileTest() throws Exception {
         final Long id = 1L;
         final String nickname = "test";
-        final User.Gender gender = User.Gender.MALE;
+        final UserPersonalInformation.Gender gender = UserPersonalInformation.Gender.MALE;
         final Integer age = 25;
         final Integer height = 200;
         final Integer weight = 100;
@@ -92,11 +94,15 @@ class UserApiControllerTest extends BaseWebMvcTest {
         final UserDto.DefaultResponse response = new UserDto.DefaultResponse(id, nickname, gender, age, height, weight);
         when(this.userService.updateProfile(any(), any())).thenReturn(response);
         mockMvc.perform(patch("/users/{id}/profile", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(Matchers.containsString("완료")))
                 .andDo(print());
         verify(this.userService, atMostOnce()).updateProfile(id, request);
+    }
+
+    private SignUpRequest createSignUpRequest(String email, String password) {
+        return new SignUpRequest(email, password, "HB", UserPersonalInformation.Gender.FEMALE, 20, 160, 50, Set.of(1L, 2L));
     }
 }

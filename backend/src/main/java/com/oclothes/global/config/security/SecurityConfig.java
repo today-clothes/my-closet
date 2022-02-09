@@ -34,10 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(this.jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/users", "/users/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/users/email-auth/**").permitAll()
                 .antMatchers("/closet/**").hasAnyAuthority(User.Role.ROLE_USER.name(), User.Role.ROLE_ADMIN.name())
                 .antMatchers("/clothes/**").hasAnyAuthority(User.Role.ROLE_USER.name(), User.Role.ROLE_ADMIN.name())
+                .antMatchers(HttpMethod.POST, "/users", "/users/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/email-auth/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/tags/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                 .anyRequest().authenticated();
