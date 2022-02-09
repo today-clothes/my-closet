@@ -1,6 +1,8 @@
 package com.oclothes.mycloset.ui.info
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.oclothes.mycloset.ApplicationClass.Companion.MAN
@@ -14,7 +16,30 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
     lateinit var myActivity : InfoSelectActivity
     override fun initAfterBinding() {
         initListener()
+        setTextWatcher()
         myActivity = requireActivity() as InfoSelectActivity
+        binding.personalInfoSelectionManTv.performClick()
+    }
+
+    private fun setTextWatcher() {
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(e: Editable?) {
+                if (e!!.length >= 2) {
+                    binding.personalInfoNextBtnTv.isClickable = true
+                    binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
+                } else {
+                    binding.personalInfoNextBtnTv.isClickable = false
+                    binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
+                }
+            }
+        }
+        binding.personalInfoEditTextNicknameEt.addTextChangedListener(textWatcher)
     }
 
     override fun onClick(v: View?) {
@@ -40,12 +65,14 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
         }
     }
 
+
+
     private fun setInfo() {
         myActivity.gender = gender
         myActivity.age = binding.personalInfoEditTextAgeEt.text.toString().toInt()
         myActivity.height = binding.personalInfoEditTextHeightEt.text.toString().toInt()
         myActivity.weight = binding.personalInfoEditTextWeightEt.text.toString().toInt()
-        myActivity.nickname = binding.personalInfoEditTextNicknameEt.toString()
+        myActivity.nickname = binding.personalInfoEditTextNicknameEt.text.toString()
     }
 
     private fun moveNextPage() {

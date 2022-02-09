@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="60dp"/>
 
     <TextView
         android:id="@+id/detail_second_title_tv"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="60dp"
-        android:text="제목"
+        android:text="겨울 월정리에서"
         android:textSize="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
@@ -56,7 +56,6 @@
         app:layout_constraintTop_toBottomOf="@id/detail_second_info_user_tv"
         android:layout_marginTop="5dp"/>
 
-
     <TextView
         android:id="@+id/detail_second_info_detail_tv"
         android:layout_width="match_parent"
@@ -67,6 +66,7 @@
         android:layout_marginEnd="30dp"
         android:textColor="@color/black"
         android:fontFamily="@font/roboto_regular"
+        android:layout_marginBottom="50dp"
         android:text="상세정보입니다 상세정보정보정보\n\n상세정보정보정보"/>
 
     <TextView

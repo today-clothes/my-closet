@@ -15,7 +15,7 @@ import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.utils.saveJwt
 import java.util.ArrayList
 
-class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) ,TagView{
+class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate){
     override fun initAfterBinding() {
 
         binding.loginLoginBtn.setOnClickListener {
@@ -35,24 +35,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         }
 
         binding.loginKakaoBtn.setOnClickListener {
-            saveJwt("Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnandvZHVkMTE5QGdtYWlsLmNvbSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2NDQ0MDE3NDZ9.UFZmZT6Y2iHdcn0UgdM6_O7OM1muTvzeHg3pwkPr_bc")
-            TagService.getTags(this)
+
         }
 
-    }
-
-    override fun onGetTagsSuccess(
-        eventTags: ArrayList<Tag>,
-        moodTags: ArrayList<Tag>,
-        seasonTags: ArrayList<Tag>
-    ) {
-        Toast.makeText(this, eventTags.toString() + moodTags.toString() + seasonTags.toString(), Toast.LENGTH_SHORT).show()
-        Log.d("TAGTEST", eventTags.toString() + moodTags.toString() + seasonTags.toString())
-
-    }
-
-    override fun onGetTagsFailure(code: Int, message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     /**

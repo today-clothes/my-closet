@@ -13,6 +13,7 @@ import com.oclothes.mycloset.utils.getLogin
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.sign
 
 object AuthService {
     val gson = Gson()
@@ -24,21 +25,26 @@ object AuthService {
 
         signUpView.onSignUpLoading()
 
+        Log.d("CHECKSIGNUP", signUpDto.toString())
+
         authService.signUp(signUpDto).enqueue(object : Callback<SignUpResponse> {
             override fun onResponse(
                 call: Call<SignUpResponse>,
                 response: Response<SignUpResponse>
             ) {
-
-                if (response.isSuccessful){
-                    signUpView.onSignUpSuccess()
-                }else{
-                    var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
-                    if (errorBody != null) {
-                        signUpView.onSignUpFailure(response.code(), errorBody.errorMessage)
-                        return
+                when(response.code()){
+                    201->{
+                        signUpView.onSignUpSuccess()
                     }
-                    signUpView.onSignUpFailure(400, "뭔가 에러가 발생한 것 같습니다.")
+                    else -> {
+                        var errorBody: ErrorBody? =
+                            gson.fromJson(response.errorBody()!!.charStream(), type)
+                        if (errorBody != null) {
+                            signUpView.onSignUpFailure(response.code(), errorBody.errorMessage)
+                            return
+                        }
+                        signUpView.onSignUpFailure(400, "뭔가 에러가 발생한 것 같습니다.")
+                    }
                 }
             }
             override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
@@ -55,29 +61,26 @@ object AuthService {
 
         authService.login(userDto).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                Log.d("LOGIN", response.code().toString())
-                if(response.isSuccessful) {
-//                    when(response.code()){
-//                        200->{
-                            val resp = response.body()!!
-                            loginView.onLoginSuccess(resp.data.jwt, userDto)
+                when(response.code()){
+                    200->{
+                        val resp = response.body()!!
+                        loginView.onLoginSuccess(resp.data.jwt, userDto)
+                        return
+                    }
+                    401 ->{
+                        loginView.onLoginFailure(response.code(), "로그인 미인증 에러")
+                    }
+
+                    else->{
+                        var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
+                        if (errorBody != null) {
+                            loginView.onLoginFailure(response.code(), errorBody.errorMessage)
                             return
-//                        }
-//                        401 ->{
-//                            loginView.onLoginFailure(response.code(), "로그인 미인증 에러")
-//                        }
-//
-//                        else->{
-//                            var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
-//                            if (errorBody != null) {
-//                                loginView.onLoginFailure(response.code(), errorBody.errorMessage)
-//                                return
-//                            }
-//                            loginView.onLoginFailure(400, "알 수 없는 오류")
-//
-//                        }
-//
-//                    }
+                        }
+                        loginView.onLoginFailure(400, "알 수 없는 오류")
+
+                    }
+
                 }
             }
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {

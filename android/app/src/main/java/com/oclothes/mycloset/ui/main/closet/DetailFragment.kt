@@ -13,5 +13,15 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         }
     }
 
-
+//    {
+//        "email" : "gjwodud312129@gmail.com",
+//        "password" : "gj1109gj",
+//        "gender": 0,
+//        "moodTags": [3,5],
+//        "nickname": "jadnddg",
+//        "weight": 60,
+//        "age": 30
+//    }
+//
+//
 }

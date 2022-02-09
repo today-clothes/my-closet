@@ -10,14 +10,5 @@ data class SignUpDto (
     @SerializedName("age") val age : Int,
     @SerializedName("height") val height : Int,
     @SerializedName("weight") val weight : Int,
-    @SerializedName("tagList") val tagList : TagList
-)
-
-data class TagList(
-    @SerializedName("tag") val tag : ArrayList<Tag>
-)
-
-data class Tag(
-    @SerializedName("id") val id : Int,
-    @SerializedName("name") val name : String
+    @SerializedName("moodTags") val moodTags : ArrayList<Int>
 )
