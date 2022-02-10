@@ -7,6 +7,7 @@ import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.ErrorBody
+import com.oclothes.mycloset.ui.main.closet.ClosetCreateView
 import com.oclothes.mycloset.ui.main.closet.ClosetView
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,8 +19,8 @@ object ClosetService {
 
     fun getClosets(closetView: ClosetView){
         val closetService = ApplicationClass.retrofit.create(ClosetRetrofitInterface::class.java)
-        closetService.getClosets().enqueue(object : Callback<ClosetResponse> {
 
+        closetService.getClosets().enqueue(object : Callback<ClosetResponse> {
             override fun onResponse(call: Call<ClosetResponse>, response: Response<ClosetResponse>) {
                 val resp = response.body()!!
                 when(response.code()){
@@ -42,4 +43,25 @@ object ClosetService {
         })
     }
 
+    fun createCloset(closetCreateView : ClosetCreateView, createClosetDto: CreateClosetDto){
+        val closetCreateService = ApplicationClass.retrofit.create(ClosetRetrofitInterface::class.java)
+
+        closetCreateService.createCloset(createClosetDto).enqueue(object: Callback<CreateResponse> {
+            override fun onResponse(
+                call: Call<CreateResponse>,
+                response: Response<CreateResponse>,
+            ) {
+                when(response.code()){
+                    201 -> {
+                        closetCreateView.onCreateClosetsSuccess()
+                    }
+                    else -> closetCreateView.onCreateClosetsFailure()
+                }
+            }
+
+            override fun onFailure(call: Call<CreateResponse>, t: Throwable) {
+                closetCreateView.onCreateClosetsFailure()
+            }
+        })
+    }
 }

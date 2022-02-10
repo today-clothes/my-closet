@@ -1,18 +1,22 @@
 package com.oclothes.mycloset.ui.main.closet.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.databinding.ItemClosetBinding
+import com.oclothes.mycloset.ui.main.closet.ClosetFragment
 
-class ClosetListRVAdapter(private val closetList : ArrayList<Closet>) : RecyclerView.Adapter<ClosetListRVAdapter.ViewHolder>(){
+class ClosetListRVAdapter(private val closetList : ArrayList<Closet>, val f : ClosetFragment) : RecyclerView.Adapter<ClosetListRVAdapter.ViewHolder>(){
 
 
     // 클릭 인터페이스를 정의
     interface MyItemClickListener{
         fun onItemClick(closet: Closet)
+        fun onItemLongClick(closet : Closet)
         fun onRemoveAlbum(position: Int)
     }
 
@@ -38,6 +42,10 @@ class ClosetListRVAdapter(private val closetList : ArrayList<Closet>) : Recycler
         holder.itemView.setOnClickListener {
             mItemClickListener.onItemClick(closetList[position])
         }
+        holder.itemView.setOnLongClickListener {
+            mItemClickListener.onItemLongClick(closetList[position])
+            true
+        }
     }
 
     override fun getItemCount(): Int {
@@ -47,7 +55,14 @@ class ClosetListRVAdapter(private val closetList : ArrayList<Closet>) : Recycler
     inner class ViewHolder(val binding: ItemClosetBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(closet: Closet){
-            binding.closetItemNameTv.text = closet.name
+            if(closet.imageSource == null){
+                binding.closetItemNameTv.setTextColor(Color.BLACK)
+                binding.closetItemNameTv.text = closet.name
+                binding.closetItemWhenEmptyTv.visibility = View.VISIBLE
+            }else{
+                binding.closetItemWhenEmptyTv.visibility = View.GONE
+                binding.closetItemNameTv.text = closet.name
+            }
             Glide.with(binding.closetItemCv)
                 .load(closet.imageSource)
                 .into(binding.closetItemImageIv)

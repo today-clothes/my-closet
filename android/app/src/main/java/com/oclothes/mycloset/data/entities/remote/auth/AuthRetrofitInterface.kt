@@ -12,5 +12,5 @@ interface AuthRetrofitInterface {
     fun login(@Body userDto : UserDto): Call<LoginResponse>
 
     @POST("/users/login")
-    fun autoLogin(@Body signUpDto : SignUpDto): Call<LoginResponse>
+    fun autoLogin(@Body UserDto : UserDto): Call<LoginResponse>
 }

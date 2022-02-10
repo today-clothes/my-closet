@@ -6,14 +6,13 @@ import com.google.gson.reflect.TypeToken
 import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.ApplicationClass.Companion.retrofit
 import com.oclothes.mycloset.data.entities.ErrorBody
-import com.oclothes.mycloset.ui.login.login.LoginView
 import com.oclothes.mycloset.ui.info.SignUpView
+import com.oclothes.mycloset.ui.login.login.LoginView
 import com.oclothes.mycloset.ui.splash.SplashView
 import com.oclothes.mycloset.utils.getLogin
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.sign
 
 object AuthService {
     val gson = Gson()
@@ -24,8 +23,6 @@ object AuthService {
         val authService = retrofit.create(AuthRetrofitInterface::class.java)
 
         signUpView.onSignUpLoading()
-
-        Log.d("CHECKSIGNUP", signUpDto.toString())
 
         authService.signUp(signUpDto).enqueue(object : Callback<SignUpResponse> {
             override fun onResponse(
@@ -101,14 +98,25 @@ object AuthService {
         userDto?.let {
             authService.autoLogin(userDto).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                    val resp = response.body()!!
+                    when(response.code()){
+                        200->{
+                            splashView.onAutoLoginSuccess(response.body()!!.data.jwt)
+                            return
+                        }
+                        401 ->{
+                            splashView.onAutoLoginFailure(response.code(), "로그인 미인증 에러")
+                        }
 
-                    if(response.isSuccessful) {
-                        splashView.onAutoLoginSuccess(resp.data.jwt)
-                        return
-                    }else{
-                        splashView.onAutoLoginFailure(response.code(), resp.message)
-                        return
+                        else->{
+                            var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
+                            if (errorBody != null) {
+                                splashView.onAutoLoginFailure(response.code(), errorBody.errorMessage)
+                                return
+                            }
+                            splashView.onAutoLoginFailure(400, "알 수 없는 오류")
+
+                        }
+
                     }
                 }
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {

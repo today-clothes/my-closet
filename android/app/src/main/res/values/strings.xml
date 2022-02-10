@@ -2,4 +2,9 @@
     <string name="app_name">MyCloset</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    <string-array name="closet_ask">
+        <item>이름 변경</item>
+        <item>삭제</item>
+    </string-array>
 </resources>

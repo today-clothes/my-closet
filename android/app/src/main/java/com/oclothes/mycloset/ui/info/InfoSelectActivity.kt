@@ -1,7 +1,6 @@
 package com.oclothes.mycloset.ui.info
 
 import android.content.Intent
-import android.provider.ContactsContract
 import android.view.View
 import com.google.android.material.tabs.TabLayoutMediator
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
@@ -10,7 +9,6 @@ import com.oclothes.mycloset.databinding.ActivityInfoSelectBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.info.adapter.InfoSelectAdapter
 import com.oclothes.mycloset.ui.login.EmailAuthActivity
-import com.oclothes.mycloset.ui.login.LoginActivity
 
 class InfoSelectActivity : BaseActivity<ActivityInfoSelectBinding>(ActivityInfoSelectBinding::inflate), SignUpView {
 

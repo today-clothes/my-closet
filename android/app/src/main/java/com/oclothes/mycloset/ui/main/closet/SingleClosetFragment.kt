@@ -1,6 +1,5 @@
 package com.oclothes.mycloset.ui.main.closet
 
-import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -108,6 +107,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     }
 
     private fun initTags(){
+        allTags = ArrayList<Tag>()
         TagService.getTags(this)
     }
 
@@ -119,10 +119,10 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         this.eventTags = eventTags
         this.moodTags = moodTags
         this.seasonTags = seasonTags
-        allTags = ArrayList<Tag>()
         allTags.addAll(eventTags)
         allTags.addAll(moodTags)
         allTags.addAll(seasonTags)
+        tagListAdapter.notifyDataSetChanged()
     }
 
     override fun onGetTagsFailure(code: Int, message: String) {

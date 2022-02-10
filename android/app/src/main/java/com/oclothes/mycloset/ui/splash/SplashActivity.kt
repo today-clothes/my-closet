@@ -1,12 +1,14 @@
 package com.oclothes.mycloset.ui.splash
 
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import com.oclothes.mycloset.data.entities.remote.auth.AuthService
 import com.oclothes.mycloset.databinding.ActivitySplashBinding
 import com.oclothes.mycloset.ui.BaseActivity
+import com.oclothes.mycloset.ui.login.EmailAuthActivity
 import com.oclothes.mycloset.ui.login.LoginActivity
 import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.utils.deleteJwt
 import com.oclothes.mycloset.utils.saveJwt
 
 class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding::inflate) , SplashView {
@@ -18,9 +20,10 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
 }
 
     private fun autoLogin() {
-
 //        AuthService.autoLogin(this)
+        deleteJwt()
         startActivityWithClear(LoginActivity::class.java)
+
         finish()
     }
 
@@ -35,8 +38,10 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
 
     override fun onAutoLoginFailure(code: Int, message: String) {
         startActivityWithClear(LoginActivity::class.java)
-        if(code == 1000){
-            showToast("다시 로그인 해주세요.")
+        when(code){
+            401 ->{
+                startActivity(Intent(this, EmailAuthActivity::class.java))
+            }
         }
     }
 }
