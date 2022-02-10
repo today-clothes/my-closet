@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
                 .authenticate(loginRequest.toAuthentication()));
     }
 
-    private User findById(Long id){
+    public User findById(Long id){
         return this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 

@@ -129,6 +129,7 @@ class UserServiceImplTest extends BaseTest {
 
         try (MockedStatic<SecurityUtils> securityUtilsMocked = mockStatic(SecurityUtils.class)){
             securityUtilsMocked.when((SecurityUtils::getLoggedInUser)).thenReturn(user);
+            when(this.userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
             this.userService.updateAccount(request);
             assertEquals(nickname, user.getNickname());
             assertEquals(gender, user.getPersonalInformation().getGender());
@@ -148,6 +149,7 @@ class UserServiceImplTest extends BaseTest {
 
         try(MockedStatic<SecurityUtils> securityUtilsMocked = mockStatic(SecurityUtils.class)){
             securityUtilsMocked.when(SecurityUtils::getLoggedInUser).thenReturn(user);
+            when(this.userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
             this.userService.updateProfile(request);
             assertEquals(height, user.getPersonalInformation().getHeight());
             assertEquals(weight, user.getPersonalInformation().getWeight());
