@@ -6,6 +6,32 @@
     android:background="@drawable/detail_round_background">
 
     <TextView
+        android:id="@+id/detail_second_edit_btn_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="수정"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:textSize="15dp"
+        />
+    
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:track="@drawable/switch_selector"
+        android:thumbTint="@color/white"
+        android:scaleX="2"
+        android:scaleY="2"
+        />
+        
+    
+    <TextView
         android:layout_width="70dp"
         android:layout_height="5dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="60dp"/>
+        android:layout_marginTop="80dp"/>
 
     <TextView
         android:id="@+id/detail_second_title_tv"
@@ -71,9 +97,42 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="140dp"
         app:layout_constraintTop_toBottomOf="@id/detail_second_info_detail_tv"
         />
+    
+    <TextView
+        android:id="@+id/detail_second_apply_tv"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="적용"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_second_info_detail_tv"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/secondary"
+        android:textColor="@color/primary"
+        />
+    
+    <TextView
+        android:id="@+id/detail_second_cancel_tv"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="취소"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_second_info_detail_tv"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/secondary"
+        android:textColor="#AE654CBB"
+        />
+    
 
 
 
