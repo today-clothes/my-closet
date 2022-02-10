@@ -55,6 +55,12 @@ public class ClothesApiController {
         return ResponseEntity.ok(ResponseDto.create(CHANGE_LOCKED_STATUS_SUCCESS.getMessage(), clothesService.changeLockStatus(id)));
     }
 
+    @ApiOperation(value = "옷 상세정보", notes = "옷 상세정보 반환 API")
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto<ClothesDto.ClothesResponse>> getClothesDetails(@PathVariable Long id){
+        return ResponseEntity.ok(ResponseDto.create(CLOTHES_DETAILS_SUCCESS.getMessage(), clothesService.getClothesDetails(id)));
+    }
+
     @ApiOperation(value = "옷 이미지", notes = "옷 이미지 반환 API")
     @GetMapping(value = "/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})
     public ResponseEntity<byte[]> getImage(@PathVariable String url) {

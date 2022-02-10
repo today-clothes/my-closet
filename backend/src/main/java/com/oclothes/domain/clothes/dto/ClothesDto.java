@@ -1,15 +1,17 @@
 package com.oclothes.domain.clothes.dto;
 
+import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.tag.dto.TagDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.oclothes.domain.user.domain.User;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class ClothesDto {
     @Getter
@@ -60,5 +62,26 @@ public abstract class ClothesDto {
     public static class DefaultResponse {
         private final Long clothesId;
         private final boolean locked;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class ClothesResponse {
+        private String userName;
+        private Integer height;
+        private Integer weight;
+        private String styleTitle;
+        private String content;
+        private LocalDateTime updateAt;
+        private Set<TagDto.Response> seasonTags;
+        private Set<TagDto.Response> eventTags;
+        private Set<TagDto.Response> moodTags;
+
+        public void setUserInfo(User user){
+            this.userName = user.getNickname();
+            this.height = user.getPersonalInformation().getHeight();
+            this.weight = user.getPersonalInformation().getWeight();
+        }
     }
 }
