@@ -25,6 +25,7 @@ import java.util.List;
 
 import static com.oclothes.domain.user.dto.UserDto.SignUpRequest;
 import static com.oclothes.domain.user.dto.UserDto.SignUpResponse;
+import static com.oclothes.global.config.security.util.SecurityUtils.getLoggedInUser;
 
 @RequiredArgsConstructor
 @Transactional
@@ -70,17 +71,27 @@ public class UserServiceImpl implements UserService {
                 .authenticate(loginRequest.toAuthentication()));
     }
 
-    @Override
-    public UserDto.DefaultResponse updateProfile(Long id, UserDto.ProfileUpdateRequest request){
-        this.validateAlreadyExistsNickname(request.getNickname());
-        return this.userMapper.entityToDefaultResponse(this.findById(id).updateUserProfile(request));
+    private User findById(Long id){
+        return this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public User findById(Long id){
-        return this.userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    @Override
+    public void updateAccount(UserDto.AccountUpdateRequest request){
+        this.validateAlreadyExistsNickname(request.getNickname());
+        this.findById(getLoggedInUser().getId()).updateUserAccount(request);
+    }
+
+    @Override
+    public void updateProfile(UserDto.ProfileUpdateRequest request){
+        this.findById(getLoggedInUser().getId()).updateUserProfile(request);
     }
 
     private void validateAlreadyExistsNickname(String nickname){
         if (this.userRepository.existsByNickname(nickname)) throw new AlreadyExistsNicknameException();
+    }
+
+    @Override
+    public UserDto.GetUserResponse getUser(){
+        return this.userMapper.entityToGetUserResponse(getLoggedInUser());
     }
 }

@@ -24,9 +24,10 @@ public interface UserMapper {
     @Mapping(target = "email", source = "user.email.value")
     SignUpResponse toSignUpResponse(User user);
 
+    @Mapping(target = "email", expression = "java(user.getEmail().getValue())")
     @Mapping(target = "age", source = "user.personalInformation.age")
     @Mapping(target = "gender", source = "user.personalInformation.gender")
     @Mapping(target = "height", source = "user.personalInformation.height")
     @Mapping(target = "weight", source = "user.personalInformation.weight")
-    DefaultResponse entityToDefaultResponse(User user);
+    GetUserResponse entityToGetUserResponse(User user);
 }
