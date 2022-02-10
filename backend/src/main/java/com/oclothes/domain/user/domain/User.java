@@ -89,13 +89,15 @@ public class User extends BaseEntity {
         this.closets.remove(closet);
     }
 
-    public User updateUserProfile(UserDto.ProfileUpdateRequest request) {
+    public void updateUserAccount(UserDto.AccountUpdateRequest request) {
         this.nickname = request.getNickname();
         this.personalInformation.setGender(request.getGender());
         this.personalInformation.setAge(request.getAge());
+    }
+
+    public void updateUserProfile(UserDto.ProfileUpdateRequest request){
         this.personalInformation.setHeight(request.getHeight());
         this.personalInformation.setWeight(request.getWeight());
-        return this;
     }
 
     public User addAllMoodTags(List<MoodTag> moodTags) {
