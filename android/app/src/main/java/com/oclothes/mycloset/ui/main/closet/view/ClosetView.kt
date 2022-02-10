@@ -1,4 +1,4 @@
-package com.oclothes.mycloset.ui.main.closet
+package com.oclothes.mycloset.ui.main.closet.view
 
 import com.oclothes.mycloset.data.entities.Closet
 

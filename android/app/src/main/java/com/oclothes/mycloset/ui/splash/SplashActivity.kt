@@ -3,6 +3,7 @@ package com.oclothes.mycloset.ui.splash
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import com.oclothes.mycloset.data.entities.remote.auth.AuthService
 import com.oclothes.mycloset.databinding.ActivitySplashBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.login.EmailAuthActivity
@@ -20,10 +21,8 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
 }
 
     private fun autoLogin() {
-//        AuthService.autoLogin(this)
         deleteJwt()
-        startActivityWithClear(LoginActivity::class.java)
-
+        AuthService.autoLogin(this)
         finish()
     }
 

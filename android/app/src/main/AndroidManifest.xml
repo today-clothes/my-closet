@@ -55,7 +55,7 @@
             android:name=".ui.info.InfoSelectActivity"
             android:exported="true">
         </activity>
-        
+
     </application>
 
 </manifest>

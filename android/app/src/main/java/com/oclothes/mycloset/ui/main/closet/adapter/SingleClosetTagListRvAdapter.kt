@@ -12,7 +12,7 @@ import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
 
 class SingleClosetTagListRvAdapter (val fragment : Fragment, private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<SingleClosetTagListRvAdapter.ViewHolder>() {
 
-    private val selectedTag : HashMap<String, Tag> = HashMap<String, Tag>()
+    private val selectedTag : ArrayList<Tag> = ArrayList<Tag>()
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
         viewType: Int
@@ -27,29 +27,40 @@ class SingleClosetTagListRvAdapter (val fragment : Fragment, private val tagList
 
     override fun getItemCount() = tagList.size
 
-    fun getSelectedTag(): HashMap<String, Tag> {
-        return selectedTag
+    fun setSelectedTag(selectedTag :  ArrayList<Tag>){
+        this.selectedTag.clear()
+        this.selectedTag.addAll(selectedTag)
     }
 
-    inner class ViewHolder(val binding: ItemSingleClosetTagBinding): RecyclerView.ViewHolder(binding.root){
+    fun getSelectedTag() : ArrayList<Tag> = selectedTag
 
+
+    inner class ViewHolder(val binding: ItemSingleClosetTagBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(tag : Tag){
             binding.singleClosetTagNameTv.text = tag.name
+            if(selectedTag.contains(tag)){
+                binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.style_info_tag_background_active)
+                binding.singleClosetTagNameTv.setTextColor(Color.WHITE)
+            }else{
+                binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.basic_theme_button_inactive_stroke)
+                binding.singleClosetTagNameTv.setTextColor(Color.BLACK)
+            }
 
             binding.singleClosetTagBtnCl.setOnClickListener {
-                if(selectedTag.contains(tag.name)){
-                    selectedTag.remove(tag.name)
+                if(selectedTag.contains(tag)){
+                    selectedTag.remove(tag)
                     binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.basic_theme_button_inactive_stroke)
                     binding.singleClosetTagNameTv.setTextColor(Color.BLACK)
 
                 }else{
-                    selectedTag[tag.name] = tag
+                    selectedTag.add(tag)
                     binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.style_info_tag_background_active)
                     binding.singleClosetTagNameTv.setTextColor(Color.WHITE)
                 }
 
                 (fragment as SingleClosetFragment).getBinding().singleClosetFilterCountTv.text = selectedTag.size.toString()
                 (fragment as SingleClosetFragment).updateList(selectedTag)
+                (fragment as SingleClosetFragment).updateStyleList()
             }
         }
     }

@@ -4,51 +4,53 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Update
 import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.remote.closet.ClosetService
 import com.oclothes.mycloset.data.entities.remote.closet.CreateClosetDto
+import com.oclothes.mycloset.data.entities.remote.closet.UpdateClosetDto
 import com.oclothes.mycloset.databinding.FragmentClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.closet.adapter.ClosetListRVAdapter
+import com.oclothes.mycloset.ui.main.closet.view.ClosetCreateView
+import com.oclothes.mycloset.ui.main.closet.view.ClosetDeleteView
+import com.oclothes.mycloset.ui.main.closet.view.ClosetUpdateView
+import com.oclothes.mycloset.ui.main.closet.view.ClosetView
 
-class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate), ClosetView, ClosetCreateView {
+class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate),
+    ClosetView, ClosetCreateView, ClosetDeleteView, ClosetUpdateView {
     lateinit var closetList : ArrayList<Closet>
     lateinit var nickName : String
     lateinit var closetRvAdapter : ClosetListRVAdapter
+    val closetFragment = this
     override fun initAfterBinding() {
+        getBundle()
+        init()
+        setClosetRvAdapter()
+        setAddBtnTrigger()
+    }
+
+    private fun getBundle() {
         arguments?.let {
             //이곳에 번들에 넣을 것 생각하자. 또는 나중에 사용하자.
         }
+    }
 
-        init()
-        binding.closetAllClosetListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    private fun setClosetRvAdapter() {
+        binding.closetAllClosetListRv.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         closetRvAdapter = ClosetListRVAdapter(closetList, this)
-
-        closetRvAdapter.setMyItemClickListener(object : ClosetListRVAdapter.MyItemClickListener{
+        closetRvAdapter.setMyItemClickListener(object : ClosetListRVAdapter.MyItemClickListener {
             override fun onItemClick(closet: Closet) {
                 startSingleClosetFragment(closet)
             }
 
             override fun onItemLongClick(closet: Closet) {
-                val items = resources.getStringArray(R.array.closet_ask)
-                AlertDialog.Builder(context).setTitle("'${closet.name}' 옷장 수정").setItems(items, object : DialogInterface.OnClickListener{
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        when(p1){
-                            0->{
-                                //이름 변경
-                            }
-                            1->{
-                                //삭제
-                            }
-                        }
-                    }
-
-                }).show()
+                showDialog(closet)
             }
 
             override fun onRemoveAlbum(position: Int) {
@@ -56,25 +58,57 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
             }
         })
         binding.closetAllClosetListRv.adapter = closetRvAdapter
+    }
 
-
-
+    private fun setAddBtnTrigger() {
         binding.closetPlusBtnIv.setOnClickListener {
-            val myLayout : ConstraintLayout = View.inflate(context, R.layout.dialog_create_closet, null) as ConstraintLayout
-            AlertDialog.Builder(context).setView(myLayout).setPositiveButton("확인", object : DialogInterface.OnClickListener{
-                override fun onClick(p0: DialogInterface?, p1: Int) {
-                    val editText = myLayout.findViewById<EditText>(R.id.dialog_create_closet_et)
-                    createCloset(editText.text.toString())
-                    Toast.makeText(context, editText.text.toString(), Toast.LENGTH_SHORT).show()
-                }
-            }).show()
+            val myLayout: ConstraintLayout =
+                View.inflate(context, R.layout.dialog_create_closet, null) as ConstraintLayout
+            AlertDialog.Builder(context).setView(myLayout).setTitle("옷장 생성")
+                .setPositiveButton("확인", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        val editText = myLayout.findViewById<EditText>(R.id.dialog_create_closet_et)
+                        createCloset(editText.text.toString())
+                    }
+                }).show()
         }
+    }
 
+    private fun showDialog(closet: Closet) {
+        val items = resources.getStringArray(R.array.closet_ask)
+        AlertDialog.Builder(context).setTitle("'${closet.name}' 옷장 수정")
+            .setItems(items, object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    when (p1) {
+                        0 -> {
+                            val myLayout: ConstraintLayout = View.inflate(
+                                context,
+                                R.layout.dialog_create_closet,
+                                null
+                            ) as ConstraintLayout
+                            AlertDialog.Builder(context).setView(myLayout).setTitle("옷장 이름 변경")
+                                .setPositiveButton("확인", object : DialogInterface.OnClickListener {
+                                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                                        val editText =
+                                            myLayout.findViewById<EditText>(R.id.dialog_create_closet_et)
+                                        ClosetService.updateCloset(
+                                            closetFragment,
+                                            UpdateClosetDto(closet.id, editText.text.toString())
+                                        )
+                                    }
+                                }).show()
+                        }
+                        1 -> {
+                            ClosetService.deleteCloset(closetFragment, closet.id)
+                        }
+                    }
+                }
+
+            }).show()
     }
 
     private fun createCloset(name : String){
         ClosetService.createCloset(this, CreateClosetDto(name))
-
     }
 
     private fun init() {
@@ -111,5 +145,24 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
 
     override fun onCreateClosetsFailure() {
         showToast("옷장 추가하기 실패")
+    }
+
+    override fun onClosetDeleteSuccess() {
+        ClosetService.getClosets(closetFragment)
+    }
+
+    override fun onClosetDeleteFailure() {
+
+
+    }
+
+    override fun onClosetUpdateSuccess() {
+        ClosetService.getClosets(closetFragment)
+    }
+
+    override fun onClosetUpdateFailure() {
+
+
+
     }
 }

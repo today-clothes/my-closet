@@ -93,10 +93,8 @@ object AuthService {
 
         splashView.onAutoLoginLoading()
 
-        val userDto = getLogin()
-
-        userDto?.let {
-            authService.autoLogin(userDto).enqueue(object : Callback<LoginResponse> {
+        getLogin()?.let {
+            authService.autoLogin(it).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     when(response.code()){
                         200->{

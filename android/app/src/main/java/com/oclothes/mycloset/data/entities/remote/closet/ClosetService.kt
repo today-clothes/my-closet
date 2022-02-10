@@ -7,8 +7,10 @@ import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.ErrorBody
-import com.oclothes.mycloset.ui.main.closet.ClosetCreateView
-import com.oclothes.mycloset.ui.main.closet.ClosetView
+import com.oclothes.mycloset.ui.main.closet.view.ClosetCreateView
+import com.oclothes.mycloset.ui.main.closet.view.ClosetDeleteView
+import com.oclothes.mycloset.ui.main.closet.view.ClosetUpdateView
+import com.oclothes.mycloset.ui.main.closet.view.ClosetView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -61,6 +63,49 @@ object ClosetService {
 
             override fun onFailure(call: Call<CreateResponse>, t: Throwable) {
                 closetCreateView.onCreateClosetsFailure()
+            }
+        })
+    }
+
+    fun deleteCloset(closetDeleteView : ClosetDeleteView, id : Int){
+        val closetDeleteService = ApplicationClass.retrofit.create(ClosetRetrofitInterface::class.java)
+
+        closetDeleteService.deleteCloset(id).enqueue(object : Callback<DeleteResponse>{
+            override fun onResponse(
+                call: Call<DeleteResponse>,
+                response: Response<DeleteResponse>
+            ) {
+                when(response.code()){
+                    200 -> {
+                        closetDeleteView.onClosetDeleteSuccess()
+                    }
+                    else -> closetDeleteView.onClosetDeleteFailure()
+                }
+            }
+            override fun onFailure(call: Call<DeleteResponse>, t: Throwable) {
+                closetDeleteView.onClosetDeleteFailure()
+            }
+        })
+    }
+
+    fun updateCloset(closetUpdateView : ClosetUpdateView, closetUpdateDto : UpdateClosetDto){
+        val closetUpdateService = ApplicationClass.retrofit.create(ClosetRetrofitInterface::class.java)
+
+        closetUpdateService.updateCloset(closetUpdateDto.id, closetUpdateDto).enqueue(object : Callback<UpdateResponse>{
+            override fun onResponse(
+                call: Call<UpdateResponse>,
+                response: Response<UpdateResponse>
+            ) {
+                when(response.code()){
+                    200 -> {
+                        closetUpdateView.onClosetUpdateSuccess()
+                    }
+                    else -> closetUpdateView.onClosetUpdateFailure()
+                }
+
+            }
+            override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
+                closetUpdateView.onClosetUpdateFailure()
             }
         })
     }

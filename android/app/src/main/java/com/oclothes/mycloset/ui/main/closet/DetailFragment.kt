@@ -4,7 +4,7 @@ import com.oclothes.mycloset.databinding.FragmentDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
 
 class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) {
-
+    val editMode = false
 
     override fun initAfterBinding() {
         binding.detailMainFrmSpl.anchorPoint = 0.5f
@@ -12,6 +12,21 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         binding.detailMainBackBtnIv.setOnClickListener{
             f.getBinding().mainFragmentVp.currentItem = 1
         }
+
+
+    }
+
+    fun onEditModeBegin(){
+
+    }
+
+    fun onEditDiscard(){
+
+    }
+
+    fun onEditConfirm(){
+
+    }
 
 //        val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
 //        ) { result : ActivityResult ->
@@ -24,8 +39,6 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
 //            intent.type = "image/*"
 //            getContent.launch(intent)
 //        }
-    }
-
 //    {
 //        "email" : "gjwodud312129@gmail.com",
 //        "password" : "gj1109gj",
