@@ -32,21 +32,12 @@ public class ClothesApiController {
         return ResponseEntity.status(CREATED).body(ResponseDto.create(UPLOAD_SUCCESS.getMessage(), this.clothesService.save(request)));
     }
 
-    @ApiOperation(value = "옷 태그 필터링", notes = "옷 전체/개별 태그 필터링 API")
+    @ApiOperation(value = "옷 검색", notes = "옷 전체/개별 태그 필터링, 옷 키워드 검색, 옷 전체 리스트 반환 API")
     @GetMapping("/search")
-    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchAllByTag(
-            @Valid @RequestBody ClothesDto.SearchRequest request,
+    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> search(
+            @Valid ClothesDto.SearchRequest request,
             @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(ResponseDto.create(TAG_FILTER_SUCCESS.getMessage(), this.clothesService.searchByTag(request, pageable)));
-    }
-
-    @ApiOperation(value = "옷 키워드 검색", notes = "옷 키워드로 검색 API")
-    @GetMapping("/search/all")
-    public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> searchByKeyword(
-            @RequestParam String keyword,
-            @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(ResponseDto.create(KEYWORD_SEARCH_SUCCESS.getMessage(),
-                clothesService.searchByKeyword(keyword, pageable)));
+        return ResponseEntity.ok(ResponseDto.create(SEARCH_CLOTHES_SUCCESS.getMessage(), this.clothesService.search(request, pageable)));
     }
 
     @ApiOperation(value = "옷 공개 여부", notes = "옷 공개/비공개 요청 API")
@@ -73,5 +64,4 @@ public class ClothesApiController {
         this.clothesService.deleteById(id);
         return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.DELETE_SUCCESS.getMessage()));
     }
-
 }

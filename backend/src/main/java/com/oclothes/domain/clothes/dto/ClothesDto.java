@@ -1,6 +1,5 @@
 package com.oclothes.domain.clothes.dto;
 
-import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.tag.dto.TagDto;
 import com.oclothes.domain.user.domain.User;
 import lombok.*;
@@ -11,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class ClothesDto {
     @Getter
@@ -40,6 +38,7 @@ public abstract class ClothesDto {
     @RequiredArgsConstructor
     public static class SearchRequest {
         private final Long closetId;
+        private final String keyword;
         private final List<Long> seasonTagIds;
         private final List<Long> eventTagIds;
         private final List<Long> moodTagIds;

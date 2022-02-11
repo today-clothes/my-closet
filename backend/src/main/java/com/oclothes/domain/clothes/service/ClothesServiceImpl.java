@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.oclothes.domain.clothes.dto.ClothesDto.*;
+import static java.util.Objects.isNull;
 
 @Transactional
 @RequiredArgsConstructor
@@ -58,16 +59,9 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public SliceDto<SearchResponse> searchByTag(SearchRequest request, Pageable pageable) {
+    public SliceDto<SearchResponse> search(SearchRequest request, Pageable pageable) {
         return SliceDto.create(this.clothesRepository
-                .searchByTag(request, pageable)
-                .map(this::createSearchDtoResponse));
-    }
-
-    @Override
-    public SliceDto<SearchResponse> searchByKeyword(String keyword, Pageable pageable) {
-        return SliceDto.create(this.clothesRepository
-                .findByContentContainingAndLockedIsFalse(keyword, pageable)
+                .searchByTag(request, getUser(request), pageable)
                 .map(this::createSearchDtoResponse));
     }
 
@@ -96,6 +90,10 @@ public class ClothesServiceImpl implements ClothesService {
 
     public Clothes findById(Long id) {
         return this.clothesRepository.findById(id).orElseThrow(ClothesNotFoundException::new);
+    }
+
+    private User getUser(SearchRequest req){
+        return isNull(req) || isNull(req.getKeyword()) ? null : SecurityUtils.getLoggedInUser();
     }
 
     private SearchResponse createSearchDtoResponse(Clothes c) {
