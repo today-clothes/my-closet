@@ -59,9 +59,9 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     @Override
-    public SliceDto<SearchResponse> search(SearchRequest request, String keyword, Pageable pageable) {
+    public SliceDto<SearchResponse> search(SearchRequest request, Pageable pageable) {
         return SliceDto.create(this.clothesRepository
-                .searchByTag(request, getUser(keyword), keyword, pageable)
+                .searchByTag(request, getUser(request), pageable)
                 .map(this::createSearchDtoResponse));
     }
 
@@ -92,8 +92,8 @@ public class ClothesServiceImpl implements ClothesService {
         return this.clothesRepository.findById(id).orElseThrow(ClothesNotFoundException::new);
     }
 
-    private User getUser(String keyword){
-        return isNull(keyword) ? null : SecurityUtils.getLoggedInUser();
+    private User getUser(SearchRequest req){
+        return isNull(req) || isNull(req.getKeyword()) ? null : SecurityUtils.getLoggedInUser();
     }
 
     private SearchResponse createSearchDtoResponse(Clothes c) {

@@ -33,7 +33,7 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<Clothes> searchByTag(SearchRequest request, User user, String keyword, Pageable pageable) {
+    public Slice<Clothes> searchByTag(SearchRequest request, User user, Pageable pageable) {
         List<Long> seasonTagIds = new ArrayList<>();
         List<Long> eventTagIds = new ArrayList<>();
         List<Long> moodTagIds = new ArrayList<>();
@@ -50,7 +50,7 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
                 .leftJoin(clothes.moodTags, clothesMoodTag)
                 .where( userIdEq(user),
                         closetIdEq(request),
-                        contentsEq(keyword),
+                        contentsEq(request),
                         tagsEq(seasonTagIds, isSeasonTag),
                         tagsEq(eventTagIds, isEventTag),
                         tagsEq(moodTagIds, isMoodTag))
@@ -78,8 +78,9 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
         return isNull(user) ? null : clothes.user.id.eq(user.getId());
     }
 
-    private BooleanBuilder contentsEq(String keyword) {
-        return isNull(keyword) ? null : new BooleanBuilder().and(clothes.content.contains(keyword)).and(clothes.locked.eq(false));
+    private BooleanBuilder contentsEq(SearchRequest req) {
+        return isNull(req) || isNull(req.getKeyword()) ? null : new BooleanBuilder()
+                .and(clothes.content.contains(req.getKeyword())).and(clothes.locked.eq(false));
     }
 
     private BooleanBuilder tagsEq(List<Long> ids, Function<Long, BooleanExpression> isTag) {

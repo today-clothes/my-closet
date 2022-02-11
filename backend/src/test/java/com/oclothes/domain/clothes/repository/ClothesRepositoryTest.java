@@ -11,6 +11,7 @@ import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.domain.ClothesEventTag;
 import com.oclothes.domain.clothes.domain.ClothesMoodTag;
 import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
+import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
@@ -116,29 +117,29 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
 
         //4.검색 객체 생성
         // 4.1) 조건. 옷장 전체
-        SearchRequest req1 = new SearchRequest(closet.getId(), null, null, null);
+        SearchRequest req1 = new SearchRequest(closet.getId(), null, null, null, null);
         // 4.2) 조건. 옷장, 계절1
-        SearchRequest req2 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId()), null, null);
+        SearchRequest req2 = new SearchRequest(closet.getId(), null, List.of(seasonTag1.getId()), null, null);
         // 4.3) 조건. 옷장, 계절1 또는 계절2
-        SearchRequest req3 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId(), seasonTag2.getId()), null, null);
+        SearchRequest req3 = new SearchRequest(closet.getId(), null, List.of(seasonTag1.getId(), seasonTag2.getId()), null, null);
         // 4.4) 조건. 옷장, 계절2
-        SearchRequest req4 = new SearchRequest(closet.getId(), List.of(seasonTag2.getId()), null, null);
+        SearchRequest req4 = new SearchRequest(closet.getId(), null, List.of(seasonTag2.getId()), null, null);
         // 4.5) 조건. 옷장, 계절1 그리고 무드1
-        SearchRequest req5 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId()), null, List.of(moodTag1.getId()));
+        SearchRequest req5 = new SearchRequest(closet.getId(), null, List.of(seasonTag1.getId()), null, List.of(moodTag1.getId()));
         // 4.6) 조건. 옷장, 계절1 그리고 무드1 그리고 이벤트1
-        SearchRequest req6 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId()), List.of(eventTag1.getId()), List.of(moodTag1.getId()));
+        SearchRequest req6 = new SearchRequest(closet.getId(), null, List.of(seasonTag1.getId()), List.of(eventTag1.getId()), List.of(moodTag1.getId()));
         // 4.7) 조건. 옷장, (계절1 or 계절2) and 이벤트1
-        SearchRequest req7 = new SearchRequest(closet.getId(), List.of(seasonTag1.getId(), seasonTag2.getId()), List.of(eventTag1.getId()), null);
+        SearchRequest req7 = new SearchRequest(closet.getId(), null, List.of(seasonTag1.getId(), seasonTag2.getId()), List.of(eventTag1.getId()), null);
 
         PageRequest pageRequest = PageRequest.of(0, 5);
 
-        Slice<Clothes> result1 = clothesRepository.searchByTag(req1, user, null, pageRequest);
-        Slice<Clothes> result2 = clothesRepository.searchByTag(req2, user, null, pageRequest);
-        Slice<Clothes> result3 = clothesRepository.searchByTag(req3, user, null, pageRequest);
-        Slice<Clothes> result4 = clothesRepository.searchByTag(req4, user, null, pageRequest);
-        Slice<Clothes> result5 = clothesRepository.searchByTag(req5, user, null, pageRequest);
-        Slice<Clothes> result6 = clothesRepository.searchByTag(req6, user, null, pageRequest);
-        Slice<Clothes> result7 = clothesRepository.searchByTag(req7, user, null, pageRequest);
+        Slice<Clothes> result1 = clothesRepository.searchByTag(req1, user, pageRequest);
+        Slice<Clothes> result2 = clothesRepository.searchByTag(req2, user, pageRequest);
+        Slice<Clothes> result3 = clothesRepository.searchByTag(req3, user, pageRequest);
+        Slice<Clothes> result4 = clothesRepository.searchByTag(req4, user, pageRequest);
+        Slice<Clothes> result5 = clothesRepository.searchByTag(req5, user, pageRequest);
+        Slice<Clothes> result6 = clothesRepository.searchByTag(req6, user, pageRequest);
+        Slice<Clothes> result7 = clothesRepository.searchByTag(req7, user, pageRequest);
 
         assertEquals(4, result1.getNumberOfElements());
         assertEquals(2, result2.getNumberOfElements());
@@ -150,8 +151,9 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
     }
 
     @Test
-    @DisplayName("전체 키워드로 옷 검색")
+    @DisplayName("전체 키워드로 공개 상태 옷 검색")
     public void findByContentContainingAndLockedIsFalseTest() {
+        ClothesDto.SearchRequest request = new ClothesDto.SearchRequest(null, "우왕", null, null, null);
         Closet closet = new Closet("c1", user);
         Closet result = this.closetRepository.save(closet);
         Clothes clothes1 = this.createClothes(result, "aa", true);
@@ -162,7 +164,7 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         this.clothesRepository.save(clothes2);
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        Slice<Clothes> clothes = this.clothesRepository.searchByTag(null, null, "우왕", pageRequest);
+        Slice<Clothes> clothes = this.clothesRepository.searchByTag(request,null, pageRequest);
         assertEquals(1, clothes.getNumberOfElements());
     }
 

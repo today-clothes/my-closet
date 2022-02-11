@@ -38,6 +38,7 @@ public abstract class ClothesDto {
     @RequiredArgsConstructor
     public static class SearchRequest {
         private final Long closetId;
+        private final String keyword;
         private final List<Long> seasonTagIds;
         private final List<Long> eventTagIds;
         private final List<Long> moodTagIds;

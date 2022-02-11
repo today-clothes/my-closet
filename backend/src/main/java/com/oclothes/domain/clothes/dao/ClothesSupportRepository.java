@@ -8,5 +8,5 @@ import org.springframework.data.domain.Slice;
 
 
 public interface ClothesSupportRepository {
-    Slice<Clothes> searchByTag(ClothesDto.SearchRequest request, User user, String keyword, Pageable pageable);
+    Slice<Clothes> searchByTag(ClothesDto.SearchRequest request, User user, Pageable pageable);
 }

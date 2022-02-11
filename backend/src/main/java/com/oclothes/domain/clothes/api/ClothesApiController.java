@@ -35,10 +35,9 @@ public class ClothesApiController {
     @ApiOperation(value = "옷 검색", notes = "옷 전체/개별 태그 필터링, 옷 키워드 검색, 옷 전체 리스트 반환 API")
     @GetMapping("/search")
     public ResponseEntity<ResponseDto<SliceDto<ClothesDto.SearchResponse>>> search(
-            @Valid @RequestBody ClothesDto.SearchRequest request,
-            @RequestParam String keyword,
+            @Valid ClothesDto.SearchRequest request,
             @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(ResponseDto.create(SEARCH_CLOTHES_SUCCESS.getMessage(), this.clothesService.search(request, keyword, pageable)));
+        return ResponseEntity.ok(ResponseDto.create(SEARCH_CLOTHES_SUCCESS.getMessage(), this.clothesService.search(request, pageable)));
     }
 
     @ApiOperation(value = "옷 공개 여부", notes = "옷 공개/비공개 요청 API")

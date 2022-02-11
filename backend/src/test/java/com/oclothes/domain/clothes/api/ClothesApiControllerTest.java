@@ -76,13 +76,13 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @WithMockUser
     @Test
     void getFilteringList() throws Exception {
-        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, "예시", Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("keyword", "hi");
         requestParams.add("size", "20");
 
-        when(clothesService.search(any(), any(), any())).thenReturn(dto);
+        when(clothesService.search(any(), any())).thenReturn(dto);
 
         mockMvc.perform(get("/clothes/search")
                         .params(requestParams)
@@ -92,7 +92,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(containsString("완료")))
                 .andDo(print());
-        verify(this.clothesService, atMostOnce()).search(any(), any(), any());
+        verify(this.clothesService, atMostOnce()).search(any(), any());
     }
 
     @DisplayName("옷을 삭제한다.")
