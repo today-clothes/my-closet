@@ -72,40 +72,27 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
         verify(this.clothesService, atMostOnce()).getImage(any());
     }
 
-    @DisplayName("옷 필터링 결과를 SliceDto 매핑해서 반환")
+    @DisplayName("옷 필터링/검색 결과를 SliceDto 매핑해서 반환")
     @WithMockUser
     @Test
     void getFilteringList() throws Exception {
         final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
-
-        when(clothesService.searchByTag(any(), any())).thenReturn(dto);
-
-        mockMvc.perform(get("/clothes/search/?size=20")
-                        .content(objectMapper.writeValueAsString(req))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(containsString("필터링된")))
-                .andDo(print());
-    }
-
-    @DisplayName("옷 검색 결과를 SliceDto 매핑해서 반환")
-    @WithMockUser
-    @Test
-    void getSearchKeywordList() throws Exception {
-        final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("keyword", "hi");
         requestParams.add("size", "20");
 
-        when(clothesService.searchByKeyword(any(), any())).thenReturn(dto);
+        when(clothesService.search(any(), any(), any())).thenReturn(dto);
 
-        mockMvc.perform(get("/clothes/search/all")
-                        .params(requestParams))
+        mockMvc.perform(get("/clothes/search")
+                        .params(requestParams)
+                        .content(objectMapper.writeValueAsString(req))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(containsString("일치하는")))
+                .andExpect(jsonPath("$.message").value(containsString("완료")))
                 .andDo(print());
+        verify(this.clothesService, atMostOnce()).search(any(), any(), any());
     }
 
     @DisplayName("옷을 삭제한다.")

@@ -11,9 +11,7 @@ public interface ClothesService {
 
     ClothesUploadResponse save(ClothesUploadRequest request);
 
-    SliceDto<SearchResponse> searchByTag(SearchRequest request, Pageable pageable);
-
-    SliceDto<SearchResponse> searchByKeyword(String keyword, Pageable pageable);
+    SliceDto<SearchResponse> search(SearchRequest request, String keyword, Pageable pageable);
 
     DefaultResponse changeLockStatus(Long id);
 

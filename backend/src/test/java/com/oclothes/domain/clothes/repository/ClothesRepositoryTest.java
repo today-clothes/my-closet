@@ -132,13 +132,13 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
 
         PageRequest pageRequest = PageRequest.of(0, 5);
 
-        Slice<Clothes> result1 = clothesRepository.searchByTag(req1, pageRequest);
-        Slice<Clothes> result2 = clothesRepository.searchByTag(req2, pageRequest);
-        Slice<Clothes> result3 = clothesRepository.searchByTag(req3, pageRequest);
-        Slice<Clothes> result4 = clothesRepository.searchByTag(req4, pageRequest);
-        Slice<Clothes> result5 = clothesRepository.searchByTag(req5, pageRequest);
-        Slice<Clothes> result6 = clothesRepository.searchByTag(req6, pageRequest);
-        Slice<Clothes> result7 = clothesRepository.searchByTag(req7, pageRequest);
+        Slice<Clothes> result1 = clothesRepository.searchByTag(req1, user, null, pageRequest);
+        Slice<Clothes> result2 = clothesRepository.searchByTag(req2, user, null, pageRequest);
+        Slice<Clothes> result3 = clothesRepository.searchByTag(req3, user, null, pageRequest);
+        Slice<Clothes> result4 = clothesRepository.searchByTag(req4, user, null, pageRequest);
+        Slice<Clothes> result5 = clothesRepository.searchByTag(req5, user, null, pageRequest);
+        Slice<Clothes> result6 = clothesRepository.searchByTag(req6, user, null, pageRequest);
+        Slice<Clothes> result7 = clothesRepository.searchByTag(req7, user, null, pageRequest);
 
         assertEquals(4, result1.getNumberOfElements());
         assertEquals(2, result2.getNumberOfElements());
@@ -157,12 +157,12 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         Clothes clothes1 = this.createClothes(result, "aa", true);
         Clothes clothes2 = this.createClothes(result, "bb", false);
         clothes1.setContent("ㅋ키키키예시");
-        clothes2.setContent("우왕");
+        clothes2.setContent("1우왕1");
         this.clothesRepository.save(clothes1);
         this.clothesRepository.save(clothes2);
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        Slice<Clothes> clothes = this.clothesRepository.findByContentContainingAndLockedIsFalse("우", pageRequest);
+        Slice<Clothes> clothes = this.clothesRepository.searchByTag(null, null, "우왕", pageRequest);
         assertEquals(1, clothes.getNumberOfElements());
     }
 
