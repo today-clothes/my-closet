@@ -138,4 +138,21 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
         verify(clothesService, atMostOnce()).changeLockStatus(id);
     }
 
+    @DisplayName("옷 상세정보 반환")
+    @WithMockUser
+    @Test
+    void getClothesDetails() throws Exception {
+        final Long id = 1L;
+        final ClothesDto.ClothesResponse dto = ClothesDto.ClothesResponse.builder().styleTitle("title").content("content").build();
+
+        when(clothesService.getClothesDetails(any())).thenReturn(dto);
+
+        mockMvc.perform(get("/clothes/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(Matchers.containsString("반환")))
+                .andDo(print());
+
+        verify(clothesService, atMostOnce()).getClothesDetails(id);
+    }
+
 }

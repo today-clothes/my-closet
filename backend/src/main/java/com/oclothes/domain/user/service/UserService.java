@@ -11,5 +11,9 @@ public interface UserService {
 
     User findByEmail(String email);
 
-    DefaultResponse updateProfile(Long id, ProfileUpdateRequest request);
+    void updateAccount(AccountUpdateRequest request);
+
+    void updateProfile(ProfileUpdateRequest request);
+
+    GetUserResponse getUser();
 }

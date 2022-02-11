@@ -67,18 +67,22 @@ public abstract class UserDto {
 
     @Getter
     @RequiredArgsConstructor
-    public static class ProfileUpdateRequest {
-        @NotNull(message = "회원 id를 입력해주세요.")
-        private final Long id;
+    public static class AccountUpdateRequest {
         @Size(min = 1, max = 20, message = "닉네임은 1자 이상 20자 이하로 입력해주세요.")
         @NotNull(message = "닉네임을 입력해주세요.")
         private final String nickname;
-        @NotNull(message = "성별을 선택해주세요.")
+        @NotNull(message = "성별을 기입해주세요. (MALE, FEMALE)")
         private final UserPersonalInformation.Gender gender;
-        @Min(value = 0, message = "나이는 0보다 작을 수 없습니다.")
-        @NotNull(message = "나이를 입력해주세요.")
+        @Min(value = 0, message = "나이를 다시 입력해주세요.")
+        @Max(value = 150, message = "나이를 다시 입력해주세요.")
         private final Integer age;
-        @Min(value = 0, message = "키는 0보다 작을 수 없습니다.")
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class ProfileUpdateRequest {
+        @Min(value = 50, message = "키를 다시 입력해주세요. (50이상 300이하)")
+        @Max(value = 300, message = "키를 다시 입력해주세요. (50이상 300이하)")
         @NotNull(message = "키를 입력해주세요.")
         private final Integer height;
         @Min(value = 0, message = "몸무게는 0보다 작을 수 없습니다.")
@@ -88,8 +92,8 @@ public abstract class UserDto {
 
     @Getter
     @RequiredArgsConstructor
-    public static class DefaultResponse {
-        private final Long id;
+    public static class GetUserResponse{
+        private final String email;
         private final String nickname;
         private final UserPersonalInformation.Gender gender;
         private final Integer age;
