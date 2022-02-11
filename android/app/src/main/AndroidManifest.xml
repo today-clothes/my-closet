@@ -3,7 +3,7 @@
     package="com.oclothes.mycloset">
     
     <uses-permission android:name="android.permission.INTERNET" />
-    
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:name=".ApplicationClass"
         android:allowBackup="true"

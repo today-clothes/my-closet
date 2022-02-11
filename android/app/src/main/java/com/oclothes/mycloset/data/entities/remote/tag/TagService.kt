@@ -3,7 +3,6 @@ package com.oclothes.mycloset.data.entities.remote.tag
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.oclothes.mycloset.ApplicationClass
-import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.ErrorBody
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.ui.info.TagView
@@ -17,7 +16,6 @@ object TagService {
 
     fun getTags(tagView : TagView){
         val tagService = ApplicationClass.retrofit.create(TagRetrofitInterface::class.java)
-
         tagService.getTags().enqueue(object : Callback<TagResponse>{
             override fun onResponse(call: Call<TagResponse>, response: Response<TagResponse>) {
                 when(response.code()){
@@ -38,19 +36,18 @@ object TagService {
                             val tag = Tag(content.id, content.name)
                             seasonTags.add(tag)
                         }
-
                         tagView.onGetTagsSuccess(eventTags, moodTags, seasonTags)
                     }
                     else -> {
-                        var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
-                            if (errorBody != null) {
-                                tagView.onGetTagsFailure(response.code(), errorBody.errorMessage)
-                                return
-                            }
+                        var errorBody: ErrorBody? =
+                            gson.fromJson(response.errorBody()!!.charStream(), type)
+                        if (errorBody != null) {
+                            tagView.onGetTagsFailure(response.code(), errorBody.errorMessage)
+                            return
+                        }
                     }
                 }
             }
-
             override fun onFailure(call: Call<TagResponse>, t: Throwable) {
                 tagView.onGetTagsFailure(400 ,"알 수 없는 오류가 발생했습니다.")
             }

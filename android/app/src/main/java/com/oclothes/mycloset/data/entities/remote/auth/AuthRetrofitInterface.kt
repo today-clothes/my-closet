@@ -2,6 +2,7 @@ package com.oclothes.mycloset.data.entities.remote.auth
 
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AuthRetrofitInterface {
@@ -13,4 +14,7 @@ interface AuthRetrofitInterface {
 
     @POST("/users/login")
     fun autoLogin(@Body UserDto : UserDto): Call<LoginResponse>
+
+    @GET("/users")
+    fun getUserInfo() : Call<InfoResponse>
 }

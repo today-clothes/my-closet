@@ -6,23 +6,21 @@ import android.view.View
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Update
 import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Closet
+import com.oclothes.mycloset.data.entities.User
+import com.oclothes.mycloset.data.entities.remote.auth.AuthService
 import com.oclothes.mycloset.data.entities.remote.closet.ClosetService
 import com.oclothes.mycloset.data.entities.remote.closet.CreateClosetDto
 import com.oclothes.mycloset.data.entities.remote.closet.UpdateClosetDto
 import com.oclothes.mycloset.databinding.FragmentClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.closet.adapter.ClosetListRVAdapter
-import com.oclothes.mycloset.ui.main.closet.view.ClosetCreateView
-import com.oclothes.mycloset.ui.main.closet.view.ClosetDeleteView
-import com.oclothes.mycloset.ui.main.closet.view.ClosetUpdateView
-import com.oclothes.mycloset.ui.main.closet.view.ClosetView
+import com.oclothes.mycloset.ui.main.closet.view.*
 
 class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate),
-    ClosetView, ClosetCreateView, ClosetDeleteView, ClosetUpdateView {
+    ClosetView, ClosetCreateView, ClosetDeleteView, ClosetUpdateView, UserInfoView {
     lateinit var closetList : ArrayList<Closet>
     lateinit var nickName : String
     lateinit var closetRvAdapter : ClosetListRVAdapter
@@ -117,10 +115,11 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
         binding.closetInfoTv.text = "\'$nickName\'님의 옷장"
         binding.closetAllClosetNumberTv.text = "${closetList.size.toString()} 개"
         ClosetService.getClosets(this)
+        AuthService.getUserInfo(this)
     }
 
     fun startSingleClosetFragment(closet: Closet) {
-        (f as MainFragment).openCloset(closet)
+        f.openCloset(closet)
     }
 
     override fun onGetClosetsSuccess(data: ArrayList<Closet>) {
@@ -152,7 +151,7 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
     }
 
     override fun onClosetDeleteFailure() {
-
+        showToast("옷장 삭제 실패")
 
     }
 
@@ -161,8 +160,15 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
     }
 
     override fun onClosetUpdateFailure() {
+        showToast("옷장 이름 변경 실패")
+    }
 
+    override fun onGetUserInfoSuccess(user: User) {
+        binding.closetInfoTv.text = "\'${user.nickname}\'님의 옷장"
 
+    }
 
+    override fun onGetUserInfoFailure(message: String) {
+        showToast(message)
     }
 }

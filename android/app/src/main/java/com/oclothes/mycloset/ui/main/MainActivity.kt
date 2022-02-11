@@ -1,6 +1,13 @@
 package com.oclothes.mycloset.ui.main
 
+import android.content.Intent
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.*
 import com.oclothes.mycloset.R
@@ -15,8 +22,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var search : SearchFragment
     lateinit var mypage : MyPageFragment
     private var backPressedTime: Long = 0
+    lateinit var filterActionActivityLauncher: ActivityResultLauncher<Intent>
     var currentPage = 0
     val TIME_INTERVAL: Long = 2000
+    var galleryFlag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +34,38 @@ class MainActivity : AppCompatActivity() {
         initFragment()
         initNavigation()
         supportActionBar?.hide()
+
+        val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){}
+        permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        filterActionActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK && it.data != null) {
+                val currentImageUri = it.data?.data
+                try {
+                    currentImageUri?.let {
+                        if (Build.VERSION.SDK_INT < 28) {
+
+                            val bitmap = MediaStore.Images.Media.getBitmap(
+                                contentResolver, currentImageUri
+                            )
+                            closet.detail.mainImageView.setImageBitmap(bitmap)
+                            closet.detail.getBinding().detailMainImageIv.setImageBitmap(bitmap)
+                            closet.getBinding().mainFragmentVp.currentItem = 2
+                        } else {
+
+                            val source = ImageDecoder.createSource(contentResolver, currentImageUri)
+                            val bitmap = ImageDecoder.decodeBitmap(source)
+                            closet.detail.setImage(bitmap)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            } else if (it.resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_SHORT).show()
+            } else {
+
+            }
+        }
 
         binding.mainNavBnv.setOnItemSelectedListener {
             when (it.itemId) {
@@ -53,6 +94,40 @@ class MainActivity : AppCompatActivity() {
             false
         }
         showFragment(closet)
+        if(savedInstanceState != null){
+            when(savedInstanceState.getInt("currentPage")) {
+                0 -> {
+                    showFragment(closet)
+                    savedInstanceState.getInt("currentItem")?.let{
+                        closet.getBinding().mainFragmentVp.currentItem = it
+                    }
+                }
+                1 -> showFragment(search)
+                2 -> showFragment(mypage)
+                else -> showFragment(closet)
+            }
+        }
+    }
+
+    fun openGallery(){
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        filterActionActivityLauncher.launch(intent)
+        galleryFlag = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(galleryFlag) {
+            closet.getBinding().mainFragmentVp.currentItem = 2
+            galleryFlag = false
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("currentPage", currentPage)
+        outState.putInt("currentItem", closet.getBinding().mainFragmentVp.currentItem)
     }
 
     private fun initFragment() {
@@ -65,7 +140,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.main_frm, closet).hide(closet).commit()
         supportFragmentManager.beginTransaction().add(R.id.main_frm, search).hide(search).commit()
         supportFragmentManager.beginTransaction().add(R.id.main_frm, mypage).hide(mypage).commit()
-
     }
 
     fun showFragment(f : Fragment){
@@ -76,7 +150,6 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val currentTime = System.currentTimeMillis()
         val intervalTime = currentTime - backPressedTime
-
 
         when(currentPage){
             0->{

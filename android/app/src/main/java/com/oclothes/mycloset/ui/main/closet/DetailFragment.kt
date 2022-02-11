@@ -1,59 +1,58 @@
 package com.oclothes.mycloset.ui.main.closet
 
+import android.graphics.Bitmap
+import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.databinding.FragmentDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
+import com.oclothes.mycloset.ui.main.MainActivity
 
 class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) {
     val editMode = false
-
+    lateinit var mainImageView: ImageView
     override fun initAfterBinding() {
         binding.detailMainFrmSpl.anchorPoint = 0.5f
         binding.detailMainFrmSpl.isClipPanel = false
-        binding.detailMainBackBtnIv.setOnClickListener{
+        binding.detailMainBackBtnIv.setOnClickListener {
             f.getBinding().mainFragmentVp.currentItem = 1
+        }
+        mainImageView = binding.detailMainImageIv
+        mainImageView.setOnClickListener {
+            (requireContext() as MainActivity).openGallery()
         }
     }
 
-    fun setContents(style : Style){
+    fun getBinding() = binding
+
+    fun setContents(style: Style) {
 
     }
 
-    fun onEditModeBegin(){
+    fun setImage(image : Bitmap){
+        Glide.with(this)
+            .load(image)
+            .into(binding.detailMainImageIv)
+    }
+
+    fun onEditModeBegin() {
         binding.detailSecondApplyTv.visibility = View.VISIBLE
         binding.detailSecondCancelTv.visibility = View.VISIBLE
     }
 
-    fun onEditDiscard(){
+    fun onEditDiscard() {
         binding.detailSecondApplyTv.visibility = View.GONE
         binding.detailSecondCancelTv.visibility = View.GONE
     }
 
-    fun onEditConfirm(){
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
-//        val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
-//        ) { result : ActivityResult ->
-//            binding.detailMainImageIv.setImageURI(result.data?.data)
-//        }
-//
-//        binding.detailMainImageIv.setOnClickListener {
-//            val intent = Intent(Intent.ACTION_PICK);
-//            intent.type = MediaStore.Images.Media.CONTENT_TYPE
-//            intent.type = "image/*"
-//            getContent.launch(intent)
-//        }
-//    {
-//        "email" : "gjwodud312129@gmail.com",
-//        "password" : "gj1109gj",
-//        "gender": 0,
-//        "moodTags": [3,5],
-//        "nickname": "jadnddg",
-//        "weight": 60,
-//        "age": 30
-//    }
-//
-//
+
+    fun onEditConfirm() {
+
+    }
 }

@@ -1,7 +1,5 @@
 package com.oclothes.mycloset.ui.main.closet
 
-import android.view.MotionEvent
-import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.databinding.FragmentMainBinding
@@ -12,6 +10,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     lateinit var singleCloset : SingleClosetFragment
     lateinit var vpAdapter: MainFragmentVPAdapter
     lateinit var detail : DetailFragment
+
     override fun initAfterBinding() {
         detail = DetailFragment(this)
         singleCloset = SingleClosetFragment(this)
@@ -30,6 +29,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     }
 
+
+
     fun getBinding() : FragmentMainBinding{
         return binding
     }
@@ -38,6 +39,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         binding.mainFragmentVp.currentItem = 1
         singleCloset.setSingleCloset(closet)
     }
+
+
 
     fun backPressed() : Boolean {
         when(binding.mainFragmentVp.currentItem){

@@ -79,8 +79,7 @@
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/roboto_bold"
         android:textColor="@color/black"
-        android:background="null"
-        android:visibility="gone"
+        android:background="@color/white"
         />
 
     <TextView
@@ -178,7 +177,7 @@
         android:textColor="@color/black"
         android:fontFamily="@font/roboto_regular"
         android:layout_marginBottom="50dp"
-        android:background="null"
+        android:background="@color/white"
         android:text="상세정보입니다 상세정보정보정보\n\n상세정보정보정보"
         android:visibility="gone"/>
     

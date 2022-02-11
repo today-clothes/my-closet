@@ -23,7 +23,6 @@
             android:id="@+id/detail_main_image_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/temp_selfee"
             />
 
         <ImageView
@@ -121,7 +120,7 @@
             android:layout_marginEnd="30dp"
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/black"
-            android:background="null"
+            android:background="@color/white"
             android:visibility="gone"
             />
     
@@ -220,7 +219,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/roboto_regular"
             android:layout_marginBottom="50dp"
-            android:background="null"
+            android:background="@color/white"
             android:text="상세정보입니다 상세정보정보정보\n\n상세정보정보정보"
             android:visibility="gone"/>
     
