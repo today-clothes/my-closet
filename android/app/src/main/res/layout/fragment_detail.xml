@@ -54,11 +54,21 @@
             android:text="수정"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="20dp"
             android:textSize="15dp"
             />
     
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/detail_second_switch_lock_state_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/lock_black_unlocked"
+            app:layout_constraintEnd_toStartOf="@id/detail_second_lock_switch_s"
+            app:layout_constraintTop_toTopOf="@id/detail_second_lock_switch_s"
+            app:layout_constraintBottom_toBottomOf="@id/detail_second_lock_switch_s"
+            android:layout_marginEnd="20dp"
+            />
     
         <Switch
             android:id="@+id/detail_second_lock_switch_s"
@@ -66,12 +76,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
             android:track="@drawable/switch_selector"
+            android:thumbTint="@color/white"
             android:thumb="@drawable/switch_thumb_on"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             />
-    
     
     
         <TextView
@@ -82,17 +94,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="10dp"
             android:background="@drawable/detail_round_gray_bar"/>
-
-        <ImageView
-            android:id="@+id/detail_second_like_btn_iv"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/heart_selected"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="60dp"/>
-
+    
+    
         <TextView
             android:id="@+id/detail_second_title_tv"
             android:layout_width="match_parent"
@@ -105,38 +108,122 @@
             android:layout_marginEnd="30dp"
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/black"/>
-
+    
+        <EditText
+            android:id="@+id/detail_second_title_edit_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="60dp"
+            android:text="겨울 월정리에서"
+            android:textSize="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/black"
+            android:background="null"
+            android:visibility="gone"
+            />
+    
         <TextView
             android:id="@+id/detail_second_info_user_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/detail_second_title_tv"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="100dp"
             android:text="22.03.03/동동 173cm 68kg"
             android:fontFamily="@font/roboto_regular"
             />
-
-        <GridLayout
-            android:id="@+id/detail_second_tag_list_gl"
+    
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detail_second_tag_list_cl"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             app:layout_constraintTop_toBottomOf="@id/detail_second_info_user_tv"
-            android:layout_marginTop="5dp"/>
-
+            android:layout_marginTop="5dp">
+        
+            <ImageView
+                android:id="@+id/detail_second_filter_image_iv"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:src="@drawable/filter_on"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                />
+        
+            <TextView
+                android:id="@+id/detail_second_filter_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/detail_second_filter_image_iv"
+                app:layout_constraintEnd_toEndOf="@id/detail_second_filter_image_iv"
+                app:layout_constraintBottom_toBottomOf="@id/detail_second_filter_image_iv"
+                android:text="2"
+                android:fontFamily="@font/roboto_bold"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="13dp"
+                />
+        
+            <com.oclothes.mycloset.ui.main.closet.custom.NestedScrollableHost
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/detail_second_filter_image_iv"
+                app:layout_constraintBottom_toBottomOf="@id/detail_second_filter_image_iv"
+                app:layout_constraintStart_toEndOf="@id/detail_second_filter_image_iv"
+                app:layout_constraintEnd_toEndOf="parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/single_closet_filter_list_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"/>
+            </com.oclothes.mycloset.ui.main.closet.custom.NestedScrollableHost>
+    
+    
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    
+        <View
+            android:id="@+id/bar1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/detail_second_tag_list_cl"
+            android:background="#5E5A5A5A"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="7dp"
+            />
+    
         <TextView
             android:id="@+id/detail_second_info_detail_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/detail_second_tag_list_gl"
-            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/detail_second_tag_list_cl"
+            android:layout_marginTop="30dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:textColor="@color/black"
             android:fontFamily="@font/roboto_regular"
             android:layout_marginBottom="50dp"
             android:text="상세정보입니다 상세정보정보정보\n\n상세정보정보정보"/>
+    
+        <EditText
+            android:id="@+id/detail_second_info_detail_edit_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/detail_second_tag_list_cl"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_marginBottom="50dp"
+            android:background="null"
+            android:text="상세정보입니다 상세정보정보정보\n\n상세정보정보정보"
+            android:visibility="gone"/>
+    
     
         <TextView
             android:layout_width="match_parent"
@@ -153,11 +240,12 @@
             android:fontFamily="@font/roboto_bold"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_second_info_detail_tv"
+            app:layout_constraintTop_toBottomOf="@id/detail_second_info_detail_edit_et"
             android:layout_marginEnd="50dp"
             android:layout_marginTop="30dp"
             android:background="@color/secondary"
             android:textColor="@color/primary"
+            android:visibility="gone"
             />
     
         <TextView
@@ -169,11 +257,12 @@
             android:fontFamily="@font/roboto_bold"
             android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detail_second_info_detail_tv"
+            app:layout_constraintTop_toBottomOf="@id/detail_second_info_detail_edit_et"
             android:layout_marginStart="50dp"
             android:layout_marginTop="30dp"
             android:background="@color/secondary"
             android:textColor="#AE654CBB"
+            android:visibility="gone"
             />
 
 

@@ -1,5 +1,7 @@
 package com.oclothes.mycloset.ui.main.closet
 
+import android.view.View
+import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.databinding.FragmentDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
 
@@ -12,16 +14,20 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         binding.detailMainBackBtnIv.setOnClickListener{
             f.getBinding().mainFragmentVp.currentItem = 1
         }
+    }
 
+    fun setContents(style : Style){
 
     }
 
     fun onEditModeBegin(){
-
+        binding.detailSecondApplyTv.visibility = View.VISIBLE
+        binding.detailSecondCancelTv.visibility = View.VISIBLE
     }
 
     fun onEditDiscard(){
-
+        binding.detailSecondApplyTv.visibility = View.GONE
+        binding.detailSecondCancelTv.visibility = View.GONE
     }
 
     fun onEditConfirm(){
