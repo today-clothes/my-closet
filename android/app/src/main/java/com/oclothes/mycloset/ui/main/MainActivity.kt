@@ -1,6 +1,7 @@
 package com.oclothes.mycloset.ui.main
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.os.Bundle
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     var currentPage = 0
     val TIME_INTERVAL: Long = 2000
     var galleryFlag = false
+    var detailImage : Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +45,14 @@ class MainActivity : AppCompatActivity() {
                 try {
                     currentImageUri?.let {
                         if (Build.VERSION.SDK_INT < 28) {
-
                             val bitmap = MediaStore.Images.Media.getBitmap(
                                 contentResolver, currentImageUri
                             )
-                            closet.detail.mainImageView.setImageBitmap(bitmap)
-                            closet.detail.getBinding().detailMainImageIv.setImageBitmap(bitmap)
-                            closet.getBinding().mainFragmentVp.currentItem = 2
+//                            setImageOnDetail(bitmap)
                         } else {
-
                             val source = ImageDecoder.createSource(contentResolver, currentImageUri)
-                            val bitmap = ImageDecoder.decodeBitmap(source)
-                            closet.detail.setImage(bitmap)
+
+                            this.detailImage = ImageDecoder.decodeBitmap(source)
                         }
                     }
                 } catch (e: Exception) {
@@ -120,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if(galleryFlag) {
             closet.getBinding().mainFragmentVp.currentItem = 2
+            closet.detail.setImage(this.detailImage!!)
             galleryFlag = false
         }
     }

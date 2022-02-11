@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.databinding.FragmentDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
@@ -12,6 +11,8 @@ import com.oclothes.mycloset.ui.main.MainActivity
 
 class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) {
     val editMode = false
+    var isEditable = false
+    var mainImage : Bitmap? = null
     lateinit var mainImageView: ImageView
     override fun initAfterBinding() {
         binding.detailMainFrmSpl.anchorPoint = 0.5f
@@ -23,6 +24,10 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         mainImageView.setOnClickListener {
             (requireContext() as MainActivity).openGallery()
         }
+        if(!isEditable) {
+            isEditable = true
+            binding.detailMainImageIv.setImageBitmap(mainImage)
+        }
     }
 
     fun getBinding() = binding
@@ -31,10 +36,12 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
 
     }
 
-    fun setImage(image : Bitmap){
-        Glide.with(this)
-            .load(image)
-            .into(binding.detailMainImageIv)
+    fun setImage(image: Bitmap) {
+        if (isEditable) {
+            binding.detailMainImageIv.setImageBitmap(mainImage)
+        }else{
+            mainImage = image
+        }
     }
 
     fun onEditModeBegin() {

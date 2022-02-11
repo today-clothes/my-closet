@@ -36,10 +36,12 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
     }
 
     override fun onAutoLoginFailure(code: Int, message: String) {
-        startActivityWithClear(LoginActivity::class.java)
         when(code){
             401 ->{
                 startActivity(Intent(this, EmailAuthActivity::class.java))
+            }
+            else ->{
+                startActivityWithClear(LoginActivity::class.java)
             }
         }
     }
