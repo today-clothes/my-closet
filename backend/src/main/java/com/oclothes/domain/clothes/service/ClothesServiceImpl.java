@@ -2,7 +2,10 @@ package com.oclothes.domain.clothes.service;
 
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
-import com.oclothes.domain.clothes.domain.*;
+import com.oclothes.domain.clothes.domain.Clothes;
+import com.oclothes.domain.clothes.domain.ClothesEventTag;
+import com.oclothes.domain.clothes.domain.ClothesMoodTag;
+import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
 import com.oclothes.domain.clothes.exception.ClothesNotFoundException;
 import com.oclothes.domain.tag.dao.EventTagRepository;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,6 +90,14 @@ public class ClothesServiceImpl implements ClothesService {
     public void deleteById(Long id) {
         this.fileService.delete(this.findById(id).getImgUrl());
         this.clothesRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAllByIdIn(Collection<Long> ids) {
+        final List<Clothes> clothes = this.clothesRepository.findAllByIdIn(ids);
+        if (clothes.isEmpty()) return;
+        this.fileService.deleteAll(clothes.stream().map(Clothes::getImgUrl).collect(Collectors.toList()));
+        this.clothesRepository.deleteAllByIdIn(ids);
     }
 
     public Clothes findById(Long id) {

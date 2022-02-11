@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -46,10 +47,11 @@ public class LocalFileServiceImpl implements FileService {
 
     @Override
     public void delete(String key) {
-        try {
-            FileUtils.forceDeleteOnExit(new File(IMAGE_PATH + key));
-        } catch (IOException e) {
-            log.info(e.getMessage());
-        }
+        FileUtils.deleteQuietly(new File(IMAGE_PATH + key));
+    }
+
+    @Override
+    public void deleteAll(List<String> keys) {
+        keys.forEach(key -> FileUtils.deleteQuietly(new File(IMAGE_PATH + key)));
     }
 }
