@@ -115,10 +115,10 @@ class ClothesServiceImplTest extends BaseTest {
         final PageRequest pageRequest = PageRequest.of(0, 2);
         SliceImpl<Clothes> slice = new SliceImpl<>(List.of(clothes1), pageRequest, true);
 
-        when(this.clothesRepository.findByContentContainingAndLockedIsFalse(any(), any())).thenReturn(slice);
+        when(this.clothesRepository.searchByTag(any(), any(), any())).thenReturn(slice);
 
-        final SliceDto<ClothesDto.SearchResponse> result = this.clothesService.searchByKeyword("예시", pageRequest);
-        verify(this.clothesRepository, atMostOnce()).findByContentContainingAndLockedIsFalse(any(), any());
+        final SliceDto<ClothesDto.SearchResponse> result = this.clothesService.search(null,  pageRequest);
+        verify(this.clothesRepository, atMostOnce()).searchByTag(any(), any(), any());
         assertEquals(1, result.getContentsCount());
     }
 }
