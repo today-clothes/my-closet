@@ -116,13 +116,16 @@ public class ClothesServiceImpl implements ClothesService {
                 mapSeasonTags(c.getSeasonTags()),
                 mapEventTags(c.getEventTags()),
                 mapMoodTags(c.getMoodTags()),
-                c.getImgUrl());
+                c.getStyleTitle(),
+                c.getImgUrl(),
+                c.getUpdatedAt());
     }
 
     private ClothesResponse createClothesResponse(Clothes c, User user){
         ClothesResponse response = ClothesResponse.builder()
                 .styleTitle(c.getStyleTitle())
                 .content(c.getContent())
+                .imgUrl(c.getImgUrl())
                 .updateAt(c.getUpdatedAt())
                 .seasonTags(mapSeasonTags(c.getSeasonTags()))
                 .moodTags(mapMoodTags(c.getMoodTags()))
