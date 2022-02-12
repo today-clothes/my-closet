@@ -202,7 +202,6 @@
         android:layout_marginTop="30dp"
         android:background="@color/secondary"
         android:textColor="@color/primary"
-        android:visibility="gone"
         />
     
     <TextView
@@ -219,7 +218,6 @@
         android:layout_marginTop="30dp"
         android:background="@color/secondary"
         android:textColor="#AE654CBB"
-        android:visibility="gone"
         />
     
 

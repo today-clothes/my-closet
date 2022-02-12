@@ -1,6 +1,7 @@
 package com.oclothes.mycloset.ui.main.closet
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -13,6 +14,10 @@ import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.style.StyleCreateView
+import com.oclothes.mycloset.data.entities.remote.style.StyleDeleteView
+import com.oclothes.mycloset.data.entities.remote.style.StyleSearchView
+import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentSingleClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
@@ -22,9 +27,12 @@ import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
 import java.util.concurrent.CopyOnWriteArrayList
 
-class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate) ,View.OnClickListener , TagView{
+class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate)
+    ,View.OnClickListener , TagView, StyleCreateView, StyleDeleteView, StyleSearchView{
 
-    lateinit var styleList: CopyOnWriteArrayList<Style>
+    val styleList: CopyOnWriteArrayList<Style> by lazy{
+        CopyOnWriteArrayList<Style>()
+    }
     lateinit var eventTags : ArrayList<Tag>
     lateinit var moodTags : ArrayList<Tag>
     lateinit var seasonTags : ArrayList<Tag>
@@ -36,7 +44,6 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     private val selectedTag = ArrayList<Tag>()
 
     override fun initAfterBinding() {
-        initStyleList()
         initTags()
         initOnClickListeners()
         clothListAdapter = SingleClosetStyleListRVAdapter(this, styleList)
@@ -68,6 +75,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         binding.singleClosetScissorsIv.setOnClickListener(this)
         binding.singleClosetPlusIv.setOnClickListener(this)
         binding.singleClosetFilterImageIv.setOnClickListener(this)
+        binding.singleClosetEditBtnIv.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -79,21 +87,37 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             }
 
             binding.singleClosetScissorsIv ->{
-                if(clothListAdapter.initEditMode(-1)){
-                    initEditMode()
-                }
+                initEditMode()
             }
 
             binding.singleClosetPlusIv ->{
-                if(clothListAdapter.getEditMode()){
-                    clothListAdapter.deleteSelectedItem()
-                }
+                f.getBinding().mainFragmentVp.currentItem = 2
+                f.detail.onEditModeBegin()
             }
 
             binding.singleClosetFilterImageIv ->{
                 showTagSelect()
             }
+
+            binding.singleClosetEditBtnIv ->{
+                clothListAdapter.deleteSelectedItem(currentCloset.id)
+                endEditMode()
+            }
+
         }
+    }
+
+    private fun initEditMode() {
+        binding.singleClosetScissorsIv.visibility = View.GONE
+        binding.singleClosetEditBtnIv.visibility = View.VISIBLE
+        binding.singleClosetTitleTv.setTextColor(Color.parseColor("#654CBB"))
+    }
+
+    private fun endEditMode() {
+        binding.singleClosetScissorsIv.visibility = View.VISIBLE
+        binding.singleClosetEditBtnIv.visibility = View.GONE
+        binding.singleClosetTitleTv.setTextColor(Color.BLACK)
+
     }
 
     private fun showTagSelect() {
@@ -163,9 +187,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
          */
     }
 
-    private fun initEditMode() {
 
-    }
 
     fun updateList(selectedTag: ArrayList<Tag>) {
         this.selectedTag.clear()
@@ -176,20 +198,14 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         return binding
     }
 
-    private fun initStyleList(){
-        styleList = CopyOnWriteArrayList<Style>()
-        for(i in 1..10) {
-            styleList.add(Style("1일번"))
-            styleList.add(Style("2이번"))
-
-        }
-    }
 
     fun setSingleCloset(closet : Closet){
-        //이부분에서 이제 closet의 아이템들을 받아서 넣어줘야하는데 지금 api가 구현된게 없음...
         currentCloset = closet
         binding.singleClosetTitleTv.text = closet.name
-        binding.singleClosetClothesCountTv.text = "내 옷장보기 " + styleList.size.toString()
+        val intMap = HashMap<String, Int>()
+        intMap["closetId"] = closet.id
+        intMap["size"] = 20
+        StyleService.searchClothes(this, intMap, null)
     }
 
     private fun initTags(){
@@ -213,4 +229,27 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
     override fun onGetTagsFailure(code: Int, message: String) {
     }
+
+    override fun onSuccess(id: Int, url: String) {
+
+    }
+
+    override fun onFailure() {
+    }
+
+    override fun onSuccess() {
+
+    }
+
+
+
+    override fun onSearchSuccess(styles: ArrayList<Style>, b: Boolean) {
+        this.styleList.clear()
+        this.styleList.addAll(styles)
+        clothListAdapter.notifyDataSetChanged()
+    }
+
+    override fun onSearchFailure() {
+    }
+
 }

@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     var currentPage = 0
     val TIME_INTERVAL: Long = 2000
     var galleryFlag = false
+    var galleryFailFlag = false
+
     var detailImage : Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +50,10 @@ class MainActivity : AppCompatActivity() {
                             val bitmap = MediaStore.Images.Media.getBitmap(
                                 contentResolver, currentImageUri
                             )
-//                            setImageOnDetail(bitmap)
+                            this.detailImage = bitmap
                         } else {
                             val source = ImageDecoder.createSource(contentResolver, currentImageUri)
-
+                            galleryFlag = true
                             this.detailImage = ImageDecoder.decodeBitmap(source)
                         }
                     }
@@ -60,6 +62,8 @@ class MainActivity : AppCompatActivity() {
                 }
             } else if (it.resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_SHORT).show()
+                galleryFailFlag = true
+
             } else {
 
             }
@@ -111,7 +115,6 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         filterActionActivityLauncher.launch(intent)
-        galleryFlag = true
     }
 
     override fun onResume() {
@@ -120,6 +123,12 @@ class MainActivity : AppCompatActivity() {
             closet.getBinding().mainFragmentVp.currentItem = 2
             closet.detail.setImage(this.detailImage!!)
             galleryFlag = false
+            closet.detail.onEditModeBegin()
+
+        }else if(galleryFailFlag){
+            closet.getBinding().mainFragmentVp.currentItem = 2
+            galleryFailFlag = true
+            closet.detail.onEditModeBegin()
         }
     }
 

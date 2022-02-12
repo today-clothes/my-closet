@@ -43,7 +43,7 @@ class SearchStyleListRVAdapter (private val fragment : SearchFragment, private v
     inner class ViewHolder(val binding: ItemSearchedItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
             Glide.with(fragment.getBinding().searchMainRv)
-                .load(style.imageSource)
+                .load(style.imgUrl)
                 .into(binding.searchItemClothImageIv)
         }
     }

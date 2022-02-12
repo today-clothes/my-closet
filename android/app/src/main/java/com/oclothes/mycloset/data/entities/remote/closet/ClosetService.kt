@@ -19,6 +19,7 @@ object ClosetService {
     val gson = Gson()
     val type = object : TypeToken<ErrorBody>() {}.type
 
+
     fun getClosets(closetView: ClosetView){
         val closetService = ApplicationClass.retrofit.create(ClosetRetrofitInterface::class.java)
 

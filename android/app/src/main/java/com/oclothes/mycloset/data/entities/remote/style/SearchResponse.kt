@@ -2,13 +2,13 @@ package com.oclothes.mycloset.data.entities.remote.style
 
 import com.google.gson.annotations.SerializedName
 
-data class StyleResponse(
+data class SearchResponse(
     @SerializedName("message") val message : String,
-    @SerializedName("data") val data : StyleData
+    @SerializedName("data") val data : SearchData
 )
 
-data class StyleData(
-    @SerializedName("contents") val contents : ArrayList<StyleContent>,
+data class SearchData(
+    @SerializedName("contents") val contents : ArrayList<Cloth>,
     @SerializedName("contentsCount") val contentsCount : Int,
     @SerializedName("hasNext") val hasNext : Boolean,
     @SerializedName("isEmpty") val isEmpty: Boolean,
@@ -17,7 +17,7 @@ data class StyleData(
     @SerializedName("pageNumber") val pageNumber : Int
 )
 
-data class StyleContent(
+data class Cloth(
     @SerializedName("closetId") val closetId : Int,
     @SerializedName("clothesId") val clothesId : Int,
     @SerializedName("imgUrl") val imgUrl : String,

@@ -24,6 +24,19 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         mainImageView.setOnClickListener {
             (requireContext() as MainActivity).openGallery()
         }
+
+        binding.detailSecondApplyTv.setOnClickListener {
+            onEditDiscard()
+        }
+
+        binding.detailSecondCancelTv.setOnClickListener {
+            onEditDiscard()
+        }
+
+        binding.detailSecondEditBtnTv.setOnClickListener {
+            onEditModeBegin()
+        }
+
         if(!isEditable) {
             isEditable = true
             binding.detailMainImageIv.setImageBitmap(mainImage)
@@ -47,11 +60,13 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
     fun onEditModeBegin() {
         binding.detailSecondApplyTv.visibility = View.VISIBLE
         binding.detailSecondCancelTv.visibility = View.VISIBLE
+        binding.detailSecondEditBtnTv.visibility = View.GONE
     }
 
     fun onEditDiscard() {
         binding.detailSecondApplyTv.visibility = View.GONE
         binding.detailSecondCancelTv.visibility = View.GONE
+        binding.detailSecondEditBtnTv.visibility = View.VISIBLE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

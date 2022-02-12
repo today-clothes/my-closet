@@ -40,6 +40,7 @@
         app:layout_constraintTop_toTopOf="@id/single_closet_title_tv"
         app:layout_constraintBottom_toBottomOf="@id/single_closet_title_tv"/>
     
+
     <ImageView
         android:id="@+id/single_closet_scissors_iv"
         android:layout_width="18dp"
@@ -49,6 +50,18 @@
         app:layout_constraintTop_toTopOf="@id/single_closet_title_tv"
         app:layout_constraintBottom_toBottomOf="@id/single_closet_title_tv"
         android:layout_marginEnd="20dp"
+        />
+
+    <ImageView
+        android:id="@+id/single_closet_edit_btn_iv"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/trash_bin"
+        app:layout_constraintEnd_toStartOf="@id/single_closet_plus_iv"
+        app:layout_constraintTop_toTopOf="@id/single_closet_title_tv"
+        app:layout_constraintBottom_toBottomOf="@id/single_closet_title_tv"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
         />
     
     
@@ -95,7 +108,7 @@
         android:id="@+id/single_closet_clothes_count_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="내 옷장보기 6"
+        android:text="내 옷장보기"
         app:layout_constraintTop_toBottomOf="@id/single_closet_filter_image_iv"
         app:layout_constraintStart_toStartOf="@id/single_closet_filter_image_iv"
         android:layout_marginTop="10dp"

@@ -15,11 +15,12 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class SearchFragment(val a : MainActivity) : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate) {
     lateinit var searchAdapter : SearchStyleListRVAdapter
-    lateinit var styleList: CopyOnWriteArrayList<Style>
+    val styleList: CopyOnWriteArrayList<Style> by lazy{
+        CopyOnWriteArrayList<Style>()
+    }
     private lateinit var myLayoutManager: GridLayoutManager
 
     override fun initAfterBinding() {
-        initStyleList()
         searchAdapter = SearchStyleListRVAdapter(this, styleList)
         searchAdapter.setMyItemClickListener(object : SearchStyleListRVAdapter.MyItemClickListener{
             override fun onItemClick(style: Style, position: Int) {
@@ -54,13 +55,6 @@ class SearchFragment(val a : MainActivity) : BaseFragment<FragmentSearchBinding>
         return true
     }
 
-    private fun initStyleList(){
-        styleList = CopyOnWriteArrayList<Style>()
-        for(i in 1..10) {
-            styleList.add(Style("1일번"))
-            styleList.add(Style("2이번"))
-        }
-    }
 
     private fun hideKeyboard (){
         val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

@@ -38,6 +38,8 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
         }
     }
 
+
+
     private fun setClosetRvAdapter() {
         binding.closetAllClosetListRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

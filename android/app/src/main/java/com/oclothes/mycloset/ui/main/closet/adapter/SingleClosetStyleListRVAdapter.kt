@@ -7,13 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.style.StyleDeleteView
+import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
 import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
-class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : CopyOnWriteArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
+class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : CopyOnWriteArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(),
+    StyleDeleteView {
     private var editMode = false
     private val viewList = ArrayList<ItemSingleClosetClothBinding>()
 
@@ -80,24 +83,20 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
     fun initEditMode(position: Int) : Boolean{
         if (!editMode) {
             editMode = true
-
             if(position != -1) {
                 styleList[position].isSelected = true
                 notifyItemChanged(position)
             }
-
         } else {
             finishEditMode()
         }
-
         return editMode
     }
 
-    fun deleteSelectedItem(){
+    fun deleteSelectedItem(id : Int){
         for (style in styleList) {
             if(style.isSelected){
-                //아무래도 여기서 삭제 API를 호출해 줘야 할 것 같다...
-                styleList.remove(style)
+                StyleService.deleteCloth(this, id)
             }
         }
         finishEditMode()
@@ -125,10 +124,18 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
 
     inner class ViewHolder(val binding: ItemSingleClosetClothBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
-            binding.singleClosetClothNameTv.text = style.name
+            binding.singleClosetClothNameTv.text = style.closetId.toString() //임시임 원래는 name으로 해야하는데 api에서 미구현.
             Glide.with(binding.singleClosetClothImageIv)
-                .load(style.imageSource)
+                .load(style.imgUrl)
                 .into(binding.singleClosetClothImageIv)
         }
+    }
+
+    override fun onSuccess() {
+        notifyDataSetChanged()
+    }
+
+    override fun onFailure() {
+
     }
 }
