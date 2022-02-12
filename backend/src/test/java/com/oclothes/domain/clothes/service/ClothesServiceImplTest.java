@@ -6,7 +6,6 @@ import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
-import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.global.dto.SliceDto;
 import com.oclothes.infra.file.FileService;

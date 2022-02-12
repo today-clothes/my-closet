@@ -1,4 +1,4 @@
-package com.oclothes.domain.clothes.repository;
+package com.oclothes.domain.clothes.domain;
 
 import com.oclothes.BaseDataJpaTest;
 import com.oclothes.domain.closet.dao.ClosetRepository;
@@ -7,10 +7,6 @@ import com.oclothes.domain.clothes.dao.ClothesEventTagRepository;
 import com.oclothes.domain.clothes.dao.ClothesMoodTagRepository;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.domain.clothes.dao.ClothesSeasonTagRepository;
-import com.oclothes.domain.clothes.domain.Clothes;
-import com.oclothes.domain.clothes.domain.ClothesEventTag;
-import com.oclothes.domain.clothes.domain.ClothesMoodTag;
-import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
