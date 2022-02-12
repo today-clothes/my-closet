@@ -2,7 +2,10 @@ package com.oclothes.domain.clothes.service;
 
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
-import com.oclothes.domain.clothes.domain.*;
+import com.oclothes.domain.clothes.domain.Clothes;
+import com.oclothes.domain.clothes.domain.ClothesEventTag;
+import com.oclothes.domain.clothes.domain.ClothesMoodTag;
+import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
 import com.oclothes.domain.clothes.exception.ClothesNotFoundException;
 import com.oclothes.domain.tag.dao.EventTagRepository;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -88,6 +92,14 @@ public class ClothesServiceImpl implements ClothesService {
         this.clothesRepository.deleteById(id);
     }
 
+    @Override
+    public void deleteAllByIdIn(Collection<Long> ids) {
+        final List<Clothes> clothes = this.clothesRepository.findAllByIdIn(ids);
+        if (clothes.isEmpty()) return;
+        this.fileService.deleteAll(clothes.stream().map(Clothes::getImgUrl).collect(Collectors.toList()));
+        this.clothesRepository.deleteAllByIdIn(ids);
+    }
+
     public Clothes findById(Long id) {
         return this.clothesRepository.findById(id).orElseThrow(ClothesNotFoundException::new);
     }
@@ -104,13 +116,16 @@ public class ClothesServiceImpl implements ClothesService {
                 mapSeasonTags(c.getSeasonTags()),
                 mapEventTags(c.getEventTags()),
                 mapMoodTags(c.getMoodTags()),
-                c.getImgUrl());
+                c.getStyleTitle(),
+                c.getImgUrl(),
+                c.getUpdatedAt());
     }
 
     private ClothesResponse createClothesResponse(Clothes c, User user){
         ClothesResponse response = ClothesResponse.builder()
                 .styleTitle(c.getStyleTitle())
                 .content(c.getContent())
+                .imgUrl(c.getImgUrl())
                 .updateAt(c.getUpdatedAt())
                 .seasonTags(mapSeasonTags(c.getSeasonTags()))
                 .moodTags(mapMoodTags(c.getMoodTags()))

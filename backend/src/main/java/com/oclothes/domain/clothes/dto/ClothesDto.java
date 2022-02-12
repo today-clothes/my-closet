@@ -17,6 +17,8 @@ public abstract class ClothesDto {
     public static class ClothesUploadRequest {
         @NotNull(message = "옷장(closet) ID를 입력해주세요.")
         private Long closetId;
+        @Length(max = 20, message = "제목은 20자를 초과할 수 없습니다.")
+        private String styleTitle;
         @Length(max = 500, message = "내용은 500자를 초과할 수 없습니다.")
         private String content;
         private List<Long> seasonIds;
@@ -53,7 +55,9 @@ public abstract class ClothesDto {
         private final Set<TagDto.Response> seasonTags;
         private final Set<TagDto.Response> eventTags;
         private final Set<TagDto.Response> moodTags;
+        private final String styleTitle;
         private final String imgUrl;
+        private final LocalDateTime updateAt;
     }
 
     @Getter
@@ -72,6 +76,7 @@ public abstract class ClothesDto {
         private Integer weight;
         private String styleTitle;
         private String content;
+        private String imgUrl;
         private LocalDateTime updateAt;
         private Set<TagDto.Response> seasonTags;
         private Set<TagDto.Response> eventTags;

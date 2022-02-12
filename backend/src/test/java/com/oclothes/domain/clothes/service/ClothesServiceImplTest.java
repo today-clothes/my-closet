@@ -6,7 +6,6 @@ import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
-import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.global.dto.SliceDto;
 import com.oclothes.infra.file.FileService;
@@ -58,7 +57,7 @@ class ClothesServiceImplTest extends BaseTest {
 
     @DisplayName("옷장 안에 있는 옷의 개수를 반환한다.")
     @Test
-    void getSizeByCloset() {
+    void getSizeByClosetTest() {
         final Closet closet = new Closet("c1", null);
         when(this.clothesRepository.countByCloset(any())).thenReturn(1L);
         assertEquals(1, this.clothesService.getSizeByCloset(closet));
@@ -67,7 +66,7 @@ class ClothesServiceImplTest extends BaseTest {
 
     @DisplayName("ID에 해당하는 옷을 삭제한다.")
     @Test
-    void name() {
+    void deleteByIdTest() {
         final Clothes clothes = Clothes.builder().imgUrl("url").build();
 
         when(this.clothesRepository.findById(any())).thenReturn(Optional.of(clothes));
@@ -106,7 +105,7 @@ class ClothesServiceImplTest extends BaseTest {
 
     @DisplayName("옷 공개 상태만 검색 결과에서 반환한다.")
     @Test
-    void showNonLockedClothes() throws NoSuchFieldException, IllegalAccessException {
+    void showNonLockedClothesTest() throws NoSuchFieldException, IllegalAccessException {
         final Closet closet = Closet.builder().build();
         final Field closetId = closet.getClass().getSuperclass().getDeclaredField("id");
         closetId.setAccessible(true);

@@ -1,7 +1,6 @@
 package com.oclothes.domain.clothes.api;
 
 import com.oclothes.domain.clothes.dto.ClothesDto;
-import com.oclothes.domain.clothes.dto.ClothesResponseMessage;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.ResponseDto;
 import com.oclothes.global.dto.SliceDto;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadRequest;
 import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadResponse;
@@ -60,8 +60,15 @@ public class ClothesApiController {
 
     @ApiOperation(value = "옷 삭제", notes = "옷 개별 삭제 API")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<ResponseDto<Void>>> deleteById(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<Void>> deleteById(@PathVariable Long id) {
         this.clothesService.deleteById(id);
-        return ResponseEntity.ok(ResponseDto.create(ClothesResponseMessage.DELETE_SUCCESS.getMessage()));
+        return ResponseEntity.ok(ResponseDto.create(DELETE_SUCCESS.getMessage()));
+    }
+
+    @ApiOperation(value = "옷 삭제", notes = "옷 개별 삭제 API")
+    @DeleteMapping
+    public ResponseEntity<ResponseDto<Void>> deleteAllById(@RequestParam List<Long> ids) {
+        this.clothesService.deleteAllByIdIn(ids);
+        return ResponseEntity.ok(ResponseDto.create(DELETE_All_SUCCESS.getMessage()));
     }
 }

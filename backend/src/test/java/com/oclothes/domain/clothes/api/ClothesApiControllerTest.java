@@ -75,7 +75,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @DisplayName("옷 필터링/검색 결과를 SliceDto 매핑해서 반환")
     @WithMockUser
     @Test
-    void getFilteringList() throws Exception {
+    void getFilteringListTest() throws Exception {
         final ClothesDto.SearchRequest req = new ClothesDto.SearchRequest(1L, "예시", Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         final SliceDto<ClothesDto.SearchResponse> dto = SliceDto.create(new SliceImpl<>(Collections.emptyList()));
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -98,10 +98,23 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @DisplayName("옷을 삭제한다.")
     @WithMockUser
     @Test
-    void deleteClothes() throws Exception {
+    void deleteClothesTest() throws Exception {
         doNothing().when(this.clothesService).deleteById(any());
 
-        this.mockMvc.perform(delete("/clothes/1"))
+        mockMvc.perform(delete("/clothes/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(containsString("삭제")))
+                .andDo(print());
+    }
+
+    @DisplayName("아이디 리스트에 해당하는 옷들을 삭제한다.")
+    @WithMockUser
+    @Test
+    void deleteAllByIdInTest() throws Exception {
+        doNothing().when(this.clothesService).deleteAllByIdIn(any());
+
+        mockMvc.perform(delete("/clothes")
+                        .param("ids", "1,2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(containsString("삭제")))
                 .andDo(print());
@@ -128,7 +141,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @DisplayName("옷 상세정보 반환")
     @WithMockUser
     @Test
-    void getClothesDetails() throws Exception {
+    void getClothesDetailsTest() throws Exception {
         final Long id = 1L;
         final ClothesDto.ClothesResponse dto = ClothesDto.ClothesResponse.builder().styleTitle("title").content("content").build();
 
