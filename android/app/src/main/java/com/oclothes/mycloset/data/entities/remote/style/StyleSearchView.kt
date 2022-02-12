@@ -4,5 +4,5 @@ import com.oclothes.mycloset.data.entities.Style
 
 interface StyleSearchView {
     fun onSearchSuccess(styles: ArrayList<Style>, b: Boolean)
-    fun onSearchFailure()
+    fun onSearchFailure(message : String)
 }

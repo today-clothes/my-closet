@@ -16,6 +16,7 @@ import com.oclothes.mycloset.databinding.ActivityMainBinding
 import com.oclothes.mycloset.ui.main.closet.MainFragment
 import com.oclothes.mycloset.ui.main.mypage.MyPageFragment
 import com.oclothes.mycloset.ui.main.search.SearchFragment
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                             )
                             this.detailImage = bitmap
                         } else {
+                            closet.detail.mainImageUrl = currentImageUri.path!!
                             val source = ImageDecoder.createSource(contentResolver, currentImageUri)
                             galleryFlag = true
                             this.detailImage = ImageDecoder.decodeBitmap(source)
@@ -83,7 +85,8 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.searchFragment -> {
                     showFragment(search)
-                    currentPage = 1
+
+                    currentPage  =1
                     return@setOnItemSelectedListener true
                 }
 
@@ -123,12 +126,11 @@ class MainActivity : AppCompatActivity() {
             closet.getBinding().mainFragmentVp.currentItem = 2
             closet.detail.setImage(this.detailImage!!)
             galleryFlag = false
-            closet.detail.onEditModeBegin()
-
+            closet.detail.editMode = true
+            closet.detail.isEditable = false
         }else if(galleryFailFlag){
-            closet.getBinding().mainFragmentVp.currentItem = 2
+            closet.getBinding().mainFragmentVp.currentItem = 1
             galleryFailFlag = true
-            closet.detail.onEditModeBegin()
         }
     }
 

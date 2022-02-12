@@ -32,7 +32,6 @@
         
         <activity
             android:name=".ui.main.MainActivity"
-            android:windowSoftInputMode="adjustNothing"
             android:exported="true">
         </activity>
     

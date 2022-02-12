@@ -22,6 +22,7 @@ import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentSingleClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.info.TagView
+import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetStyleListRVAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
@@ -30,8 +31,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate)
     ,View.OnClickListener , TagView, StyleCreateView, StyleDeleteView, StyleSearchView{
 
-    val styleList: CopyOnWriteArrayList<Style> by lazy{
-        CopyOnWriteArrayList<Style>()
+    val styleList: ArrayList<Style> by lazy{
+        ArrayList<Style>()
     }
     lateinit var eventTags : ArrayList<Tag>
     lateinit var moodTags : ArrayList<Tag>
@@ -42,6 +43,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
     private lateinit var myLayoutManager: GridLayoutManager
     private val selectedTag = ArrayList<Tag>()
+
 
     override fun initAfterBinding() {
         initTags()
@@ -64,19 +66,24 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         binding.singleClosetClothesListRv.layoutManager = myLayoutManager
         binding.singleClosetClothesListRv.adapter = clothListAdapter
 
+
+
         tagListAdapter = SingleClosetTagListRvAdapter(this, allTags)
         binding.singleClosetFilterListRv.adapter = tagListAdapter
         binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.singleClosetFilterCountTv.text = "0"
     }
 
+
     private fun initOnClickListeners() {
         binding.singleClosetBackBtnIv.setOnClickListener(this)
         binding.singleClosetScissorsIv.setOnClickListener(this)
         binding.singleClosetPlusIv.setOnClickListener(this)
         binding.singleClosetFilterImageIv.setOnClickListener(this)
-        binding.singleClosetEditBtnIv.setOnClickListener(this)
+        binding.singleClosetDeleteIv.setOnClickListener(this)
+
     }
+
 
     override fun onClick(v: View?) {
         when(v){
@@ -91,16 +98,15 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             }
 
             binding.singleClosetPlusIv ->{
-                f.getBinding().mainFragmentVp.currentItem = 2
-                f.detail.onEditModeBegin()
+                (requireContext() as MainActivity).openGallery()
             }
 
             binding.singleClosetFilterImageIv ->{
                 showTagSelect()
             }
 
-            binding.singleClosetEditBtnIv ->{
-                clothListAdapter.deleteSelectedItem(currentCloset.id)
+            binding.singleClosetDeleteIv ->{
+                clothListAdapter.deleteSelectedItem()
                 endEditMode()
             }
 
@@ -109,15 +115,14 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
     private fun initEditMode() {
         binding.singleClosetScissorsIv.visibility = View.GONE
-        binding.singleClosetEditBtnIv.visibility = View.VISIBLE
+        binding.singleClosetDeleteIv.visibility = View.VISIBLE
         binding.singleClosetTitleTv.setTextColor(Color.parseColor("#654CBB"))
     }
 
     private fun endEditMode() {
         binding.singleClosetScissorsIv.visibility = View.VISIBLE
-        binding.singleClosetEditBtnIv.visibility = View.GONE
+        binding.singleClosetDeleteIv.visibility = View.GONE
         binding.singleClosetTitleTv.setTextColor(Color.BLACK)
-
     }
 
     private fun showTagSelect() {
@@ -150,12 +155,10 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         if(selectedTag.size >= 1) {
             dialog.findViewById<TextView>(R.id.tag_select_apply_btn1).visibility = View.GONE
             dialog.findViewById<TextView>(R.id.tag_select_apply_btn2).visibility = View.VISIBLE
-
         }else{
             dialog.findViewById<TextView>(R.id.tag_select_apply_btn1).visibility = View.VISIBLE
             dialog.findViewById<TextView>(R.id.tag_select_apply_btn2).visibility = View.GONE
         }
-
         dialog.findViewById<TextView>(R.id.tag_select_apply_btn2).setOnClickListener {
             Log.d("TAGTESTMAN", selectedTag.toString())
             tagListAdapter.setSelectedTag(selectedTag)
@@ -164,19 +167,16 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             updateStyleList()
             dialog.dismiss()
         }
-
         dialog.findViewById<ImageView>(R.id.tag_select_back_btn).setOnClickListener {
             selectedTag.clear()
             selectedTag.addAll(tagListAdapter.getSelectedTag())
             dialog.dismiss()
         }
-
         dialog.findViewById<TextView>(R.id.tag_select_reset_btn).setOnClickListener {
             eventAdapter.reset()
             moodAdapter.reset()
             seasonAdapter.reset()
         }
-
     }
 
     fun updateStyleList() {
@@ -186,8 +186,6 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
          *
          */
     }
-
-
 
     fun updateList(selectedTag: ArrayList<Tag>) {
         this.selectedTag.clear()
@@ -205,7 +203,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         val intMap = HashMap<String, Int>()
         intMap["closetId"] = closet.id
         intMap["size"] = 20
-        StyleService.searchClothes(this, intMap, null)
+        StyleService.searchClothes(this, intMap, HashMap<String, String>())
     }
 
     private fun initTags(){
@@ -230,18 +228,21 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     override fun onGetTagsFailure(code: Int, message: String) {
     }
 
-    override fun onSuccess(id: Int, url: String) {
+    override fun onCreateSuccess(id: Int, url: String) {
 
     }
 
-    override fun onFailure() {
+    override fun onCreateFailure() {
+
     }
 
     override fun onSuccess() {
 
     }
 
+    override fun onFailure() {
 
+    }
 
     override fun onSearchSuccess(styles: ArrayList<Style>, b: Boolean) {
         this.styleList.clear()
@@ -249,7 +250,9 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         clothListAdapter.notifyDataSetChanged()
     }
 
-    override fun onSearchFailure() {
+    override fun onSearchFailure(message : String) {
+        showToast(message)
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.oclothes.mycloset.data.entities.remote.style
 
 import com.google.gson.annotations.SerializedName
+import com.oclothes.mycloset.data.entities.Tag
 
 data class InfoResponse(
     @SerializedName("message") val message : String,
@@ -17,9 +18,4 @@ data class InfoData(
     @SerializedName("eventTags") val eventTags : ArrayList<Tag>,
     @SerializedName("moodTags") val moodTags : ArrayList<Tag>,
     @SerializedName("seasonTags") val seasonTags : ArrayList<Tag>
-)
-
-data class Tag(
-    @SerializedName("id") val id : Int,
-    @SerializedName("name") val name : String
 )

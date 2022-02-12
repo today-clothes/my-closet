@@ -1,6 +1,5 @@
 package com.oclothes.mycloset.data.entities
 
-import com.oclothes.mycloset.data.entities.remote.style.Tag
 
 data class Style(
     val closetId : Int,

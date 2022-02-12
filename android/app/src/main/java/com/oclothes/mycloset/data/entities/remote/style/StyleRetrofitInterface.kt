@@ -7,8 +7,8 @@ import retrofit2.http.*
 interface StyleRetrofitInterface {
     @GET("/clothes/search")
     fun searchClothes(
-        @QueryMap queryNum : Map<String, Int>?,
-        @QueryMap queryString : Map<String, String>?,
+        @QueryMap queryNum : Map<String, Int>,
+        @QueryMap queryString : Map<String, String>,
     ) : Call<SearchResponse>
 
     @Multipart

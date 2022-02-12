@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="300dp"
     android:paddingBottom="20dp"
-    android:paddingStart="3dp"
-    android:paddingEnd="3dp"
     android:paddingTop="3dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
@@ -19,10 +17,21 @@
         android:src="@drawable/temp_selfee"
         android:scaleType="centerCrop"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         />
-    
+
+    <ImageView
+        android:id="@+id/single_closet_lock_icon_iv"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/lock_purple_locked"
+        app:layout_constraintTop_toTopOf="@id/single_closet_cloth_image_iv"
+        app:layout_constraintStart_toStartOf="@id/single_closet_cloth_image_iv"
+        android:layout_marginTop="-5dp"
+        android:layout_marginStart="-5dp"
+        android:visibility="gone"/>
+
     <ImageView
         android:id="@+id/single_closet_cloth_like_btn_iv"
         android:layout_width="30dp"

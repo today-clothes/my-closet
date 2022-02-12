@@ -15,7 +15,7 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
-class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : CopyOnWriteArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(),
+class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(),
     StyleDeleteView {
     private var editMode = false
     private val viewList = ArrayList<ItemSingleClosetClothBinding>()
@@ -93,10 +93,10 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
         return editMode
     }
 
-    fun deleteSelectedItem(id : Int){
+    fun deleteSelectedItem(){
         for (style in styleList) {
             if(style.isSelected){
-                StyleService.deleteCloth(this, id)
+                StyleService.deleteCloth(this, style.clothesId)
             }
         }
         finishEditMode()
@@ -124,7 +124,15 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
 
     inner class ViewHolder(val binding: ItemSingleClosetClothBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
-            binding.singleClosetClothNameTv.text = style.closetId.toString() //임시임 원래는 name으로 해야하는데 api에서 미구현.
+            binding.singleClosetClothNameTv.text = style.closetId.toString() //임시임 원래는 name으로 해야하는데 api에서 미구현
+
+            if(style.locked){
+                binding.singleClosetLockIconIv.visibility = View.VISIBLE
+            }else{
+                binding.singleClosetLockIconIv.visibility = View.GONE
+            }
+
+
             Glide.with(binding.singleClosetClothImageIv)
                 .load(style.imgUrl)
                 .into(binding.singleClosetClothImageIv)

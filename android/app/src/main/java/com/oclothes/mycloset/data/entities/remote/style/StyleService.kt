@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken
 import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.data.entities.ErrorBody
 import com.oclothes.mycloset.data.entities.Style
+import com.oclothes.mycloset.data.entities.StyleInfo
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,7 +15,7 @@ object StyleService {
     val gson = Gson()
     val type = object : TypeToken<ErrorBody>() {}.type
 
-    fun searchClothes(styleSearchView : StyleSearchView, intMap : Map<String, Int>?, stringMap : Map<String, String>?){
+    fun searchClothes(styleSearchView : StyleSearchView, intMap : Map<String, Int>, stringMap : Map<String, String>){
         val styleService = ApplicationClass.retrofit.create(StyleRetrofitInterface::class.java)
         styleService.searchClothes(intMap, stringMap).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
@@ -37,12 +38,21 @@ object StyleService {
                         }
                     }
                     else -> {
-                        styleSearchView.onSearchFailure()
+                        var errorBody: ErrorBody? =
+                            StyleService.gson.fromJson(response.errorBody()!!.charStream(),
+                                StyleService.type
+                            )
+                        if (errorBody != null) {
+                            styleSearchView.onSearchFailure(errorBody.errorMessage)
+                            return
+                        }
+                        styleSearchView.onSearchFailure("알 수 없는 오류 in response")
                     }
                 }
             }
             override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                styleSearchView.onSearchFailure()
+
+                styleSearchView.onSearchFailure("알 수 없는 오류 in failure")
             }
         })
     }
@@ -57,15 +67,15 @@ object StyleService {
                 val resp = response.body()!!
                 when(response.code()) {
                     in 200..299 -> {
-                        styleCreateView.onSuccess(resp.data.clothesId, resp.data.imgUrl)
+                        styleCreateView.onCreateSuccess(resp.data.clothesId, resp.data.imgUrl)
                     }
                     else -> {
-                        styleCreateView.onFailure()
+                        styleCreateView.onCreateFailure()
                     }
                 }
             }
             override fun onFailure(call: Call<CreateResponse>, t: Throwable) {
-                styleCreateView.onFailure()
+                styleCreateView.onCreateFailure()
             }
         })
     }
@@ -78,8 +88,9 @@ object StyleService {
                 when(response.code()) {
                     in 200..299 -> {
                         resp.data.apply {
+                            val styleInfo = StyleInfo(content, height, styleTitle, updateAt, userName, weight, eventTags, moodTags, seasonTags)
+                            styleInfoView.onInfoSuccess(styleInfo)
                         }
-//                        styleInfoView.onSuccess()
                     }
                     else -> {
                         styleInfoView.onFailure()

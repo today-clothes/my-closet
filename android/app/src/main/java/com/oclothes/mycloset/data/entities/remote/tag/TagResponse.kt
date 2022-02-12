@@ -1,6 +1,7 @@
 package com.oclothes.mycloset.data.entities.remote.tag
 
 import com.google.gson.annotations.SerializedName
+import com.oclothes.mycloset.data.entities.Tag
 
 data class TagResponse(
     @SerializedName("message") val message : String,
@@ -13,7 +14,3 @@ data class TagResponseData(
     @SerializedName("eventTags") val eventTags : List<Tag>
 )
 
-data class Tag(
-    @SerializedName("id") val id : Int,
-    @SerializedName("name") val name : String
-)

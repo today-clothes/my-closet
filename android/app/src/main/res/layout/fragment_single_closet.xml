@@ -53,7 +53,7 @@
         />
 
     <ImageView
-        android:id="@+id/single_closet_edit_btn_iv"
+        android:id="@+id/single_closet_delete_iv"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:src="@drawable/trash_bin"
