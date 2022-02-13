@@ -27,7 +27,6 @@ public class LocalFileServiceImpl implements FileService {
             File savedFile = new File(String.format("%s%s.%s", IMAGE_PATH, UUID.randomUUID(), extension));
             savedFile.getParentFile().mkdirs();
             file.transferTo(savedFile.toPath());
-            System.out.println(savedFile.getName());
             return savedFile.getName();
         } catch (IOException e) {
             log.error(e.getMessage());
