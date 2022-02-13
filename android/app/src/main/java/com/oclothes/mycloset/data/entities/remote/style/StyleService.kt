@@ -7,6 +7,7 @@ import com.oclothes.mycloset.data.entities.ErrorBody
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.StyleInfo
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,9 +45,9 @@ object StyleService {
                             )
                         if (errorBody != null) {
                             styleSearchView.onSearchFailure(errorBody.errorMessage)
-                            return
+                        }else {
+                            styleSearchView.onSearchFailure("알 수 없는 오류 in response")
                         }
-                        styleSearchView.onSearchFailure("알 수 없는 오류 in response")
                     }
                 }
             }
@@ -57,28 +58,69 @@ object StyleService {
         })
     }
 
-    fun createCloth(styleCreateView : StyleCreateView, closetId: MultipartBody.Part, content: MultipartBody.Part, eventIds: MultipartBody.Part, file: MultipartBody.Part, moodIds: MultipartBody.Part, seasonIds: MultipartBody.Part, title: MultipartBody.Part){
+    fun createCloth(styleCreateView : StyleCreateView, body : RequestBody){
         val styleService = ApplicationClass.retrofit.create(StyleRetrofitInterface::class.java)
-        styleService.createCloth(closetId, content, eventIds, file, moodIds, seasonIds, title).enqueue(object : Callback<CreateResponse> {
+        styleService.createCloth(body).enqueue(object : Callback<CreateResponse> {
             override fun onResponse(
                 call: Call<CreateResponse>,
                 response: Response<CreateResponse>
             ) {
-                val resp = response.body()!!
+
                 when(response.code()) {
                     in 200..299 -> {
+                        val resp = response.body()!!
                         styleCreateView.onCreateSuccess(resp.data.clothesId, resp.data.imgUrl)
                     }
                     else -> {
-                        styleCreateView.onCreateFailure()
+                        var errorBody: ErrorBody? =
+                            StyleService.gson.fromJson(response.errorBody()!!.charStream(),
+                                StyleService.type
+                            )
+                        if (errorBody != null) {
+                            styleCreateView.onCreateFailure(errorBody.errorMessage)
+                        }else {
+                            styleCreateView.onCreateFailure("알 수 없는 오류 in response")
+                        }
                     }
                 }
             }
             override fun onFailure(call: Call<CreateResponse>, t: Throwable) {
-                styleCreateView.onCreateFailure()
+                styleCreateView.onCreateFailure("알 수 없는 오류 in failure")
             }
         })
     }
+
+
+//    fun createCloth(styleCreateView : StyleCreateView, closetId: MultipartBody.Part, content: MultipartBody.Part, eventIds: MultipartBody.Part, file: MultipartBody.Part, moodIds: MultipartBody.Part, seasonIds: MultipartBody.Part, styleTitle: MultipartBody.Part){
+//        val styleService = ApplicationClass.retrofit.create(StyleRetrofitInterface::class.java)
+//        styleService.createCloth(closetId, content, eventIds, file, moodIds, seasonIds, styleTitle).enqueue(object : Callback<CreateResponse> {
+//            override fun onResponse(
+//                call: Call<CreateResponse>,
+//                response: Response<CreateResponse>
+//            ) {
+//                val resp = response.body()!!
+//                when(response.code()) {
+//                    in 200..299 -> {
+//                        styleCreateView.onCreateSuccess(resp.data.clothesId, resp.data.imgUrl)
+//                    }
+//                    else -> {
+//                        var errorBody: ErrorBody? =
+//                            StyleService.gson.fromJson(response.errorBody()!!.charStream(),
+//                                StyleService.type
+//                            )
+//                        if (errorBody != null) {
+//                            styleCreateView.onCreateFailure(errorBody.errorMessage)
+//                        }else {
+//                            styleCreateView.onCreateFailure("알 수 없는 오류 in response")
+//                        }
+//                    }
+//                }
+//            }
+//            override fun onFailure(call: Call<CreateResponse>, t: Throwable) {
+//                styleCreateView.onCreateFailure("알 수 없는 오류 in failure")
+//            }
+//        })
+//    }
 
     fun getClothInfo(styleInfoView : StyleInfoView, id : Int){
         val styleService = ApplicationClass.retrofit.create(StyleRetrofitInterface::class.java)

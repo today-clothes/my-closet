@@ -25,8 +25,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         binding.mainFragmentVp.currentItem = 2
         binding.mainFragmentVp.currentItem = 1
         binding.mainFragmentVp.currentItem = 0
-
-
     }
 
 

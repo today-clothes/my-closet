@@ -1,6 +1,7 @@
 package com.oclothes.mycloset.data.entities.remote.style
 
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -11,17 +12,23 @@ interface StyleRetrofitInterface {
         @QueryMap queryString : Map<String, String>,
     ) : Call<SearchResponse>
 
-    @Multipart
     @POST("/clothes")
     fun createCloth(
-        @Part closetId : MultipartBody.Part,
-        @Part content : MultipartBody.Part,
-        @Part eventIds : MultipartBody.Part,
-        @Part file : MultipartBody.Part,
-        @Part moodIds : MultipartBody.Part,
-        @Part seasonIds : MultipartBody.Part,
-        @Part title : MultipartBody.Part
+        @Body body : RequestBody
     ) : Call<CreateResponse>
+//
+//    @Multipart
+//    @POST("/clothes")
+//    fun createCloth(
+//        @Part closetId : MultipartBody.Part,
+//        @Part content : MultipartBody.Part,
+//        @Part eventIds : MultipartBody.Part,
+//        @Part file : MultipartBody.Part,
+//        @Part moodIds : MultipartBody.Part,
+//        @Part seasonIds : MultipartBody.Part,
+//        @Part styleTitle : MultipartBody.Part
+//    ) : Call<CreateResponse>
+
 
     @GET("/clothes/{id}")
     fun getClothInfo(

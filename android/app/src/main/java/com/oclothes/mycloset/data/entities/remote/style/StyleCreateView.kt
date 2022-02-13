@@ -4,5 +4,5 @@ import com.oclothes.mycloset.data.entities.Style
 
 interface StyleCreateView {
     fun onCreateSuccess(id : Int, url : String)
-    fun onCreateFailure()
+    fun onCreateFailure(message : String)
 }

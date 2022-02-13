@@ -18,6 +18,7 @@ import com.oclothes.mycloset.data.entities.StyleInfo
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.data.entities.User
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
+import com.oclothes.mycloset.data.entities.remote.style.StyleCreateView
 import com.oclothes.mycloset.data.entities.remote.style.StyleInfoView
 import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.data.entities.remote.tag.TagService
@@ -27,11 +28,20 @@ import com.oclothes.mycloset.ui.info.TagView
 import com.oclothes.mycloset.ui.main.closet.adapter.DetailTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
 import com.oclothes.mycloset.ui.main.closet.view.UserInfoView
+import com.oclothes.mycloset.utils.FormDataUtils
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import java.net.URI
 
-class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate), UserInfoView, StyleInfoView, TagView{
+class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate), UserInfoView, StyleInfoView, TagView,
+    StyleCreateView {
     var editMode = false
     var isEditable = false
     var mainImage : Bitmap? = null
+    var currentClosetId : Int = 3
 
     lateinit var tagListAdapter: DetailTagListRvAdapter
     val tagListForAdapter = ArrayList<Tag>()
@@ -68,6 +78,107 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
             clearTagListForEdit()
             TagService.getTags(this)
         }
+    }
+
+    fun uploadCloth(){
+//        val map = HashMap<String, RequestBody>()
+//
+//        map["closetId"] = currentClosetId.toString().toRequestBody("text/plain".toMediaType())
+//        map["content"] = binding.detailSecondInfoDetailEditEt.text.toString().toRequestBody("text/plain".toMediaType())
+//        map["styleTitle"] = binding.detailSecondTitleEditEt.text.toString().toRequestBody("text/plain".toMediaType())
+//        val tempArr = ArrayList<Int>()
+//        for (eventTag in eventTags) {
+//            if(selectedTag.contains(eventTag)){
+//                tempArr.add(eventTag.id)
+//            }
+//        }
+//        map["eventIds"] = tempArr.joinToString(separator = ",").toRequestBody("text/plain".toMediaType())
+//
+//        if(tempArr.size == 0)
+//            map["eventIds"] = "".toRequestBody("text/plain".toMediaType())
+//
+//        tempArr.clear()
+//
+//        for (moodTag in moodTags) {
+//            if(selectedTag.contains(moodTag)){
+//                tempArr.add(moodTag.id)
+//            }
+//        }
+//        map["moodIds"] = tempArr.joinToString(separator = ",").toRequestBody("text/plain".toMediaType())
+//        if(tempArr.size == 0)
+//            map["moodIds"] = "".toRequestBody("text/plain".toMediaType())
+//        tempArr.clear()
+//
+//        for (seasonTag in seasonTags) {
+//            if(selectedTag.contains(seasonTag)){
+//                tempArr.add(seasonTag.id)
+//            }
+//        }
+//        map["seasonIds"] = tempArr.joinToString(separator = ",").toRequestBody("text/plain".toMediaType())
+//        if(tempArr.size == 0)
+//            map["seasonIds"] = "".toRequestBody("text/plain".toMediaType())
+//
+//        val f = File(mainImageUrl)
+//        val fb = f.asRequestBody("image/*".toMediaType())
+//        val file = MultipartBody.Part.createFormData("file", f.name, fb)
+
+
+        val tempArr = ArrayList<Int>()
+
+        for (eventTag in eventTags) {
+            if(selectedTag.contains(eventTag)){
+                tempArr.add(eventTag.id)
+            }
+        }
+        var eventIds = tempArr.joinToString(separator = ",")
+        if(tempArr.size == 0)
+            eventIds = ""
+        tempArr.clear()
+
+        for (moodTag in moodTags) {
+            if(selectedTag.contains(moodTag)){
+                tempArr.add(moodTag.id)
+            }
+        }
+        var moodIds  = tempArr.joinToString(separator = ",")
+        if(tempArr.size == 0)
+            moodIds = ""
+        tempArr.clear()
+
+        for (seasonTag in seasonTags) {
+            if(selectedTag.contains(seasonTag)){
+                tempArr.add(seasonTag.id)
+            }
+        }
+        var seasonIds = tempArr.joinToString(separator = ",")
+        if(tempArr.size == 0)
+            seasonIds = ""
+
+//        StyleService.createCloth(
+//            this,
+//            content = FormDataUtils.getBody("content", binding.detailSecondInfoDetailEditEt.text.toString()),
+//            eventIds = FormDataUtils.getBody("eventIds", eventIds),
+//            moodIds = FormDataUtils.getBody("moodIds", moodIds),
+//            seasonIds = FormDataUtils.getBody("seasonIds", seasonIds),
+//            styleTitle = FormDataUtils.getBody("styleTitle", binding.detailSecondTitleEditEt.text.toString()),
+//            closetId = FormDataUtils.getBody("closetId", currentClosetId.toString()),
+//            file = FormDataUtils.getImageBody("file", File(mainImageUrl))
+//        )
+
+
+        val data: MultipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+            .addFormDataPart("content", binding.detailSecondInfoDetailEditEt.text.toString())
+            .addFormDataPart("styleTitle", binding.detailSecondTitleEditEt.text.toString())
+            .addFormDataPart("closetId", currentClosetId.toString())
+            .addFormDataPart("eventIds", eventIds)
+            .addFormDataPart("moodIds",moodIds)
+            .addFormDataPart("seasonIds", seasonIds)
+            .addFormDataPart("file", File(mainImageUrl).name ,File(mainImageUrl).asRequestBody("image/*".toMediaType()))
+            .build()
+
+
+
+        StyleService.createCloth(this, data)
     }
 
     private fun showTagSelect() {
@@ -209,9 +320,9 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
     }
 
     fun onEditConfirm() {
+        uploadCloth()
         normalModeViewSet()
         detailTagRvAdapter.isEditOnDetail = false
-
     }
 
     fun editModeViewSet(){
@@ -278,6 +389,15 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
     }
 
     override fun onGetTagsFailure(code: Int, message: String) {
+
+    }
+
+    override fun onCreateSuccess(id: Int, url: String) {
+        showToast("설마 돼?")
+    }
+
+    override fun onCreateFailure(message: String) {
+        showToast(message)
 
     }
 }

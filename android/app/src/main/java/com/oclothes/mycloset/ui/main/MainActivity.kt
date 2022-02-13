@@ -40,8 +40,13 @@ class MainActivity : AppCompatActivity() {
         initNavigation()
         supportActionBar?.hide()
 
-        val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){}
+        val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+        }
+        permissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+
+
+
         filterActionActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK && it.data != null) {
                 val currentImageUri = it.data?.data
@@ -54,9 +59,11 @@ class MainActivity : AppCompatActivity() {
                             this.detailImage = bitmap
                         } else {
                             closet.detail.mainImageUrl = currentImageUri.path!!
+                            Toast.makeText(this, File(currentImageUri.path).absolutePath, Toast.LENGTH_SHORT).show()
                             val source = ImageDecoder.createSource(contentResolver, currentImageUri)
                             galleryFlag = true
                             this.detailImage = ImageDecoder.decodeBitmap(source)
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         }
                     }
                 } catch (e: Exception) {

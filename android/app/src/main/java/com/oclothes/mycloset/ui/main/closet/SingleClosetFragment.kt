@@ -232,7 +232,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
     }
 
-    override fun onCreateFailure() {
+    override fun onCreateFailure(message: String) {
 
     }
 
