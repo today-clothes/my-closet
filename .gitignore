@@ -248,7 +248,7 @@ replay_pid*
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 
-images/
+/images/
 
 application-jwt.yml
 application-prod.yml

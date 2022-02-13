@@ -26,6 +26,8 @@ public abstract class ClothesDto {
         private List<Long> moodIds;
         @NotNull(message = "저장할 이미지는 null일 수 없습니다.")
         private MultipartFile file;
+        @NotNull (message = "공개 여부를 선택해주세요.")
+        private boolean locked;
     }
 
     @Getter

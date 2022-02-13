@@ -49,7 +49,8 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                         .param("content", "haha")
                         .param("seasonIds", "1,2")
                         .param("eventIds", "1")
-                        .param("moodIds", "1"))
+                        .param("moodIds", "1")
+                        .param("locked", "false"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value(containsString("저장했습니다")))
                 .andExpect(jsonPath("$.data.closetId").value(is(1)))
@@ -66,7 +67,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
 
         when(this.clothesService.getImage(any())).thenReturn(new byte[0]);
 
-        mockMvc.perform(get("/clothes/imageUrl"))
+        mockMvc.perform(get("/clothes/images/imageUrl"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(String.format("%s;%s", MediaType.IMAGE_JPEG_VALUE, utf8)));
         verify(this.clothesService, atMostOnce()).getImage(any());

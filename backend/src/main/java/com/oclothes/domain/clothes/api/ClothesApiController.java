@@ -53,7 +53,7 @@ public class ClothesApiController {
     }
 
     @ApiOperation(value = "옷 이미지", notes = "옷 이미지 반환 API")
-    @GetMapping(value = "/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})
+    @GetMapping(value = "/images/{url}", produces = {MediaType.IMAGE_JPEG_VALUE})
     public ResponseEntity<byte[]> getImage(@PathVariable String url) {
         return ResponseEntity.ok(this.clothesService.getImage(url));
     }
