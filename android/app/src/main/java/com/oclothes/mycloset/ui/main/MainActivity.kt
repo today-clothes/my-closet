@@ -1,8 +1,10 @@
 package com.oclothes.mycloset.ui.main
 
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -58,12 +60,11 @@ class MainActivity : AppCompatActivity() {
                             )
                             this.detailImage = bitmap
                         } else {
-                            closet.detail.mainImageUrl = currentImageUri.path!!
-                            Toast.makeText(this, File(currentImageUri.path).absolutePath, Toast.LENGTH_SHORT).show()
+                            closet.detail.mainImageUri = currentImageUri
                             val source = ImageDecoder.createSource(contentResolver, currentImageUri)
+                            val imageBitmap = ImageDecoder.decodeBitmap(source)
                             galleryFlag = true
-                            this.detailImage = ImageDecoder.decodeBitmap(source)
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                            this.detailImage = imageBitmap
                         }
                     }
                 } catch (e: Exception) {

@@ -3,6 +3,8 @@ package com.oclothes.mycloset.ui.main.closet
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -29,11 +31,17 @@ import com.oclothes.mycloset.ui.main.closet.adapter.DetailTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
 import com.oclothes.mycloset.ui.main.closet.view.UserInfoView
 import com.oclothes.mycloset.utils.FormDataUtils
+import com.oclothes.mycloset.utils.FormDataUtils.asMultipart
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 import java.net.URI
 
 class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate), UserInfoView, StyleInfoView, TagView,
@@ -50,7 +58,7 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
     lateinit var moodTags : ArrayList<Tag>
     lateinit var seasonTags : ArrayList<Tag>
 
-    lateinit var mainImageUrl : String
+    lateinit var mainImageUri : Uri
     val detailTagRvAdapter : DetailTagListRvAdapter = DetailTagListRvAdapter(this, tagListForAdapter)
     lateinit var mainImageView: ImageView
     private val selectedTag = ArrayList<Tag>()
@@ -154,31 +162,61 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         if(tempArr.size == 0)
             seasonIds = ""
 
-//        StyleService.createCloth(
-//            this,
-//            content = FormDataUtils.getBody("content", binding.detailSecondInfoDetailEditEt.text.toString()),
-//            eventIds = FormDataUtils.getBody("eventIds", eventIds),
-//            moodIds = FormDataUtils.getBody("moodIds", moodIds),
-//            seasonIds = FormDataUtils.getBody("seasonIds", seasonIds),
-//            styleTitle = FormDataUtils.getBody("styleTitle", binding.detailSecondTitleEditEt.text.toString()),
-//            closetId = FormDataUtils.getBody("closetId", currentClosetId.toString()),
-//            file = FormDataUtils.getImageBody("file", File(mainImageUrl))
-//        )
-
-
-        val data: MultipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
-            .addFormDataPart("content", binding.detailSecondInfoDetailEditEt.text.toString())
-            .addFormDataPart("styleTitle", binding.detailSecondTitleEditEt.text.toString())
-            .addFormDataPart("closetId", currentClosetId.toString())
-            .addFormDataPart("eventIds", eventIds)
-            .addFormDataPart("moodIds",moodIds)
-            .addFormDataPart("seasonIds", seasonIds)
-            .addFormDataPart("file", File(mainImageUrl).name ,File(mainImageUrl).asRequestBody("image/*".toMediaType()))
-            .build()
+        requireActivity().contentResolver.openInputStream(mainImageUri)?.use { inputStream ->
+            val tempFile = createTempFile(requireContext(), "test", "jpg")
+            copyStreamToFile(inputStream, tempFile)
+            val body = FormDataUtils.getImageBody("file", tempFile)
+            StyleService.createCloth(
+                this,
+                content = FormDataUtils.getBody("content", binding.detailSecondInfoDetailEditEt.text.toString()),
+                eventIds = FormDataUtils.getBody("eventIds", eventIds),
+                moodIds = FormDataUtils.getBody("moodIds", moodIds),
+                seasonIds = FormDataUtils.getBody("seasonIds", seasonIds),
+                styleTitle = FormDataUtils.getBody("styleTitle", binding.detailSecondTitleEditEt.text.toString()),
+                closetId = FormDataUtils.getBody("closetId", currentClosetId.toString()),
+                file = body,
+                locked = FormDataUtils.getBody("locked", binding.detailSecondLockSwitchS.isChecked)
+            )
+        }
 
 
 
-        StyleService.createCloth(this, data)
+
+
+
+
+//
+//        val data: MultipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+//            .addFormDataPart("content", binding.detailSecondInfoDetailEditEt.text.toString())
+//            .addFormDataPart("styleTitle", binding.detailSecondTitleEditEt.text.toString())
+//            .addFormDataPart("closetId", currentClosetId.toString())
+//            .addFormDataPart("eventIds", eventIds)
+//            .addFormDataPart("moodIds",moodIds)
+//            .addFormDataPart("seasonIds", seasonIds)
+//            .addFormDataPart("file", File(mainImageUrl).name ,File(mainImageUrl).asRequestBody("image/*".toMediaType()))
+//            .build()
+//        StyleService.createCloth(this, data)
+    }
+
+    @Throws(IOException::class)
+    fun createTempFile(context: Context, fileName: String?, extension: String?): File {
+        val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+        return File(storageDir, "$fileName.$extension")
+    }
+
+    fun copyStreamToFile(inputStream: InputStream, outputFile: File) {
+        inputStream.use { input ->
+            val outputStream = FileOutputStream(outputFile)
+            outputStream.use { output ->
+                val buffer = ByteArray(4 * 1024) // buffer size
+                while (true) {
+                    val byteCount = input.read(buffer)
+                    if (byteCount < 0) break
+                    output.write(buffer, 0, byteCount)
+                }
+                output.flush()
+            }
+        }
     }
 
     private fun showTagSelect() {

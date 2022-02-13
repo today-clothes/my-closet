@@ -14,8 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.MyCloset"
-        android:requestLegacyExternalStorage="true">
+        android:theme="@style/Theme.MyCloset">
     
         <activity
             android:name=".ui.splash.SplashActivity"

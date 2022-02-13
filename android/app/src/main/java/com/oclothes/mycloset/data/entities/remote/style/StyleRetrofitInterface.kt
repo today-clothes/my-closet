@@ -12,22 +12,24 @@ interface StyleRetrofitInterface {
         @QueryMap queryString : Map<String, String>,
     ) : Call<SearchResponse>
 
-    @POST("/clothes")
-    fun createCloth(
-        @Body body : RequestBody
-    ) : Call<CreateResponse>
-//
-//    @Multipart
 //    @POST("/clothes")
 //    fun createCloth(
-//        @Part closetId : MultipartBody.Part,
-//        @Part content : MultipartBody.Part,
-//        @Part eventIds : MultipartBody.Part,
-//        @Part file : MultipartBody.Part,
-//        @Part moodIds : MultipartBody.Part,
-//        @Part seasonIds : MultipartBody.Part,
-//        @Part styleTitle : MultipartBody.Part
+//        @Body body : RequestBody
 //    ) : Call<CreateResponse>
+//
+
+    @Multipart
+    @POST("/clothes")
+    fun createCloth(
+        @Part closetId : MultipartBody.Part,
+        @Part content : MultipartBody.Part,
+        @Part eventIds : MultipartBody.Part,
+        @Part file : MultipartBody.Part,
+        @Part moodIds : MultipartBody.Part,
+        @Part seasonIds : MultipartBody.Part,
+        @Part styleTitle : MultipartBody.Part,
+        @Part locked : MultipartBody.Part
+    ) : Call<CreateResponse>
 
 
     @GET("/clothes/{id}")
