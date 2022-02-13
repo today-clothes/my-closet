@@ -24,11 +24,11 @@ public class LocalFileServiceImpl implements FileService {
         try {
             String extension = Objects.requireNonNull(FilenameUtils.getExtension(file.getOriginalFilename()));
             ImageExtension.validateImageExtension(extension);
-            final String key = UUID.randomUUID().toString();
-            File destination = new File(String.format("%s%s.%s", IMAGE_PATH, key, extension));
-            destination.getParentFile().mkdirs();
-            file.transferTo(destination.toPath());
-            return key;
+            File savedFile = new File(String.format("%s%s.%s", IMAGE_PATH, UUID.randomUUID(), extension));
+            savedFile.getParentFile().mkdirs();
+            file.transferTo(savedFile.toPath());
+            System.out.println(savedFile.getName());
+            return savedFile.getName();
         } catch (IOException e) {
             log.error(e.getMessage());
             throw new IllegalArgumentException("파일 저장에 실패했습니다.");
