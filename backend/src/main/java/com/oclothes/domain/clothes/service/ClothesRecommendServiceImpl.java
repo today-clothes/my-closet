@@ -28,7 +28,7 @@ public class ClothesRecommendServiceImpl implements ClothesRecommendService {
 
     @Getter
     @AllArgsConstructor
-    public static class ClothesWithSim {
+    private static class ClothesWithSim {
         private long cIndex;
         private float similarity;
     }
@@ -56,8 +56,9 @@ public class ClothesRecommendServiceImpl implements ClothesRecommendService {
         });
 
         return clothesWithSims.stream()
-                .map(c -> clothes.get((int) c.getCIndex())).collect(Collectors.toList()).stream()
-                .map(this.clothesMapper::toSearchResponse).collect(Collectors.toList());
+                .map(c -> clothes.get((int) c.getCIndex()))
+                .map(this.clothesMapper::toSearchResponse)
+                .collect(Collectors.toList());
     }
 
     private Long getClothesVectorization(Set<ClothesMoodTag> clothes) {

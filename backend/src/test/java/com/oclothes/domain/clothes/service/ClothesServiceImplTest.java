@@ -53,6 +53,7 @@ class ClothesServiceImplTest extends BaseTest {
     private ClothesMapperSupport clothesMapperSupport;
 
     @Spy
+    @InjectMocks
     private ClothesMapper clothesMapper = Mappers.getMapper(ClothesMapper.class);
 
     @InjectMocks
@@ -134,7 +135,7 @@ class ClothesServiceImplTest extends BaseTest {
 
         when(this.clothesRepository.searchByTag(any(), any(), any())).thenReturn(slice);
 
-        final SliceDto<ClothesDto.SearchResponse> result = this.clothesService.search(null,  pageRequest);
+        final SliceDto<ClothesDto.SearchResponse> result = this.clothesService.search(null, pageRequest);
         verify(this.clothesRepository, atMostOnce()).searchByTag(any(), any(), any());
         assertEquals(1, result.getContentsCount());
     }
