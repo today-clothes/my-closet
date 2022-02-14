@@ -89,7 +89,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
     fun openDetail(style: Style) {
         f.getBinding().mainFragmentVp.currentItem = 2
-//        f.detail.fromCloset(style.clothesId)
+        f.detail.fromCloset(style.clothesId)
     }
 
 

@@ -100,6 +100,11 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         normalModeViewSet()
     }
 
+    fun fromSearch(id: Int) {
+        StyleService.getClothInfo(this, id)
+        normalModeViewSet()
+    }
+
     fun uploadCloth(){
         val tempArr = ArrayList<Int>()
         for (eventTag in eventTags) {
