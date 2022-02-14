@@ -5,11 +5,20 @@ import {
 import React from 'react';
 import styled from 'styled-components';
 import mockImg from '@images/home/section2.png';
+import { media } from '@constants/theme';
 
 const Section = styled.section`
   display: flex;
   justify-content: space-between;
   padding: 120px 40px;
+
+  ${media.mobile} {
+    flex-direction: column-reverse;
+    align-items: center;
+    img {
+      margin-bottom: 40px;
+    }
+  }
 `;
 
 const TextSection = styled.article`
@@ -32,6 +41,12 @@ const ImageSection = styled.article`
   width: 50%;
   img {
     width: 100%;
+  }
+  ${media.mobile} {
+    width: 100%;
+    img {
+      margin-bottom: 50px;
+    }
   }
 `;
 
