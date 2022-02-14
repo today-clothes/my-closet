@@ -49,7 +49,8 @@ class SearchFragment(val f : MainSearchFragment) : BaseFragment<FragmentSearchBi
         searchAdapter = SearchStyleListRVAdapter(this, styleList)
         searchAdapter.setMyItemClickListener(object : SearchStyleListRVAdapter.MyItemClickListener{
             override fun onItemClick(style: Style, position: Int) {
-
+                f.detail.fromSearch(style.clothesId)
+                f.getBinding().mainSearchFragmentVp.currentItem = 1
             }
         })
         myLayoutManager = GridLayoutManager(activity, 2)

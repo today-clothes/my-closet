@@ -35,7 +35,7 @@ class SearchStyleListRVAdapter (private val fragment : SearchFragment, val style
     override fun onBindViewHolder(holder: SearchStyleListRVAdapter.ViewHolder, position: Int) {
         holder.bind(styleList[position])
         holder.itemView.setOnClickListener {
-
+            mItemClickListener.onItemClick(styleList[position], position)
         }
     }
 
