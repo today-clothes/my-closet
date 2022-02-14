@@ -19,7 +19,7 @@ class MainSearchFragment : BaseFragment<FragmentMainSearchBinding>(FragmentMainS
 
         binding.mainSearchFragmentVp.adapter = vpAdapter
         binding.mainSearchFragmentVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-//        binding.mainSearchFragmentVp.isUserInputEnabled = false
+        binding.mainSearchFragmentVp.isUserInputEnabled = false
         binding.mainSearchFragmentVp.currentItem = 1
         binding.mainSearchFragmentVp.currentItem = 0
     }
