@@ -6,6 +6,7 @@ import React from 'react';
 import img from '@images/home/section1-1.png';
 import styled from 'styled-components';
 import { RoundButtonStyles as RoundButton } from '@components/Button/RoundButton.styles';
+import { media } from '@constants/theme';
 
 const Section = styled.section`
   padding: 120px 40px;
@@ -25,6 +26,16 @@ const Section = styled.section`
     width: 50%;
     margin: 50px 0;
   }
+  ${media.mobile} {
+    img {
+      width: 100%;
+      margin-bottom: 50px;
+    }
+    .button-container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 `;
 
 const HomeSection4 = () => {
@@ -41,7 +52,7 @@ const HomeSection4 = () => {
           <div>
             <img src={img} alt="section4 image" />
           </div>
-          <div>
+          <div className="button-container">
             <RoundButton
               backgroundColor="#693686"
               size="large"
