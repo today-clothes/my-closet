@@ -105,7 +105,7 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     private User getUser(SearchRequest req){
-        return isNull(req) || isNull(req.getKeyword()) ? null : SecurityUtils.getLoggedInUser();
+        return isNull(req) || isNull(req.getKeyword()) ? SecurityUtils.getLoggedInUser() : null;
     }
 
     private SearchResponse createSearchDtoResponse(Clothes c) {
