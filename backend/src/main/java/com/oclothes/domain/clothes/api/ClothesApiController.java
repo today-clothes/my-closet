@@ -1,6 +1,7 @@
 package com.oclothes.domain.clothes.api;
 
 import com.oclothes.domain.clothes.dto.ClothesDto;
+import com.oclothes.domain.clothes.service.ClothesRecommendService;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.ResponseDto;
 import com.oclothes.global.dto.SliceDto;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("/clothes")
 public class ClothesApiController {
     private final ClothesService clothesService;
+    private final ClothesRecommendService clothesRecommendService;
 
     @ApiOperation(value = "옷 업로드", notes = "옷 업로드 API")
     @PostMapping
@@ -71,4 +73,11 @@ public class ClothesApiController {
         this.clothesService.deleteAllByIdIn(ids);
         return ResponseEntity.ok(ResponseDto.create(DELETE_All_SUCCESS.getMessage()));
     }
+
+    @ApiOperation(value = "옷 추천", notes = "옷 추천 알고리즘")
+    @GetMapping("/recommend")
+    public ResponseEntity<?> recommendClothes() {
+        return ResponseEntity.ok(ResponseDto.create("옷 추천 리스트 반환 성공.", this.clothesRecommendService.recommendClothes()));
+    }
+
 }

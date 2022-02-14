@@ -2,6 +2,7 @@ package com.oclothes.domain.clothes.api;
 
 import com.oclothes.BaseWebMvcTest;
 import com.oclothes.domain.clothes.dto.ClothesDto;
+import com.oclothes.domain.clothes.service.ClothesRecommendService;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.SliceDto;
 import org.hamcrest.Matchers;
@@ -17,7 +18,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -33,6 +36,9 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
 
     @MockBean
     private ClothesService clothesService;
+
+    @MockBean
+    private ClothesRecommendService clothesRecommendService;
 
     @DisplayName("옷 업로드를 성공한다.")
     @WithMockUser
@@ -154,6 +160,21 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
                 .andDo(print());
 
         verify(clothesService, atMostOnce()).getClothesDetails(id);
+    }
+
+    @DisplayName("옷 추천 리스트 반환")
+    @WithMockUser
+    @Test
+    void recommendClothesTest() throws Exception {
+        final List<ClothesDto.SearchResponse> dto = new ArrayList<>();
+
+        when(clothesRecommendService.recommendClothes()).thenReturn(dto);
+
+        mockMvc.perform(get("/clothes/recommend"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(Matchers.containsString("성공")))
+                .andDo(print());
+        verify(clothesRecommendService, atMostOnce()).recommendClothes();
     }
 
 }
