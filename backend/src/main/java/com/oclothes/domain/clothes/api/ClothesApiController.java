@@ -1,6 +1,7 @@
 package com.oclothes.domain.clothes.api;
 
 import com.oclothes.domain.clothes.dto.ClothesDto;
+import com.oclothes.domain.clothes.service.ClothesRecommendService;
 import com.oclothes.domain.clothes.service.ClothesService;
 import com.oclothes.global.dto.ResponseDto;
 import com.oclothes.global.dto.SliceDto;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("/clothes")
 public class ClothesApiController {
     private final ClothesService clothesService;
+    private final ClothesRecommendService clothesRecommendService;
 
     @ApiOperation(value = "옷 업로드", notes = "옷 업로드 API")
     @PostMapping
