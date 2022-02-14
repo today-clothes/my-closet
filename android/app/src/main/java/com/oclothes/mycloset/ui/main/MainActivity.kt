@@ -7,13 +7,17 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.*
+import com.google.gson.Gson
 import com.oclothes.mycloset.R
+import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.databinding.ActivityMainBinding
 import com.oclothes.mycloset.ui.main.closet.MainFragment
 import com.oclothes.mycloset.ui.main.mypage.MyPageFragment
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     val TIME_INTERVAL: Long = 2000
     var galleryFlag = false
     var galleryFailFlag = false
+    lateinit var singleClosetCurrent : Closet
 
     var detailImage : Bitmap? = null
 
@@ -65,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                             val imageBitmap = ImageDecoder.decodeBitmap(source)
                             galleryFlag = true
                             this.detailImage = imageBitmap
+                            closet.detail.currentClosetId = singleClosetCurrent.id
                         }
                     }
                 } catch (e: Exception) {
@@ -73,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             } else if (it.resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_SHORT).show()
                 galleryFailFlag = true
-
+                closet.getBinding().mainFragmentVp.currentItem = 1
             } else {
 
             }
@@ -123,9 +129,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openGallery(){
+        singleClosetCurrent = closet.singleCloset.currentCloset
+
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         filterActionActivityLauncher.launch(intent)
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+
+        outState.putString("currentCloset",Gson().toJson(singleClosetCurrent, Closet::class.java))
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        singleClosetCurrent = Gson().fromJson(savedInstanceState.getString("currentCloset"), Closet::class.java)
+
     }
 
     override fun onResume() {
@@ -138,7 +160,10 @@ class MainActivity : AppCompatActivity() {
             closet.detail.isEditable = false
         }else if(galleryFailFlag){
             closet.getBinding().mainFragmentVp.currentItem = 1
-            galleryFailFlag = true
+            closet.detail.currentClosetId = singleClosetCurrent.id
+            closet.singleCloset.currentCloset = singleClosetCurrent
+            closet.singleCloset.setSingleCloset(singleClosetCurrent)
+            galleryFailFlag = false
         }
     }
 

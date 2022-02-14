@@ -12,12 +12,6 @@ interface StyleRetrofitInterface {
         @QueryMap queryString : Map<String, String>,
     ) : Call<SearchResponse>
 
-//    @POST("/clothes")
-//    fun createCloth(
-//        @Body body : RequestBody
-//    ) : Call<CreateResponse>
-//
-
     @Multipart
     @POST("/clothes")
     fun createCloth(

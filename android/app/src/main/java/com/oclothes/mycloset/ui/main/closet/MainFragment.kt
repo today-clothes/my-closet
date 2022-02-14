@@ -5,6 +5,7 @@ import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.databinding.FragmentMainBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.closet.adapter.MainFragmentVPAdapter
+import kotlin.math.sin
 
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
     lateinit var singleCloset : SingleClosetFragment
@@ -44,6 +45,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         when(binding.mainFragmentVp.currentItem){
             2->{
                 binding.mainFragmentVp.currentItem = 1
+                singleCloset.setSingleCloset(singleCloset.currentCloset)
                 return false
             }
             1->{

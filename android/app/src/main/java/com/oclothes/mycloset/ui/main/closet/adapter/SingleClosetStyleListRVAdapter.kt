@@ -5,12 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.data.entities.remote.style.StyleDeleteView
 import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
 import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
+import com.oclothes.mycloset.utils.getJwt
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
@@ -48,15 +51,18 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
         setBackground(position, holder)
 
         holder.itemView.setOnLongClickListener {
-            mItemClickListener.onItemLongClick(styleList[position])
             initEditMode(position)
             setBackground(position, holder)
+            mItemClickListener.onItemLongClick(styleList[position])
             true
         }
         holder.itemView.setOnClickListener {
             mItemClickListener.onItemClick(styleList[position], position)
             if(editMode){
                 styleList[position].isSelected = !styleList[position].isSelected
+            }
+            if(!editMode){
+                fragment.openDetail(styleList[position])
             }
             setBackground(position, holder)
             notifyItemChanged(position)
@@ -65,6 +71,9 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
 
     fun getEditMode() = editMode
 
+    fun setEditMode(b : Boolean){
+        editMode = b
+    }
     private fun setBackground(
         position: Int,
         holder: ViewHolder
@@ -124,22 +133,23 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
 
     inner class ViewHolder(val binding: ItemSingleClosetClothBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
-            binding.singleClosetClothNameTv.text = style.closetId.toString() //임시임 원래는 name으로 해야하는데 api에서 미구현
-
+            binding.singleClosetClothNameTv.text = style.styleTitle
+            binding.singleClosetClothClosetTextBodyTv.text = style.updateAt.substring(0, 10)
             if(style.locked){
                 binding.singleClosetLockIconIv.visibility = View.VISIBLE
             }else{
                 binding.singleClosetLockIconIv.visibility = View.GONE
             }
 
-
-            Glide.with(binding.singleClosetClothImageIv)
-                .load(style.imgUrl)
-                .into(binding.singleClosetClothImageIv)
+            val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${style.imgUrl}", LazyHeaders.Builder()
+                .addHeader("Authorization", getJwt()!!)
+                .build())
+            Glide.with(fragment).load(glideUrl).into(binding.singleClosetClothImageIv)
         }
     }
 
     override fun onSuccess() {
+        fragment.setSingleCloset(fragment.currentCloset)
         notifyDataSetChanged()
     }
 

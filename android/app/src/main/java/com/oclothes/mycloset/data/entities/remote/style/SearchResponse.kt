@@ -26,4 +26,6 @@ data class Cloth(
     @SerializedName("eventTags") val eventTags : ArrayList<Tag>,
     @SerializedName("moodTags") val moodTags : ArrayList<Tag>,
     @SerializedName("seasonTags") val seasonTags : ArrayList<Tag>,
+    @SerializedName("styleTitle") val styleTitle : String,
+    @SerializedName("updateAt") val updateAt : String
 )

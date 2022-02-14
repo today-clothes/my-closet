@@ -4,5 +4,5 @@ import com.oclothes.mycloset.data.entities.StyleInfo
 
 interface StyleInfoView {
     fun onInfoSuccess(styleInfo : StyleInfo)
-    fun onFailure()
+    fun onInfoFailure()
 }

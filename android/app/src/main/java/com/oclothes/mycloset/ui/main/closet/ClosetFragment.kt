@@ -38,8 +38,6 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
         }
     }
 
-
-
     private fun setClosetRvAdapter() {
         binding.closetAllClosetListRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -50,7 +48,7 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
             }
 
             override fun onItemLongClick(closet: Closet) {
-                showDialog(closet)
+                showEditDialog(closet)
             }
 
             override fun onRemoveAlbum(position: Int) {
@@ -74,7 +72,7 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
         }
     }
 
-    private fun showDialog(closet: Closet) {
+    private fun showEditDialog(closet: Closet) {
         val items = resources.getStringArray(R.array.closet_ask)
         AlertDialog.Builder(context).setTitle("'${closet.name}' 옷장 수정")
             .setItems(items, object : DialogInterface.OnClickListener {
@@ -103,7 +101,6 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
                         }
                     }
                 }
-
             }).show()
     }
 
@@ -118,6 +115,14 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
         binding.closetAllClosetNumberTv.text = "${closetList.size.toString()} 개"
         ClosetService.getClosets(this)
         AuthService.getUserInfo(this)
+        initAllClothes()
+    }
+
+    private fun initAllClothes() {
+        binding.closetAllClosetCv.setOnClickListener {
+            f.getBinding().mainFragmentVp.currentItem = 1
+            f.singleCloset.setAllCloset()
+        }
     }
 
     fun startSingleClosetFragment(closet: Closet) {
@@ -154,7 +159,6 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
 
     override fun onClosetDeleteFailure() {
         showToast("옷장 삭제 실패")
-
     }
 
     override fun onClosetUpdateSuccess() {
@@ -167,7 +171,6 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
 
     override fun onGetUserInfoSuccess(user: User) {
         binding.closetInfoTv.text = "\'${user.nickname}\'님의 옷장"
-
     }
 
     override fun onGetUserInfoFailure(message: String) {
