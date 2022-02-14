@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@id/main_nav_bnv"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="50dp"
         />
 
 

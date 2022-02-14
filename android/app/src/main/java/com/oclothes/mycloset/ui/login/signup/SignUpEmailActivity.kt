@@ -1,15 +1,18 @@
 package com.oclothes.mycloset.ui.login.signup
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
-import com.oclothes.mycloset.data.entities.remote.auth.UserDto
+import com.oclothes.mycloset.data.entities.remote.auth.SignUpDto
 import com.oclothes.mycloset.databinding.ActivityEmailSignUpBinding
 import com.oclothes.mycloset.ui.BaseActivity
-import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.ui.info.InfoSelectActivity
+import com.oclothes.mycloset.ui.login.LoginActivity
 
-class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEmailSignUpBinding::inflate), SignUpView, View.OnClickListener {
+class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEmailSignUpBinding::inflate), View.OnClickListener {
     override fun initAfterBinding() {
         init()
     }
@@ -41,7 +44,6 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
 
     private fun signUp() {
         if (binding.loginSignUpEditTextEmailEt.text.toString().isEmpty() &&
-            binding.loginSignUpEditTextNickNameEt.text.toString().isEmpty() &&
             binding.loginSignUpEditTextPasswordConfirmEt.text.toString().isEmpty() &&
             binding.loginSignUpEditTextPasswordEt.text.toString().isEmpty()
         ) {
@@ -49,15 +51,11 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
         } else if (binding.loginSignUpEditTextPasswordEt.text.toString() != binding.loginSignUpEditTextPasswordConfirmEt.text.toString()) {
             showToast("입력된 비밀번호가 같지 않습니다.")
         } else {
-            AuthService.signUp(this, getUserDto())
+            val intent = Intent(this, InfoSelectActivity::class.java)
+            intent.putExtra("email", binding.loginSignUpEditTextEmailEt.text.toString())
+            intent.putExtra("pw", binding.loginSignUpEditTextPasswordEt.text.toString())
+            startActivity(intent)
         }
-    }
-
-    private fun getUserDto(): UserDto {
-        val email : String = binding.loginSignUpEditTextEmailEt.text.toString()
-        val pw = binding.loginSignUpEditTextPasswordEt.text.toString()
-        val nickname : String = binding.loginSignUpEditTextNickNameEt.text.toString()
-        return UserDto(email, pw)
     }
 
     private fun checkLogic2() {
@@ -84,20 +82,6 @@ class SignUpEmailActivity : BaseActivity<ActivityEmailSignUpBinding>(ActivityEma
             binding.loginSignUpAgree2Cb.isChecked = false
             binding.loginSignUpAgree3Cb.isChecked = false
         }
-    }
-
-    override fun onSignUpLoading() {
-        binding.loginSignUpLoadingPb.visibility = View.VISIBLE
-    }
-
-    override fun onSignUpSuccess() {
-        binding.loginSignUpLoadingPb.visibility = View.GONE
-        startActivityWithClear(MainActivity::class.java)
-    }
-
-    override fun onSignUpFailure(code: Int, message: String) {
-        binding.loginSignUpLoadingPb.visibility = View.GONE
-        showToast(code.toString() + "그리고" + message)
     }
 
 }

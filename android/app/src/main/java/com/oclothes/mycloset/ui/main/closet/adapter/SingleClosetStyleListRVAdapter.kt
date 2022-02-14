@@ -1,18 +1,30 @@
 package com.oclothes.mycloset.ui.main.closet.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.style.StyleDeleteView
+import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
+import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
+import com.oclothes.mycloset.utils.getJwt
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.collections.ArrayList
 
-class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(){
+class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(),
+    StyleDeleteView {
     private var editMode = false
+    private val viewList = ArrayList<ItemSingleClosetClothBinding>()
+
     interface MyItemClickListener{
-        fun onItemClick(style: Style)
+        fun onItemClick(style: Style, position : Int)
         fun onRemoveStyle(position: Int)
         fun onItemLongClick(style : Style)
     }
@@ -29,28 +41,86 @@ class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) 
         viewType: Int
     ): SingleClosetStyleListRVAdapter.ViewHolder {
         val binding: ItemSingleClosetClothBinding = ItemSingleClosetClothBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+        viewList.add(binding)
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SingleClosetStyleListRVAdapter.ViewHolder, position: Int) {
         holder.bind(styleList[position])
 
-        if(editMode) {
-            holder.itemView.setOnLongClickListener {
-                mItemClickListener.onItemLongClick(styleList[position])
-                true
-            }
+        setBackground(position, holder)
 
-            holder.itemView.setOnClickListener {
-                mItemClickListener.onItemClick(styleList[position])
+        holder.itemView.setOnLongClickListener {
+            initEditMode(position)
+            setBackground(position, holder)
+            mItemClickListener.onItemLongClick(styleList[position])
+            true
+        }
+        holder.itemView.setOnClickListener {
+            mItemClickListener.onItemClick(styleList[position], position)
+            if(editMode){
+                styleList[position].isSelected = !styleList[position].isSelected
             }
-        }else{
-
+            if(!editMode){
+                fragment.openDetail(styleList[position])
+            }
+            setBackground(position, holder)
+            notifyItemChanged(position)
         }
     }
 
-    fun setEditMode(status : Boolean){
-        editMode = status
+    fun getEditMode() = editMode
+
+    fun setEditMode(b : Boolean){
+        editMode = b
+    }
+    private fun setBackground(
+        position: Int,
+        holder: ViewHolder
+    ) {
+        if (editMode) {
+            if (styleList[position].isSelected) {
+                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.VISIBLE
+                holder.binding.singleClosetClothSelectedBtnIv.visibility = View.VISIBLE
+            } else {
+                holder.binding.singleClosetClothEditBackgroundTv.visibility = View.GONE
+                holder.binding.singleClosetClothSelectedBtnIv.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun initEditMode(position: Int) : Boolean{
+        if (!editMode) {
+            editMode = true
+            if(position != -1) {
+                styleList[position].isSelected = true
+                notifyItemChanged(position)
+            }
+        } else {
+            finishEditMode()
+        }
+        return editMode
+    }
+
+    fun deleteSelectedItem(){
+        for (style in styleList) {
+            if(style.isSelected){
+                StyleService.deleteCloth(this, style.clothesId)
+            }
+        }
+        finishEditMode()
+    }
+
+    fun finishEditMode() {
+        editMode = false
+        for (style in styleList) {
+            style.isSelected = false
+        }
+        for (itemSingleClosetClothBinding in viewList) {
+            itemSingleClosetClothBinding.singleClosetClothEditBackgroundTv.visibility = View.GONE
+            itemSingleClosetClothBinding.singleClosetClothSelectedBtnIv.visibility = View.GONE
+        }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -63,10 +133,27 @@ class SingleClosetStyleListRVAdapter (private val styleList : ArrayList<Style>) 
 
     inner class ViewHolder(val binding: ItemSingleClosetClothBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
-            binding.singleClosetClothNameTv.text = style.name
-            Glide.with(binding.singleClosetClothImageIv)
-                .load(style.imageSource)
-                .into(binding.singleClosetClothImageIv)
+            binding.singleClosetClothNameTv.text = style.styleTitle
+            binding.singleClosetClothClosetTextBodyTv.text = style.updateAt.substring(0, 10)
+            if(style.locked){
+                binding.singleClosetLockIconIv.visibility = View.VISIBLE
+            }else{
+                binding.singleClosetLockIconIv.visibility = View.GONE
+            }
+
+            val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${style.imgUrl}", LazyHeaders.Builder()
+                .addHeader("Authorization", getJwt()!!)
+                .build())
+            Glide.with(fragment).load(glideUrl).into(binding.singleClosetClothImageIv)
         }
+    }
+
+    override fun onSuccess() {
+        fragment.setSingleCloset(fragment.currentCloset)
+        notifyDataSetChanged()
+    }
+
+    override fun onFailure() {
+
     }
 }

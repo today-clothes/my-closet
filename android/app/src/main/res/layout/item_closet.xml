@@ -32,6 +32,15 @@
             android:textColor="@color/white"
             android:textSize="30dp"
             android:fontFamily="@font/roboto_bold"/>
+        <TextView
+            android:id="@+id/closet_item_when_empty_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="표시할 코디나 아이템이 없습니다."
+            android:textSize="17dp"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_marginTop="170dp"/>
     </androidx.cardview.widget.CardView>
     
 </androidx.constraintlayout.widget.ConstraintLayout>

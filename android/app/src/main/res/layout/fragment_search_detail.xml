@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search_detail_main_frm_spl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:layout_gravity="bottom"
+    app:umanoShadowHeight="0dp"
+    app:umanoDragView="@id/search_detail_second_cl"
+    app:umanoOverlay="true"
+    app:umanoPanelHeight="60dp"
+    >
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <ImageView
+            android:id="@+id/search_detail_main_image_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
+            />
+
+        <ImageView
+            android:id="@+id/search_detail_main_back_btn_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/arrow_gray_to_left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_detail_second_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/detail_round_background"
+        >
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/detail_round_gray_bar"/>
+
+        <EditText
+            android:id="@+id/search_detail_second_title_edit_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="60dp"
+            android:text="겨울 월정리에서"
+            android:textSize="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/black"
+            android:background="@color/white"
+            android:hint="제목을 입력하세요"
+            />
+
+        <TextView
+            android:id="@+id/search_detail_second_info_user_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="100dp"
+            android:text="22.03.03/동동 173cm 68kg"
+            android:fontFamily="@font/roboto_regular"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/search_detail_second_tag_list_cl"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@id/search_detail_second_info_user_tv"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/search_detail_second_filter_image_iv"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:src="@drawable/filter_on"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <TextView
+                android:id="@+id/search_detail_second_filter_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/search_detail_second_filter_image_iv"
+                app:layout_constraintEnd_toEndOf="@id/search_detail_second_filter_image_iv"
+                app:layout_constraintBottom_toBottomOf="@id/search_detail_second_filter_image_iv"
+                android:text="2"
+                android:fontFamily="@font/roboto_bold"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="13dp"
+                />
+
+            <com.oclothes.mycloset.ui.main.closet.custom.NestedScrollableHost
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/search_detail_second_filter_image_iv"
+                app:layout_constraintBottom_toBottomOf="@id/search_detail_second_filter_image_iv"
+                app:layout_constraintStart_toEndOf="@id/search_detail_second_filter_image_iv"
+                app:layout_constraintEnd_toEndOf="parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/single_closet_filter_list_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"/>
+            </com.oclothes.mycloset.ui.main.closet.custom.NestedScrollableHost>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/bar1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/search_detail_second_tag_list_cl"
+            android:background="#5E5A5A5A"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="7dp"
+            />
+
+
+        <EditText
+            android:id="@+id/search_detail_second_info_search_detail_edit_et"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:layout_constraintTop_toBottomOf="@id/search_detail_second_tag_list_cl"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_marginBottom="50dp"
+            android:background="@color/white"
+            android:text="상세정보입니다 상세정보정보정보\n\n상세정보정보정보"
+            android:hint="상세정보를 입력해주세요."
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toBottomOf="@id/search_detail_second_info_search_detail_edit_et"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -1,6 +1,8 @@
 package com.oclothes.mycloset.ui.info
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.oclothes.mycloset.ApplicationClass.Companion.MAN
@@ -11,8 +13,33 @@ import com.oclothes.mycloset.ui.BaseFragment
 
 class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentPersonalInfoBinding::inflate), View.OnClickListener{
     private var gender = 0
+    lateinit var myActivity : InfoSelectActivity
     override fun initAfterBinding() {
         initListener()
+        setTextWatcher()
+        myActivity = requireActivity() as InfoSelectActivity
+        binding.personalInfoSelectionManTv.performClick()
+    }
+
+    private fun setTextWatcher() {
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(e: Editable?) {
+                if (e!!.length >= 2) {
+                    binding.personalInfoNextBtnTv.isClickable = true
+                    binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
+                } else {
+                    binding.personalInfoNextBtnTv.isClickable = false
+                    binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
+                }
+            }
+        }
+        binding.personalInfoEditTextNicknameEt.addTextChangedListener(textWatcher)
     }
 
     override fun onClick(v: View?) {
@@ -29,6 +56,7 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
                 hideKeyboard()
             }
             binding.personalInfoNextBtnTv -> {
+                setInfo()
                 moveNextPage()
             }
             binding.personalInfoCl -> {
@@ -37,8 +65,17 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
         }
     }
 
+
+
+    private fun setInfo() {
+        myActivity.gender = gender
+        myActivity.age = binding.personalInfoEditTextAgeEt.text.toString().toInt()
+        myActivity.height = binding.personalInfoEditTextHeightEt.text.toString().toInt()
+        myActivity.weight = binding.personalInfoEditTextWeightEt.text.toString().toInt()
+        myActivity.nickname = binding.personalInfoEditTextNicknameEt.text.toString()
+    }
+
     private fun moveNextPage() {
-        val myActivity = requireActivity() as InfoSelectActivity
         myActivity.getBinding().infoContentVp.currentItem = 1
     }
 
@@ -68,11 +105,6 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
                 || binding.personalInfoEditTextWeightEt.text.toString().isEmpty()
                 || gender == 0)
     }
-
-
-
-
-
 
     private fun womanButtonFun() {
         if (gender != WOMAN) {

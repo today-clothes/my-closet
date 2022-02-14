@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 class ApplicationClass : Application() {
     companion object{
-        const val X_ACCESS_TOKEN: String = "accessToken"         // JWT Token Key
+        const val X_ACCESS_TOKEN: String = "Authorization"         // JWT Token Key
         const val TAG: String = "MYCLOSET-APP"                      // Log, SharedPreference
         const val APP_DATABASE = "$TAG-DB"
 
@@ -25,8 +25,6 @@ class ApplicationClass : Application() {
         //여기서부터는 각 클래스에서 사용할 상수 선언
         const val MAN : Int = 1
         const val WOMAN : Int = 2
-
-
     }
 
     override fun onCreate() {
