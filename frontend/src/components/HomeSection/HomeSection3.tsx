@@ -9,12 +9,20 @@ import { media } from '@constants/theme';
 
 const Section = styled.section`
   display: flex;
-  justify-content: space-between;
   padding: 120px 40px;
+  flex-direction: column;
+  align-items: center;
+  img {
+    margin-bottom: 40px;
+  }
 
-  ${media.mobile} {
-    flex-direction: column;
-    align-items: center;
+  ${media.tablet} {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 120px 0;
+    img {
+      margin-bottom: 0;
+    }
   }
 `;
 
@@ -35,13 +43,14 @@ const TextSection = styled.article`
 `;
 
 const ImageSection = styled.article`
-  width: 50%;
+  width: 100%;
   img {
     width: 100%;
   }
-  ${media.mobile} {
-    width: 100%;
+  ${media.tablet} {
+    width: 50%;
     img {
+      width: 100%;
       margin-bottom: 50px;
     }
   }
