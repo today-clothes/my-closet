@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,13 +22,15 @@ import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.databinding.ActivityMainBinding
 import com.oclothes.mycloset.ui.main.closet.MainFragment
 import com.oclothes.mycloset.ui.main.mypage.MyPageFragment
+import com.oclothes.mycloset.ui.main.search.MainSearchFragment
 import com.oclothes.mycloset.ui.main.search.SearchFragment
+import com.oclothes.mycloset.utils.saveString
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
     lateinit var closet : MainFragment
-    lateinit var search : SearchFragment
+    lateinit var search : MainSearchFragment
     lateinit var mypage : MyPageFragment
     private var backPressedTime: Long = 0
     lateinit var filterActionActivityLauncher: ActivityResultLauncher<Intent>
@@ -71,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                             galleryFlag = true
                             this.detailImage = imageBitmap
                             closet.detail.currentClosetId = singleClosetCurrent.id
+                            closet.detail.currentClosetName = singleClosetCurrent.name
                         }
                     }
                 } catch (e: Exception) {
@@ -78,6 +82,9 @@ class MainActivity : AppCompatActivity() {
                 }
             } else if (it.resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_SHORT).show()
+                closet.detail.currentClosetId = singleClosetCurrent.id
+                closet.detail.currentClosetName = singleClosetCurrent.name
+                closet.singleCloset.currentCloset = singleClosetCurrent
                 galleryFailFlag = true
                 closet.getBinding().mainFragmentVp.currentItem = 1
             } else {
@@ -99,8 +106,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.searchFragment -> {
                     showFragment(search)
-
-                    currentPage  =1
+                    currentPage = 1
                     return@setOnItemSelectedListener true
                 }
 
@@ -130,28 +136,24 @@ class MainActivity : AppCompatActivity() {
 
     fun openGallery(){
         singleClosetCurrent = closet.singleCloset.currentCloset
-
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         filterActionActivityLauncher.launch(intent)
 
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-
-        outState.putString("currentCloset",Gson().toJson(singleClosetCurrent, Closet::class.java))
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        singleClosetCurrent = Gson().fromJson(savedInstanceState.getString("currentCloset"), Closet::class.java)
-
+    override fun onPause() {
+        super.onPause()
+        singleClosetCurrent?.let{
+            saveString("currentCloset", Gson().toJson(singleClosetCurrent, Closet::class.java))
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        com.oclothes.mycloset.utils.getString("currentCloset")?.let {
+            singleClosetCurrent = Gson().fromJson(it, Closet::class.java)
+        }
         if(galleryFlag) {
             closet.getBinding().mainFragmentVp.currentItem = 2
             closet.detail.setImage(this.detailImage!!)
@@ -162,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             closet.getBinding().mainFragmentVp.currentItem = 1
             closet.detail.currentClosetId = singleClosetCurrent.id
             closet.singleCloset.currentCloset = singleClosetCurrent
-            closet.singleCloset.setSingleCloset(singleClosetCurrent)
+            closet.singleCloset.isFailFromGallery = true
             galleryFailFlag = false
         }
     }
@@ -176,7 +178,7 @@ class MainActivity : AppCompatActivity() {
     private fun initFragment() {
         mypage = MyPageFragment()
         closet = MainFragment()
-        search = SearchFragment(this)
+        search = MainSearchFragment()
     }
 
     private fun initNavigation() {

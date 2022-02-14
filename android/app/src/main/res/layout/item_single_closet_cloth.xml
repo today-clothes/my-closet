@@ -32,16 +32,6 @@
         android:layout_marginStart="-5dp"
         android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/single_closet_cloth_like_btn_iv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/heart_unselected"
-        app:layout_constraintEnd_toEndOf="@id/single_closet_cloth_image_iv"
-        app:layout_constraintBottom_toBottomOf="@id/single_closet_cloth_image_iv"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        />
     
     <ImageView
         android:id="@+id/single_closet_cloth_selected_btn_iv"

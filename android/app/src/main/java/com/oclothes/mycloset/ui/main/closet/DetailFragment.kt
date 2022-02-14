@@ -21,19 +21,24 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.R
+import com.oclothes.mycloset.data.entities.Closet
 import com.oclothes.mycloset.data.entities.StyleInfo
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.data.entities.User
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
+import com.oclothes.mycloset.data.entities.remote.closet.ClosetService
 import com.oclothes.mycloset.data.entities.remote.style.StyleCreateView
 import com.oclothes.mycloset.data.entities.remote.style.StyleInfoView
+import com.oclothes.mycloset.data.entities.remote.style.StyleLockView
 import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.info.TagView
+import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.DetailTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
+import com.oclothes.mycloset.ui.main.closet.view.ClosetView
 import com.oclothes.mycloset.ui.main.closet.view.UserInfoView
 import com.oclothes.mycloset.utils.FormDataUtils
 import com.oclothes.mycloset.utils.FormDataUtils.asMultipart
@@ -51,11 +56,13 @@ import java.io.InputStream
 import java.net.URI
 
 class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate), UserInfoView, StyleInfoView, TagView,
-    StyleCreateView {
+    StyleCreateView, ClosetView, StyleLockView {
     var editMode = false
     var isEditable = false
     var mainImage : Bitmap? = null
     var currentClosetId = 0
+    var currentClosetName = ""
+    var currentCloth = 0
 
     lateinit var tagListAdapter: DetailTagListRvAdapter
     val tagListForAdapter = ArrayList<Tag>()
@@ -96,6 +103,8 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
     }
 
     fun fromCloset(id: Int){
+        editMode = false
+        currentCloth = id
         StyleService.getClothInfo(this, id)
         normalModeViewSet()
     }
@@ -185,15 +194,15 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
 
 
     private fun setClickListeners() {
+
         binding.detailSecondFilterImageIv.setOnClickListener {
             showTagSelect()
         }
         binding.detailMainBackBtnIv.setOnClickListener {
             f.getBinding().mainFragmentVp.currentItem = 1
-        }
-
-        binding.detailMainBackBtnIv.setOnClickListener {
-            f.getBinding().mainFragmentVp.currentItem = 1
+            if(editMode){
+                onEditDiscard()
+            }
         }
 
         mainImageView.setOnClickListener {
@@ -216,6 +225,10 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
             hideKeyboard()
         }
 
+        binding.detailSecondLockSwitchS.setOnClickListener {
+            lockCloth()
+        }
+
         binding.detailSecondLockSwitchS.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
             override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
                 if(p1){
@@ -225,6 +238,11 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
                 }
             }
         })
+    }
+
+    fun lockCloth(){
+        if(!editMode)
+            StyleService.lockCloth(this, currentCloth)
     }
 
     private fun setPanelView() {
@@ -245,13 +263,18 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
     fun onEditModeBegin() {
         editModeViewSet()
         detailTagRvAdapter.isEditOnDetail = true
+        editMode = true
 
     }
 
     fun onEditDiscard() {
         normalModeViewSet()
         detailTagRvAdapter.isEditOnDetail = false
-
+        if(f.singleCloset.isAllCloset) {
+            f.singleCloset.setAllCloset()
+        }else
+            f.singleCloset.setSingleCloset((requireActivity() as MainActivity).singleClosetCurrent)
+        f.getBinding().mainFragmentVp.currentItem = 1
     }
 
     fun onEditConfirm() {
@@ -266,17 +289,14 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
         binding.detailSecondEditBtnTv.visibility = View.GONE
         binding.detailSecondApplyTv.visibility = View.VISIBLE
         binding.detailSecondCancelTv.visibility = View.VISIBLE
-        binding.detailSecondEditBtnTv.visibility = View.GONE
-        binding.detailSecondInfoUserTv.text = ""
     }
 
     fun normalModeViewSet(){
         binding.detailSecondTitleEditEt.isEnabled = false
         binding.detailSecondInfoDetailEditEt.isEnabled = false
-        binding.detailSecondEditBtnTv.visibility = View.VISIBLE
+//        binding.detailSecondEditBtnTv.visibility = View.VISIBLE
         binding.detailSecondApplyTv.visibility = View.GONE
         binding.detailSecondCancelTv.visibility = View.GONE
-        binding.detailSecondEditBtnTv.visibility = View.VISIBLE
     }
 
     private fun hideKeyboard (){
@@ -295,18 +315,23 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
     override fun onInfoSuccess(styleinfo: StyleInfo) {
         binding.detailSecondTitleEditEt.setText(styleinfo.styleTitle)
         binding.detailSecondInfoDetailEditEt.setText(styleinfo.content)
-        binding.detailSecondInfoUserTv.text = "${styleinfo.updateAt.substring(2,3)}.${styleinfo.updateAt.substring(5,6)}.${styleinfo.updateAt.substring(8,9)}/${styleinfo.userName} ${styleinfo.height}cm ${styleinfo.weight}kg"
+        binding.detailSecondLockSwitchS.isChecked = styleinfo.locked
+
+        val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${styleinfo.imgUrl}", LazyHeaders.Builder()
+            .addHeader("Authorization", getJwt()!!)
+            .build())
+        Glide.with(this).load(glideUrl).into(binding.detailMainImageIv)
+
+
         tagListForAdapter.clear()
         tagListForAdapter.addAll(styleinfo.eventTags)
         tagListForAdapter.addAll(styleinfo.moodTags)
         tagListForAdapter.addAll(styleinfo.seasonTags)
         detailTagRvAdapter.notifyDataSetChanged()
-        showToast("상세정보 가져오기 성공이요 ^^")
 
     }
 
     override fun onInfoFailure() {
-        showToast("상세정보 가져오기 실패요 ^^")
     }
 
     fun updateList(selectedTag: ArrayList<Tag>) {
@@ -329,8 +354,10 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
 
     }
 
-    override fun onCreateSuccess(id: Int, url: String) {
-
+    override fun onCreateSuccess(closetId: Int, clothesId: Int,  url: String) {
+        currentClosetId = closetId
+        showToast("옷장에 옷이 등록되었습니다.")
+        ClosetService.getClosets(this)
     }
 
     override fun onCreateFailure(message: String) {
@@ -392,6 +419,32 @@ class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>
             moodAdapter.reset()
             seasonAdapter.reset()
         }
+    }
+
+    override fun onGetClosetsSuccess(data: ArrayList<Closet>) {
+        for (closet in data) {
+            if(closet.id == currentClosetId){
+                f.singleCloset.setSingleCloset(closet)
+                f.singleCloset.currentCloset = closet
+            }
+        }
+    }
+
+    override fun onGetClosetsFailure(code: Int, message: String) {
+
+    }
+
+    override fun onLockSuccess() {
+        if(binding.detailSecondLockSwitchS.isChecked){
+            showToast("사진이 잠겼습니다.")
+        }else {
+            showToast("사진 잠금이 풀렸습니다.")
+        }
+        f.singleCloset.setSingleCloset((requireActivity() as MainActivity).singleClosetCurrent)
+    }
+
+    override fun onLockFailure() {
+
     }
 
 }

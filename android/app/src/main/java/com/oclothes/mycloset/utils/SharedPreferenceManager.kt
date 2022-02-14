@@ -12,6 +12,16 @@ fun saveJwt(jwtToken: String) {
     editor.apply()
 }
 
+fun saveString(key : String, body : String){
+    val editor = mSharedPreferences.edit()
+    editor.putString(key, body)
+    editor.apply()
+}
+
+fun getString(key : String) : String?{
+    return mSharedPreferences.getString(key, null)
+}
+
 fun getJwt(): String? = mSharedPreferences.getString(X_ACCESS_TOKEN, null)
 
 fun deleteJwt(){

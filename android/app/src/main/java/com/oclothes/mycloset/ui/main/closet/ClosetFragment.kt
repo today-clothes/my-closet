@@ -155,10 +155,11 @@ class ClosetFragment (private val f : MainFragment): BaseFragment<FragmentCloset
 
     override fun onClosetDeleteSuccess() {
         ClosetService.getClosets(closetFragment)
+        showToast("옷장을 삭제했습니다.")
     }
 
     override fun onClosetDeleteFailure() {
-        showToast("옷장 삭제 실패")
+        showToast("옷장 안에 옷이 있어 삭제할 수 없습니다.")
     }
 
     override fun onClosetUpdateSuccess() {

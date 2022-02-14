@@ -4,12 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.databinding.ItemSearchedItemBinding
 import com.oclothes.mycloset.ui.main.search.SearchFragment
+import com.oclothes.mycloset.utils.getJwt
 import java.util.concurrent.CopyOnWriteArrayList
 
-class SearchStyleListRVAdapter (private val fragment : SearchFragment, private val styleList : CopyOnWriteArrayList<Style>) : RecyclerView.Adapter<SearchStyleListRVAdapter.ViewHolder>(){
+class SearchStyleListRVAdapter (private val fragment : SearchFragment, val styleList : ArrayList<Style>) : RecyclerView.Adapter<SearchStyleListRVAdapter.ViewHolder>(){
     interface MyItemClickListener{
         fun onItemClick(style: Style, position : Int)
     }
@@ -42,9 +45,11 @@ class SearchStyleListRVAdapter (private val fragment : SearchFragment, private v
 
     inner class ViewHolder(val binding: ItemSearchedItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
-            Glide.with(fragment.getBinding().searchMainRv)
-                .load(style.imgUrl)
-                .into(binding.searchItemClothImageIv)
+            val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${style.imgUrl}", LazyHeaders.Builder()
+                .addHeader("Authorization", getJwt()!!)
+                .build())
+            Glide.with(fragment).load(glideUrl).into(binding.searchItemClothImageIv)
+
         }
     }
 }

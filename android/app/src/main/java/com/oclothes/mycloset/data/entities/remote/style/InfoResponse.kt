@@ -17,5 +17,7 @@ data class InfoData(
     @SerializedName("weight") val weight : Int,
     @SerializedName("eventTags") val eventTags : ArrayList<Tag>,
     @SerializedName("moodTags") val moodTags : ArrayList<Tag>,
-    @SerializedName("seasonTags") val seasonTags : ArrayList<Tag>
+    @SerializedName("seasonTags") val seasonTags : ArrayList<Tag>,
+    @SerializedName("imgUrl") val imgUrl : String,
+    @SerializedName("locked") val locked : Boolean
 )

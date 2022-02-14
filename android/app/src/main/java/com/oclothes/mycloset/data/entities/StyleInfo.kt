@@ -10,5 +10,7 @@ data class StyleInfo(
     val weight : Int,
     val eventTags : ArrayList<Tag>,
     val moodTags : ArrayList<Tag>,
-    val seasonTags : ArrayList<Tag>
+    val seasonTags : ArrayList<Tag>,
+    val imgUrl : String,
+    val locked : Boolean
 )

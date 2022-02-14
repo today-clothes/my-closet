@@ -89,7 +89,7 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
         }
     }
 
-    fun initEditMode(position: Int) : Boolean{
+    private fun initEditMode(position: Int) : Boolean{
         if (!editMode) {
             editMode = true
             if(position != -1) {

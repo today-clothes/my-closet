@@ -41,6 +41,8 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     lateinit var seasonTags : ArrayList<Tag>
     lateinit var allTags : ArrayList<Tag>
     lateinit var currentCloset : Closet
+    var isFailFromGallery = false
+    var isAllCloset = false
     private lateinit var tagListAdapter : SingleClosetTagListRvAdapter
     private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
     private lateinit var myLayoutManager: GridLayoutManager
@@ -51,7 +53,9 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         initTags()
         initOnClickListeners()
         setSingleClosetRvAdapter()
-
+        if(isFailFromGallery){
+            setSingleCloset((requireActivity() as MainActivity).singleClosetCurrent)
+        }
     }
 
     private fun setSingleClosetRvAdapter() {
@@ -59,13 +63,10 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         clothListAdapter.setMyItemClickListener(object :
             SingleClosetStyleListRVAdapter.MyItemClickListener {
             override fun onItemClick(style: Style, position: Int) {
-//                openDetail(style)
-
 
             }
-
             override fun onRemoveStyle(position: Int) {
-                //이것도 아직은 미구현. 롱클릭 이벤트 먼저 구현예정
+
             }
 
             override fun onItemLongClick(style: Style) {
@@ -79,11 +80,9 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         myLayoutManager = GridLayoutManager(activity, 2)
         binding.singleClosetClothesListRv.layoutManager = myLayoutManager
         binding.singleClosetClothesListRv.adapter = clothListAdapter
-
         tagListAdapter = SingleClosetTagListRvAdapter(this, allTags)
         binding.singleClosetFilterListRv.adapter = tagListAdapter
-        binding.singleClosetFilterListRv.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.singleClosetFilterCountTv.text = "0"
     }
 
@@ -115,7 +114,12 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             }
 
             binding.singleClosetPlusIv ->{
-                (requireContext() as MainActivity).openGallery()
+                if(isAllCloset){
+                    showToast("전체 옷에서는 옷을 추가할 수 없습니다.")
+                }else{
+                    (requireContext() as MainActivity).openGallery()
+
+                }
             }
 
             binding.singleClosetFilterImageIv ->{
@@ -176,6 +180,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     }
 
     fun setSingleCloset(closet : Closet){
+        isAllCloset = false
         currentCloset = closet
         normalMode()
         binding.singleClosetTitleTv.text = closet.name
@@ -187,6 +192,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
     fun setAllCloset(){
         normalMode()
+        isAllCloset = true
         binding.singleClosetTitleTv.text = "모든 옷"
         val intMap = HashMap<String, Int>()
         intMap["page"] = 0
@@ -216,7 +222,7 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     override fun onGetTagsFailure(code: Int, message: String) {
     }
 
-    override fun onCreateSuccess(id: Int, url: String) {
+    override fun onCreateSuccess(closetId: Int, clothesId : Int,  url: String) {
 
     }
 

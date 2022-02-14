@@ -68,7 +68,7 @@ object StyleService {
                 when(response.code()) {
                     in 200..299 -> {
                         val resp = response.body()!!
-                        styleCreateView.onCreateSuccess(resp.data.clothesId, resp.data.imgUrl)
+                        styleCreateView.onCreateSuccess(resp.data.closetId, resp.data.clothesId ,resp.data.imgUrl)
                     }
                     else -> {
                         var errorBody: ErrorBody? =
@@ -97,7 +97,7 @@ object StyleService {
                 when(response.code()) {
                     in 200..299 -> {
                         resp.data.apply {
-                            val styleInfo = StyleInfo(content, height, styleTitle, updateAt, userName, weight, eventTags, moodTags, seasonTags)
+                            val styleInfo = StyleInfo(content, height, styleTitle, updateAt, userName, weight, eventTags, moodTags, seasonTags, imgUrl, locked)
                             styleInfoView.onInfoSuccess(styleInfo)
                         }
                     }
@@ -142,14 +142,14 @@ object StyleService {
                 val resp = response.body()!!
                 when(response.code()) {
                     in 200..299 -> {
-                        styleLockView.onSuccess()
+                        styleLockView.onLockSuccess()
                     }
                     else -> {
                     }
                 }
             }
             override fun onFailure(call: Call<LockResponse>, t: Throwable) {
-                styleLockView.onFailure()
+                styleLockView.onLockFailure()
             }
         })
     }
