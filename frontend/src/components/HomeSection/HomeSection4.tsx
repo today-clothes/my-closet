@@ -23,17 +23,21 @@ const Section = styled.section`
     line-height: 25px;
   }
   img {
-    width: 50%;
+    width: 100%;
     margin: 50px 0;
   }
-  ${media.mobile} {
+  .button-container {
+    display: flex;
+    flex-direction: column;
+  }
+  ${media.tablet} {
     img {
-      width: 100%;
+      width: 60%;
       margin-bottom: 50px;
     }
     .button-container {
-      display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      justify-content: center;
     }
   }
 `;
