@@ -72,10 +72,20 @@ const HomeSection1 = () => {
             </h2>
           </TextSection>
           <ButtonSection>
-            <RoundButton backgroundColor="#CCB0D5" color="#693686" size="large">
+            <RoundButton
+              backgroundColor="#CCB0D5"
+              color="#23272a"
+              hoverColor="#693686"
+              size="large"
+              fontWeight={600}
+            >
               Android용 다운로드
             </RoundButton>
-            <RoundButton backgroundColor="#693686" size="large">
+            <RoundButton
+              backgroundColor="#693686"
+              size="large"
+              fontWeight={600}
+            >
               웹브라우저에서 시작하기
             </RoundButton>
           </ButtonSection>

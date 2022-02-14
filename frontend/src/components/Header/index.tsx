@@ -21,7 +21,9 @@ const Header = () => {
         <img src={logo} alt="logo" />
       </LogoContainer>
       <div>
-        <RoundButton color="#8E5F9F">로그인</RoundButton>
+        <RoundButton color="#23272a" hoverColor="#8E5F9F">
+          로그인
+        </RoundButton>
       </div>
     </HeaderContainer>
   );

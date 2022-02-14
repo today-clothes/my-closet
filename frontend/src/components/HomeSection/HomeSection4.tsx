@@ -42,7 +42,11 @@ const HomeSection4 = () => {
             <img src={img} alt="section4 image" />
           </div>
           <div>
-            <RoundButton backgroundColor="#693686" size="large">
+            <RoundButton
+              backgroundColor="#693686"
+              size="large"
+              fontWeight={600}
+            >
               Android용 다운로드
             </RoundButton>
           </div>
