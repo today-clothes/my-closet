@@ -80,14 +80,9 @@ public abstract class ClothesDto {
         private String content;
         private String imgUrl;
         private LocalDateTime updateAt;
+        private boolean locked;
         private Set<TagDto.Response> seasonTags;
         private Set<TagDto.Response> eventTags;
         private Set<TagDto.Response> moodTags;
-
-        public void setUserInfo(User user){
-            this.userName = user.getNickname();
-            this.height = user.getPersonalInformation().getHeight();
-            this.weight = user.getPersonalInformation().getWeight();
-        }
     }
 }
