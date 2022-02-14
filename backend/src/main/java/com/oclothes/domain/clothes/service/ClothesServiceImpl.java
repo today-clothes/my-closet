@@ -122,19 +122,18 @@ public class ClothesServiceImpl implements ClothesService {
     }
 
     private ClothesResponse createClothesResponse(Clothes c, User user){
-        ClothesResponse response = ClothesResponse.builder()
+        return ClothesResponse.builder()
+                .userName(user.getNickname())
+                .weight(user.getPersonalInformation().getWeight())
+                .height(user.getPersonalInformation().getHeight())
                 .styleTitle(c.getStyleTitle())
                 .content(c.getContent())
                 .imgUrl(c.getImgUrl())
                 .updateAt(c.getUpdatedAt())
+                .locked(c.isLocked())
                 .seasonTags(mapSeasonTags(c.getSeasonTags()))
                 .moodTags(mapMoodTags(c.getMoodTags()))
                 .eventTags(mapEventTags(c.getEventTags())).build();
-
-        if(!SecurityUtils.getLoggedInUser().getId().equals(user.getId())){
-            response.setUserInfo(user);
-        }
-        return response;
     }
 
     private Set<TagDto.Response> mapSeasonTags(Set<ClothesSeasonTag> tag) {
