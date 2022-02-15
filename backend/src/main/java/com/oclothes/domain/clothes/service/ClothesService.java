@@ -17,7 +17,7 @@ public interface ClothesService {
 
     DefaultResponse changeLockStatus(Long id);
 
-    ClothesResponse getClothesDetails(Long id);
+    ClothesDetailResponse getClothesDetails(Long id);
 
     byte[] getImage(String url);
 

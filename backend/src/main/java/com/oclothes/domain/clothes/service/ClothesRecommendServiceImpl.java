@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ClothesRecommendServiceImpl implements ClothesRecommendService {
     private final ClothesRepository clothesRepository;
     private final ClothesMapper clothesMapper;
-    private final long numOfMoodTag = 12l;
+    private final long numOfMoodTag = 12L;
 
     @Getter
     @AllArgsConstructor
@@ -74,7 +74,7 @@ public class ClothesRecommendServiceImpl implements ClothesRecommendService {
     }
 
     private float calcSimilarity(Long style, Long user) {
-        final Long remove_one = (long)Math.pow(2, this.numOfMoodTag);
+        final long remove_one = (long) Math.pow(2, this.numOfMoodTag);
         int cnt_one_xnor = countOne((~(style ^ user)) + remove_one);
 
         return ((float) cnt_one_xnor / (float) this.numOfMoodTag);

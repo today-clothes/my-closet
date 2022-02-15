@@ -11,9 +11,7 @@ import com.oclothes.domain.clothes.exception.ClothesNotFoundException;
 import com.oclothes.domain.tag.dao.EventTagRepository;
 import com.oclothes.domain.tag.dao.MoodTagRepository;
 import com.oclothes.domain.tag.dao.SeasonTagRepository;
-import com.oclothes.domain.tag.dto.TagDto;
 import com.oclothes.domain.user.domain.User;
-import com.oclothes.global.config.security.util.SecurityUtils;
 import com.oclothes.global.dto.SliceDto;
 import com.oclothes.infra.file.FileService;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.oclothes.domain.clothes.dto.ClothesDto.*;
+import static com.oclothes.global.config.security.util.SecurityUtils.getLoggedInUser;
 import static java.util.Objects.isNull;
 
 @Transactional
@@ -65,20 +63,23 @@ public class ClothesServiceImpl implements ClothesService {
     @Override
     public SliceDto<SearchResponse> search(SearchRequest request, Pageable pageable) {
         return SliceDto.create(this.clothesRepository
-                .searchByTag(request, getUser(request), pageable)
-                .map(this::createSearchDtoResponse));
+                .searchByTag(request, this.existsKeywordThenReturnUserOrElseNull(request), pageable)
+                .map(this.clothesMapper::toSearchResponse));
     }
 
     @Override
     public DefaultResponse changeLockStatus(Long id) {
-        Clothes clothes = this.clothesRepository.findByIdAndUser(id, SecurityUtils.getLoggedInUser()).orElseThrow(ClothesNotFoundException::new);
-        return this.clothesMapper.toDefaultResponse(clothes.changeLockStatus());
+        return this.clothesMapper.toDefaultResponse(
+                this.clothesRepository.findByIdAndUser(id, getLoggedInUser())
+                        .orElseThrow(ClothesNotFoundException::new)
+                        .changeLockStatus());
     }
 
     @Override
-    public ClothesResponse getClothesDetails(Long id) {
-        Clothes clothes = this.clothesRepository.findClothesDetails(id).orElseThrow(ClothesNotFoundException::new);
-        return createClothesResponse(clothes, clothes.getUser());
+    public ClothesDetailResponse getClothesDetails(Long id) {
+        return this.clothesMapper.toClothesResponse(
+                this.clothesRepository.findClothesDetails(id)
+                        .orElseThrow(ClothesNotFoundException::new));
     }
 
     @Override
@@ -104,47 +105,7 @@ public class ClothesServiceImpl implements ClothesService {
         return this.clothesRepository.findById(id).orElseThrow(ClothesNotFoundException::new);
     }
 
-    private User getUser(SearchRequest req){
-        return isNull(req) || isNull(req.getKeyword()) ? SecurityUtils.getLoggedInUser() : null;
-    }
-
-    private SearchResponse createSearchDtoResponse(Clothes c) {
-        return new SearchResponse(
-                c.getCloset().getId(),
-                c.getId(),
-                c.isLocked(),
-                mapSeasonTags(c.getSeasonTags()),
-                mapEventTags(c.getEventTags()),
-                mapMoodTags(c.getMoodTags()),
-                c.getStyleTitle(),
-                c.getImgUrl(),
-                c.getUpdatedAt());
-    }
-
-    private ClothesResponse createClothesResponse(Clothes c, User user){
-        return ClothesResponse.builder()
-                .userName(user.getNickname())
-                .weight(user.getPersonalInformation().getWeight())
-                .height(user.getPersonalInformation().getHeight())
-                .styleTitle(c.getStyleTitle())
-                .content(c.getContent())
-                .imgUrl(c.getImgUrl())
-                .updateAt(c.getUpdatedAt())
-                .locked(c.isLocked())
-                .seasonTags(mapSeasonTags(c.getSeasonTags()))
-                .moodTags(mapMoodTags(c.getMoodTags()))
-                .eventTags(mapEventTags(c.getEventTags())).build();
-    }
-
-    private Set<TagDto.Response> mapSeasonTags(Set<ClothesSeasonTag> tag) {
-        return tag.stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet());
-    }
-
-    private Set<TagDto.Response> mapMoodTags(Set<ClothesMoodTag> tag) {
-        return tag.stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet());
-    }
-
-    private Set<TagDto.Response> mapEventTags(Set<ClothesEventTag> tag) {
-        return tag.stream().map(t -> new TagDto.Response(t.getTag().getId(), t.getTag().getName())).collect(Collectors.toSet());
+    private User existsKeywordThenReturnUserOrElseNull(SearchRequest req) {
+        return isNull(req) || isNull(req.getKeyword()) ? getLoggedInUser() : null;
     }
 }

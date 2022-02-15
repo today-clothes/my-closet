@@ -150,7 +150,7 @@ class ClothesApiControllerTest extends BaseWebMvcTest {
     @Test
     void getClothesDetailsTest() throws Exception {
         final Long id = 1L;
-        final ClothesDto.ClothesResponse dto = ClothesDto.ClothesResponse.builder().styleTitle("title").content("content").build();
+        final ClothesDto.ClothesDetailResponse dto = ClothesDto.ClothesDetailResponse.builder().styleTitle("title").content("content").build();
 
         when(clothesService.getClothesDetails(any())).thenReturn(dto);
 

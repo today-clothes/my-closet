@@ -2,10 +2,10 @@ package com.oclothes.domain.clothes.dto;
 
 import com.oclothes.domain.clothes.domain.Clothes;
 import com.oclothes.global.config.security.util.SecurityUtils;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadRequest;
-import static com.oclothes.domain.clothes.dto.ClothesDto.ClothesUploadResponse;
+import static com.oclothes.domain.clothes.dto.ClothesDto.*;
 
 @Mapper(componentModel = "spring", uses = ClothesMapperSupport.class, imports = SecurityUtils.class)
 public interface ClothesMapper {
@@ -21,8 +21,19 @@ public interface ClothesMapper {
 
     @Mapping(target = "closetId", source = "clothes.closet.id")
     @Mapping(target = "clothesId", source = "clothes.id")
-    ClothesDto.SearchResponse toSearchResponse(Clothes clothes);
+    @Mapping(target = "seasonTags", source = "clothes.seasonTags", qualifiedByName = "mapToTagDto")
+    @Mapping(target = "eventTags", source = "clothes.eventTags", qualifiedByName = "mapToTagDto")
+    @Mapping(target = "moodTags", source = "clothes.moodTags", qualifiedByName = "mapToTagDto")
+    SearchResponse toSearchResponse(Clothes clothes);
 
     @Mapping(target = "clothesId", source = "clothes.id")
-    ClothesDto.DefaultResponse toDefaultResponse(Clothes clothes);
+    DefaultResponse toDefaultResponse(Clothes clothes);
+
+    @Mapping(target = "userName", source = "clothes.user.nickname")
+    @Mapping(target = "weight", source = "clothes.user.personalInformation.weight")
+    @Mapping(target = "height", source = "clothes.user.personalInformation.height")
+    @Mapping(target = "seasonTags", source = "clothes.seasonTags", qualifiedByName = "mapToTagDto")
+    @Mapping(target = "eventTags", source = "clothes.eventTags", qualifiedByName = "mapToTagDto")
+    @Mapping(target = "moodTags", source = "clothes.moodTags", qualifiedByName = "mapToTagDto")
+    ClothesDetailResponse toClothesResponse(Clothes clothes);
 }

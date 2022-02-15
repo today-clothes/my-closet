@@ -1,7 +1,6 @@
 package com.oclothes.domain.clothes.dto;
 
 import com.oclothes.domain.tag.dto.TagDto;
-import com.oclothes.domain.user.domain.User;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,7 +58,7 @@ public abstract class ClothesDto {
         private final Set<TagDto.Response> moodTags;
         private final String styleTitle;
         private final String imgUrl;
-        private final LocalDateTime updateAt;
+        private final LocalDateTime updatedAt;
     }
 
     @Getter
@@ -72,14 +71,14 @@ public abstract class ClothesDto {
     @Getter
     @Setter
     @Builder
-    public static class ClothesResponse {
+    public static class ClothesDetailResponse {
         private String userName;
         private Integer height;
         private Integer weight;
         private String styleTitle;
         private String content;
         private String imgUrl;
-        private LocalDateTime updateAt;
+        private LocalDateTime updatedAt;
         private boolean locked;
         private Set<TagDto.Response> seasonTags;
         private Set<TagDto.Response> eventTags;

@@ -5,7 +5,7 @@ data class StyleInfo(
     val content : String,
     val height : Int,
     val styleTitle: String? = "임시이름",
-    val updateAt : String,
+    val updatedAt : String,
     val userName : String,
     val weight : Int,
     val eventTags : ArrayList<Tag>,

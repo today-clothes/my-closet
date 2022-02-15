@@ -28,7 +28,7 @@ object StyleService {
                         val styles = ArrayList<Style>()
                         for (style in resp.data.contents) {
                             style.apply {
-                                styles.add(Style(closetId, clothesId, imgUrl, locked, "", styleTitle ,eventTags, moodTags, seasonTags, updateAt))
+                                styles.add(Style(closetId, clothesId, imgUrl, locked, "", styleTitle ,eventTags, moodTags, seasonTags, updatedAt))
                             }
                         }
                         if(resp.data.hasNext){
@@ -97,7 +97,7 @@ object StyleService {
                 when(response.code()) {
                     in 200..299 -> {
                         resp.data.apply {
-                            val styleInfo = StyleInfo(content, height, styleTitle, updateAt, userName, weight, eventTags, moodTags, seasonTags, imgUrl, locked)
+                            val styleInfo = StyleInfo(content, height, styleTitle, updatedAt, userName, weight, eventTags, moodTags, seasonTags, imgUrl, locked)
                             styleInfoView.onInfoSuccess(styleInfo)
                         }
                     }

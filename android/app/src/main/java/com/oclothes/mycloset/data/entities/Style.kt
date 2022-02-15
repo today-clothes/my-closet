@@ -11,6 +11,6 @@ data class Style(
     val eventTags : ArrayList<Tag>,
     val moodTags : ArrayList<Tag>,
     val seasonTags : ArrayList<Tag>,
-    val updateAt : String = "",
+    val updatedAt : String = "",
     var isSelected : Boolean = false
 )

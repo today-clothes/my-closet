@@ -35,7 +35,7 @@ class SearchDetailFragment(val f : MainSearchFragment) : BaseFragment<FragmentSe
     override fun onInfoSuccess(styleInfo: StyleInfo) {
         binding.searchDetailSecondTitleEditEt.setText(styleInfo.styleTitle)
         binding.searchDetailSecondInfoSearchDetailEditEt.setText(styleInfo.content)
-        binding.searchDetailSecondInfoUserTv.text = "${styleInfo.updateAt.substring(0,10)}/${styleInfo.userName} ${styleInfo.height}cm ${styleInfo.weight}kg"
+        binding.searchDetailSecondInfoUserTv.text = "${styleInfo.updatedAt.substring(0,10)}/${styleInfo.userName} ${styleInfo.height}cm ${styleInfo.weight}kg"
 
         val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${styleInfo.imgUrl}", LazyHeaders.Builder()
             .addHeader("Authorization", getJwt()!!)
