@@ -12,7 +12,7 @@ data class InfoData(
     @SerializedName("content") val content : String,
     @SerializedName("height") val height : Int,
     @SerializedName("styleTitle") val styleTitle: String?,
-    @SerializedName("updateAt") val updateAt : String,
+    @SerializedName("updatedAt") val updatedAt : String,
     @SerializedName("userName") val userName : String,
     @SerializedName("weight") val weight : Int,
     @SerializedName("eventTags") val eventTags : ArrayList<Tag>,

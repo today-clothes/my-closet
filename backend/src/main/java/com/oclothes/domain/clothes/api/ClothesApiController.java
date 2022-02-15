@@ -50,7 +50,7 @@ public class ClothesApiController {
 
     @ApiOperation(value = "옷 상세정보", notes = "옷 상세정보 반환 API")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto<ClothesDto.ClothesResponse>> getClothesDetails(@PathVariable Long id){
+    public ResponseEntity<ResponseDto<ClothesDto.ClothesDetailResponse>> getClothesDetails(@PathVariable Long id) {
         return ResponseEntity.ok(ResponseDto.create(CLOTHES_DETAILS_SUCCESS.getMessage(), clothesService.getClothesDetails(id)));
     }
 

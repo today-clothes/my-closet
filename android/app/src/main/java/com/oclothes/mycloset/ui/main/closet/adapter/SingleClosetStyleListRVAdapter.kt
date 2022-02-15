@@ -134,7 +134,7 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
     inner class ViewHolder(val binding: ItemSingleClosetClothBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
             binding.singleClosetClothNameTv.text = style.styleTitle
-            binding.singleClosetClothClosetTextBodyTv.text = style.updateAt.substring(0, 10)
+            binding.singleClosetClothClosetTextBodyTv.text = style.updatedAt.substring(0, 10)
             if(style.locked){
                 binding.singleClosetLockIconIv.visibility = View.VISIBLE
             }else{
