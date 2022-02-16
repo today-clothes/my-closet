@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@id/login_sign_up_agree_all_cb"
         app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_password_confirm_et"
         android:layout_marginStart="40dp"
-        android:text="이용약관 동의"/>
+        android:text="이용약관 동의 (필수)"/>
     
     <CheckBox
         android:id="@+id/login_sign_up_agree_2_cb"
@@ -109,7 +109,7 @@
         app:layout_constraintTop_toBottomOf="@id/login_sign_up_agree_1_cb"
         app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_password_confirm_et"
         android:layout_marginStart="40dp"
-        android:text="개인정보 취급방침 동의"/>
+        android:text="개인정보 취급방침 동의 (필수)"/>
     
     <CheckBox
         android:id="@+id/login_sign_up_agree_3_cb"
@@ -118,7 +118,7 @@
         app:layout_constraintTop_toBottomOf="@id/login_sign_up_agree_2_cb"
         app:layout_constraintStart_toStartOf="@id/login_sign_up_edit_text_password_confirm_et"
         android:layout_marginStart="40dp"
-        android:text="마케팅 정보 수신 동의"/>
+        android:text="마케팅 정보 수신 동의 (선택)"/>
     
     
     <TextView

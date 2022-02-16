@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken
 import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.data.entities.ErrorBody
 import com.oclothes.mycloset.data.entities.Tag
-import com.oclothes.mycloset.ui.info.TagView
+import com.oclothes.mycloset.ui.signup.TagView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

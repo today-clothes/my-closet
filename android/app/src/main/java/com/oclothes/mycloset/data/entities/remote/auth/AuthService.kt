@@ -7,7 +7,7 @@ import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.ApplicationClass.Companion.retrofit
 import com.oclothes.mycloset.data.entities.ErrorBody
 import com.oclothes.mycloset.data.entities.User
-import com.oclothes.mycloset.ui.info.SignUpView
+import com.oclothes.mycloset.ui.signup.SignUpView
 import com.oclothes.mycloset.ui.login.login.LoginView
 import com.oclothes.mycloset.ui.main.closet.view.UserInfoView
 import com.oclothes.mycloset.ui.splash.SplashView
@@ -19,6 +19,7 @@ import retrofit2.Response
 object AuthService {
     val gson = Gson()
     val type = object : TypeToken<ErrorBody>() {}.type
+
     fun signUp(signUpView: SignUpView, signUpDto: SignUpDto) {
         val authService = retrofit.create(AuthRetrofitInterface::class.java)
         signUpView.onSignUpLoading()
@@ -38,7 +39,6 @@ object AuthService {
                             signUpView.onSignUpFailure(response.code(), errorBody.errorMessage)
                             return
                         }
-                        signUpView.onSignUpFailure(400, "뭔가 에러가 발생한 것 같습니다.")
                     }
                 }
             }
@@ -60,7 +60,7 @@ object AuthService {
                         return
                     }
                     401 ->{
-                        loginView.onLoginFailure(response.code(), "로그인 미인증 에러")
+                        loginView.onLoginFailure(response.code(), "이메일 미인증 에러")
                     }
                     else->{
                         var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
@@ -68,7 +68,6 @@ object AuthService {
                             loginView.onLoginFailure(response.code(), errorBody.errorMessage)
                             return
                         }
-                        loginView.onLoginFailure(400, "알 수 없는 오류")
                     }
                 }
             }
@@ -78,7 +77,6 @@ object AuthService {
             }
         })
     }
-
     fun autoLogin(splashView: SplashView) {
         val authService = retrofit.create(AuthRetrofitInterface::class.java)
         splashView.onAutoLoginLoading()
@@ -87,29 +85,24 @@ object AuthService {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     when(response.code()){
                         200->{
-                            splashView.onAutoLoginSuccess(response.body()!!.data.jwt)
+                            val resp = response.body()!!
+                            splashView.onAutoLoginSuccess(resp.data.jwt)
                             return
-                        }
-                        401 ->{
-                            splashView.onAutoLoginFailure(response.code(), "로그인 미인증 에러")
                         }
                         else->{
                             var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
                             if (errorBody != null) {
                                 splashView.onAutoLoginFailure(response.code(), errorBody.errorMessage)
-                                return
                             }
-                            splashView.onAutoLoginFailure(400, "알 수 없는 오류")
                         }
                     }
                 }
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Log.d("$TAG/API-ERROR", t.message.toString())
-                    splashView.onAutoLoginFailure(400, "자동 로그인에 실패했습니다..")
+                    splashView.onAutoLoginFailure(400, "네트워크 오류가 발생했습니다.")
                 }
             })
         }
-        splashView.onAutoLoginFailure(1000, "")
     }
 
     fun getUserInfo(userInfoView: UserInfoView){

@@ -1,4 +1,4 @@
-package com.oclothes.mycloset.ui.info
+package com.oclothes.mycloset.ui.signup
 
 import com.oclothes.mycloset.data.entities.Tag
 import java.util.ArrayList

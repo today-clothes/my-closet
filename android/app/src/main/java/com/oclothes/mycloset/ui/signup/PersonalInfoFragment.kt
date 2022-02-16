@@ -1,9 +1,10 @@
-package com.oclothes.mycloset.ui.info
+package com.oclothes.mycloset.ui.signup
 
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.oclothes.mycloset.ApplicationClass.Companion.MAN
 import com.oclothes.mycloset.ApplicationClass.Companion.WOMAN
@@ -13,16 +14,22 @@ import com.oclothes.mycloset.ui.BaseFragment
 
 class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentPersonalInfoBinding::inflate), View.OnClickListener{
     private var gender = 0
-    lateinit var myActivity : InfoSelectActivity
+    lateinit var myActivity : SignUpActivity
+    private var ageFilled = false
+    private var heightFilled = false
+    private var weightFilled = false
+    private var nicknameFilled = false
+
     override fun initAfterBinding() {
         initListener()
         setTextWatcher()
-        myActivity = requireActivity() as InfoSelectActivity
+        myActivity = requireActivity() as SignUpActivity
         binding.personalInfoSelectionManTv.performClick()
+        (activity as SignUpActivity).window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
     private fun setTextWatcher() {
-        val textWatcher = object : TextWatcher {
+        val ageWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -30,26 +37,76 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
             }
 
             override fun afterTextChanged(e: Editable?) {
-                if (e!!.length >= 2) {
-                    binding.personalInfoNextBtnTv.isClickable = true
-                    binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
-                } else {
-                    binding.personalInfoNextBtnTv.isClickable = false
-                    binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
-                }
+                ageFilled = e!!.isNotEmpty()
+                setNextButtonState()
             }
         }
-        binding.personalInfoEditTextNicknameEt.addTextChangedListener(textWatcher)
+
+        val heightWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(e: Editable?) {
+                heightFilled = e!!.isNotEmpty()
+                setNextButtonState()
+            }
+        }
+
+        val weightWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(e: Editable?) {
+                weightFilled = e!!.isNotEmpty()
+                setNextButtonState()
+            }
+        }
+
+        val nicknameWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(e: Editable?) {
+                nicknameFilled = e!!.isNotEmpty()
+                setNextButtonState()
+            }
+        }
+        binding.personalInfoEditTextAgeEt.addTextChangedListener(ageWatcher)
+        binding.personalInfoEditTextHeightEt.addTextChangedListener(heightWatcher)
+        binding.personalInfoEditTextWeightEt.addTextChangedListener(weightWatcher)
+        binding.personalInfoEditTextNicknameEt.addTextChangedListener(nicknameWatcher)
+    }
+
+    private fun setNextButtonState(){
+        if(ageFilled && heightFilled && weightFilled && nicknameFilled && gender != 0){
+            binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
+            binding.personalInfoNextBtnTv.isClickable = true
+        }
+        else{
+            binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
+            binding.personalInfoNextBtnTv.isClickable = false
+        }
     }
 
     override fun onClick(v: View?) {
         when (v) {
             binding.personalInfoSelectionManTv -> {
                 manButtonFun()
+                setNextButtonState()
             }
 
             binding.personalInfoSelectionWomanTv -> {
                 womanButtonFun()
+                setNextButtonState()
             }
 
             binding.personalInfoBackgroundCl -> {
@@ -57,7 +114,9 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
             }
             binding.personalInfoNextBtnTv -> {
                 setInfo()
-                moveNextPage()
+                hideKeyboard()
+                myActivity.getBinding().infoContentVp.currentItem = 2
+
             }
             binding.personalInfoCl -> {
                 hideKeyboard()
@@ -65,18 +124,12 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
         }
     }
 
-
-
     private fun setInfo() {
         myActivity.gender = gender
         myActivity.age = binding.personalInfoEditTextAgeEt.text.toString().toInt()
         myActivity.height = binding.personalInfoEditTextHeightEt.text.toString().toInt()
         myActivity.weight = binding.personalInfoEditTextWeightEt.text.toString().toInt()
         myActivity.nickname = binding.personalInfoEditTextNicknameEt.text.toString()
-    }
-
-    private fun moveNextPage() {
-        myActivity.getBinding().infoContentVp.currentItem = 1
     }
 
     private fun initListener() {
@@ -87,44 +140,25 @@ class PersonalInfoFragment : BaseFragment<FragmentPersonalInfoBinding>(FragmentP
         binding.personalInfoNextBtnTv.setOnClickListener(this)
     }
 
-
-
-    private fun deactivateNextButton() {
-        binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
-        binding.personalInfoNextBtnTv.isClickable = false
-    }
-
-    private fun activateNextButton() {
-        binding.personalInfoNextBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
-        binding.personalInfoNextBtnTv.isClickable = true
-    }
-
-    private fun checkButtonActive() : Boolean{
-        return !(binding.personalInfoEditTextAgeEt.text.toString().isEmpty()
-                || binding.personalInfoEditTextHeightEt.text.toString().isEmpty()
-                || binding.personalInfoEditTextWeightEt.text.toString().isEmpty()
-                || gender == 0)
-    }
-
     private fun womanButtonFun() {
-        if (gender != WOMAN) {
+        gender = if (gender != WOMAN) {
             binding.personalInfoSelectionWomanTv.setBackgroundResource(R.drawable.personal_info_gender_active)
             binding.personalInfoSelectionManTv.setBackgroundResource(R.drawable.personal_info_edit_text_background)
-            gender = WOMAN
+            WOMAN
         } else {
             binding.personalInfoSelectionWomanTv.setBackgroundResource(R.drawable.personal_info_edit_text_background)
-            gender = 0
+            0
         }
     }
 
     private fun manButtonFun() {
-        if (gender != MAN) {
+        gender = if (gender != MAN) {
             binding.personalInfoSelectionManTv.setBackgroundResource(R.drawable.personal_info_gender_active)
             binding.personalInfoSelectionWomanTv.setBackgroundResource(R.drawable.personal_info_edit_text_background)
-            gender = MAN
+            MAN
         } else {
             binding.personalInfoSelectionManTv.setBackgroundResource(R.drawable.personal_info_edit_text_background)
-            gender = 0
+            0
         }
     }
 

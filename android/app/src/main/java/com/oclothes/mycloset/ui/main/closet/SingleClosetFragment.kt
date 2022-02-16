@@ -6,10 +6,8 @@ import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +22,7 @@ import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentSingleClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
-import com.oclothes.mycloset.ui.info.TagView
+import com.oclothes.mycloset.ui.signup.TagView
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetStyleListRVAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter

@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/style_info_cl"
         android:layout_width="0dp"
-        android:layout_height="500dp"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/style_info_main_tv"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,8 +61,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/style_info_tag_list_rv"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/style_info_logo_iv"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -87,6 +87,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
