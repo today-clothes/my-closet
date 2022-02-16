@@ -35,7 +35,7 @@ public class RestControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ExceptionResponse.create(exception.getMessage()));
     }
 
-    @ExceptionHandler({ExpiredJwtException.class, UserStatusException.class})
+    @ExceptionHandler({ExpiredJwtException.class, UserStatusException.class, AuthorityException.class})
     public ResponseEntity<ExceptionResponse> expiredJwtExceptionHandle(Exception exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionResponse.create(exception.getMessage()));
     }
