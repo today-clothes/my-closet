@@ -1,6 +1,7 @@
 package com.oclothes.domain.clothes.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.clothes.exception.ClothesAccessDeniedException;
 import com.oclothes.domain.tag.domain.EventTag;
 import com.oclothes.domain.tag.domain.MoodTag;
 import com.oclothes.domain.tag.domain.SeasonTag;
@@ -82,6 +83,13 @@ public class Clothes extends BaseEntity {
 
     public Clothes addAllMoodTags(List<MoodTag> tags) {
         this.moodTags.addAll(tags.stream().map(tag -> new ClothesMoodTag(this, tag)).collect(Collectors.toList()));
+        return this;
+    }
+
+    public Clothes validateAuthority(User user) {
+        if (this.locked && !this.user.getId().equals(user.getId())) {
+            throw new ClothesAccessDeniedException();
+        }
         return this;
     }
 }

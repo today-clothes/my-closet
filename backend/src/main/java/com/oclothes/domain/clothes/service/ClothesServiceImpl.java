@@ -70,7 +70,8 @@ public class ClothesServiceImpl implements ClothesService {
     public ClothesDetailResponse getClothesDetails(Long id) {
         return this.clothesMapper.toClothesDetailResponse(
                 this.clothesRepository.findClothesDetails(id)
-                        .orElseThrow(ClothesNotFoundException::new));
+                        .orElseThrow(ClothesNotFoundException::new)
+                        .validateAuthority(getLoggedInUser()));
     }
 
     @Override
