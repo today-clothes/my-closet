@@ -21,9 +21,7 @@ public interface ClothesMapper {
 
     @Mapping(target = "closetId", source = "clothes.closet.id")
     @Mapping(target = "clothesId", source = "clothes.id")
-    @Mapping(target = "seasonTags", source = "clothes.seasonTags", qualifiedByName = "mapToTagDto")
-    @Mapping(target = "eventTags", source = "clothes.eventTags", qualifiedByName = "mapToTagDto")
-    @Mapping(target = "moodTags", source = "clothes.moodTags", qualifiedByName = "mapToTagDto")
+    @MapToTagDto
     SearchResponse toSearchResponse(Clothes clothes);
 
     @Mapping(target = "clothesId", source = "clothes.id")
@@ -32,8 +30,7 @@ public interface ClothesMapper {
     @Mapping(target = "userName", source = "clothes.user.nickname")
     @Mapping(target = "weight", source = "clothes.user.personalInformation.weight")
     @Mapping(target = "height", source = "clothes.user.personalInformation.height")
-    @Mapping(target = "seasonTags", source = "clothes.seasonTags", qualifiedByName = "mapToTagDto")
-    @Mapping(target = "eventTags", source = "clothes.eventTags", qualifiedByName = "mapToTagDto")
-    @Mapping(target = "moodTags", source = "clothes.moodTags", qualifiedByName = "mapToTagDto")
-    ClothesDetailResponse toClothesResponse(Clothes clothes);
+    @MapToTagDto
+    ClothesDetailResponse toClothesDetailResponse(Clothes clothes);
+
 }

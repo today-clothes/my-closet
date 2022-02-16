@@ -3,9 +3,6 @@ package com.oclothes.domain.clothes.service;
 import com.oclothes.domain.closet.domain.Closet;
 import com.oclothes.domain.clothes.dao.ClothesRepository;
 import com.oclothes.domain.clothes.domain.Clothes;
-import com.oclothes.domain.clothes.domain.ClothesEventTag;
-import com.oclothes.domain.clothes.domain.ClothesMoodTag;
-import com.oclothes.domain.clothes.domain.ClothesSeasonTag;
 import com.oclothes.domain.clothes.dto.ClothesMapper;
 import com.oclothes.domain.clothes.exception.ClothesNotFoundException;
 import com.oclothes.domain.tag.dao.EventTagRepository;
@@ -47,17 +44,11 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public ClothesUploadResponse save(ClothesUploadRequest request) {
-        final Clothes clothes = this.clothesRepository.save(this.clothesMapper.toEntity(request));
-        final List<ClothesSeasonTag> clothesSeasonTags = this.seasonTagRepository.findAllById(request.getSeasonIds()).stream()
-                .map(t -> new ClothesSeasonTag(clothes, t)).collect(Collectors.toList());
-        final List<ClothesEventTag> eventTags = this.eventTagRepository.findAllById(request.getEventIds()).stream()
-                .map(t -> new ClothesEventTag(clothes, t)).collect(Collectors.toList());
-        final List<ClothesMoodTag> moodTags = this.moodTagRepository.findAllById(request.getMoodIds()).stream()
-                .map(t -> new ClothesMoodTag(clothes, t)).collect(Collectors.toList());
-        clothes.getSeasonTags().addAll(clothesSeasonTags);
-        clothes.getEventTags().addAll(eventTags);
-        clothes.getMoodTags().addAll(moodTags);
-        return this.clothesMapper.toUploadResponse(clothes);
+        return this.clothesMapper.toUploadResponse(
+                this.clothesRepository.save(this.clothesMapper.toEntity(request))
+                        .addAllSeasonTags(this.seasonTagRepository.findAllById(request.getSeasonIds()))
+                        .addAllEventTags(this.eventTagRepository.findAllById(request.getEventIds()))
+                        .addAllMoodTags(this.moodTagRepository.findAllById(request.getMoodIds())));
     }
 
     @Override
@@ -77,7 +68,7 @@ public class ClothesServiceImpl implements ClothesService {
 
     @Override
     public ClothesDetailResponse getClothesDetails(Long id) {
-        return this.clothesMapper.toClothesResponse(
+        return this.clothesMapper.toClothesDetailResponse(
                 this.clothesRepository.findClothesDetails(id)
                         .orElseThrow(ClothesNotFoundException::new));
     }

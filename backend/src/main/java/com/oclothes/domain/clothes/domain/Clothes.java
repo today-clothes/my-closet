@@ -1,6 +1,9 @@
 package com.oclothes.domain.clothes.domain;
 
 import com.oclothes.domain.closet.domain.Closet;
+import com.oclothes.domain.tag.domain.EventTag;
+import com.oclothes.domain.tag.domain.MoodTag;
+import com.oclothes.domain.tag.domain.SeasonTag;
 import com.oclothes.domain.user.domain.User;
 import com.oclothes.global.entity.BaseEntity;
 import lombok.Builder;
@@ -10,8 +13,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -60,8 +65,23 @@ public class Clothes extends BaseEntity {
         this.closet = closet;
     }
 
-    public Clothes changeLockStatus(){
+    public Clothes changeLockStatus() {
         this.locked = !this.locked;
+        return this;
+    }
+
+    public Clothes addAllSeasonTags(List<SeasonTag> tags) {
+        this.seasonTags.addAll(tags.stream().map(tag -> new ClothesSeasonTag(this, tag)).collect(Collectors.toList()));
+        return this;
+    }
+
+    public Clothes addAllEventTags(List<EventTag> tags) {
+        this.eventTags.addAll(tags.stream().map(tag -> new ClothesEventTag(this, tag)).collect(Collectors.toList()));
+        return this;
+    }
+
+    public Clothes addAllMoodTags(List<MoodTag> tags) {
+        this.moodTags.addAll(tags.stream().map(tag -> new ClothesMoodTag(this, tag)).collect(Collectors.toList()));
         return this;
     }
 }
