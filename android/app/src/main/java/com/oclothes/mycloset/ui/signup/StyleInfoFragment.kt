@@ -1,23 +1,26 @@
-package com.oclothes.mycloset.ui.info
+package com.oclothes.mycloset.ui.signup
 
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
-import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentStyleInfoBinding
 import com.oclothes.mycloset.ui.BaseFragment
-import com.oclothes.mycloset.ui.info.adapter.InfoStyleRvAdapter
+import com.oclothes.mycloset.ui.signup.adapter.InfoStyleRvAdapter
 
 class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleInfoBinding::inflate), TagView{
-    private lateinit var tags : ArrayList<Tag>
+    var tags = ArrayList<Tag>()
     lateinit var rvAdapter: InfoStyleRvAdapter
-    lateinit var myActivity : InfoSelectActivity
+    lateinit var myActivity : SignUpActivity
 
     override fun initAfterBinding() {
         init()
         initRvAdapter()
+        setOnClickListeners()
+    }
+
+    private fun setOnClickListeners() {
         binding.styleInfoNextBtnTv.setOnClickListener {
             for (selectedTag in rvAdapter.getSelectedTags()) {
                 myActivity.tagList.add(selectedTag.id)
@@ -28,20 +31,16 @@ class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleIn
     }
 
     private fun initRvAdapter() {
-
+        rvAdapter = InfoStyleRvAdapter(tags, this)
         binding.styleInfoTagListRv.adapter = rvAdapter
-
         val gridLayoutManager = GridLayoutManager(activity, 2)
         binding.styleInfoTagListRv.layoutManager = gridLayoutManager
     }
 
     private fun init(){
-        tags = ArrayList<Tag>()
-        rvAdapter = InfoStyleRvAdapter(tags, this)
-        TagService.getTags(this)
         binding.styleInfoNextBtnTv.isEnabled = false
-        myActivity = requireActivity() as InfoSelectActivity
-
+        TagService.getTags(this)
+        myActivity = requireActivity() as SignUpActivity
     }
 
     override fun onGetTagsSuccess(
@@ -54,7 +53,7 @@ class StyleInfoFragment : BaseFragment<FragmentStyleInfoBinding>(FragmentStyleIn
     }
 
     override fun onGetTagsFailure(code: Int, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        showToast(message)
     }
 
     fun getBinding() : FragmentStyleInfoBinding = binding

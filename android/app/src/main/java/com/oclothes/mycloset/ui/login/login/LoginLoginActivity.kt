@@ -10,70 +10,78 @@ import com.oclothes.mycloset.data.entities.remote.auth.UserDto
 import com.oclothes.mycloset.databinding.ActivityLoginLoginBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.login.EmailAuthActivity
-import com.oclothes.mycloset.ui.login.signup.SignUpEmailActivity
+import com.oclothes.mycloset.ui.signup.SignUpEmailFragment
 import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.ui.signup.SignUpActivity
 import com.oclothes.mycloset.utils.saveJwt
 import com.oclothes.mycloset.utils.saveLogin
 
 class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLoginLoginBinding::inflate), LoginView, View.OnClickListener {
 
+    private var emailFilled = false
+    private var passwordFilled = false
+
     override fun initAfterBinding() {
-        init()
+        setOnClickListeners()
+        setEditText()
     }
 
-    private fun init() {
+    private fun setOnClickListeners() {
         binding.loginLoginLoginBtnTv.setOnClickListener(this)
         binding.loginLoginSignUpTv.setOnClickListener(this)
         binding.loginLoginFindPasswordTv.setOnClickListener(this)
         binding.loginLoginLoginBtnTv.isClickable = false
         binding.loginLoginBackgroundCl.setOnClickListener(this)
-        setEditText()
     }
 
     private fun setEditText(){
-        val textWatcher = object: TextWatcher {
+        val emailWatcher = object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun afterTextChanged(e: Editable?) {
-                if(e!!.length >= 6){
-                    binding.loginLoginLoginBtnTv.isClickable = true
-                    binding.loginLoginLoginBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
-                }else{
-                    binding.loginLoginLoginBtnTv.isClickable = false
-                    binding.loginLoginLoginBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
-                }
+                emailFilled = e!!.isNotEmpty()
+                setNextButtonState()
             }
         }
 
-        binding.loginLoginEditTextPasswordEt.addTextChangedListener(textWatcher)
+        val passwordWatcher = object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun afterTextChanged(e: Editable?) {
+                passwordFilled = e!!.isNotEmpty()
+                setNextButtonState()
+            }
+        }
+        binding.loginLoginEditTextEmailEt.addTextChangedListener(emailWatcher)
+        binding.loginLoginEditTextPasswordEt.addTextChangedListener(passwordWatcher)
     }
 
+    private fun setNextButtonState(){
+        if(emailFilled && passwordFilled){
+            binding.loginLoginLoginBtnTv.isClickable = true
+            binding.loginLoginLoginBtnTv.setBackgroundResource(R.drawable.basic_theme_button_active)
+        }
+        else{
+            binding.loginLoginLoginBtnTv.isClickable = false
+            binding.loginLoginLoginBtnTv.setBackgroundResource(R.drawable.basic_theme_button_inactive)
+        }
+    }
 
     override fun onClick(v: View?) {
         when(v){
             binding.loginLoginLoginBtnTv -> login()
             binding.loginLoginFindPasswordTv -> showToast("찾을 수 없습니다.")
-            binding.loginLoginSignUpTv -> startActivity(Intent(this, SignUpEmailActivity::class.java))
+            binding.loginLoginSignUpTv -> startActivity(Intent(this, SignUpActivity::class.java))
             binding.loginLoginBackgroundCl -> hideKeyboard(v)
         }
     }
 
     private fun login() {
-        when {
-            binding.loginLoginEditTextEmailEt.text.toString().isEmpty() -> {
-                showToast("이메일이 입력되지 않았습니다.")
-            }
-            else -> {
-                val email = binding.loginLoginEditTextEmailEt.text.toString()
-                val pw = binding.loginLoginEditTextPasswordEt.text.toString()
-                val userDto = UserDto(email, pw)
-                AuthService.login(this, userDto)
-            }
-        }
+        AuthService.login(this, UserDto(binding.loginLoginEditTextEmailEt.text.toString(), binding.loginLoginEditTextPasswordEt.text.toString()))
     }
 
     override fun onLoginLoading() {
@@ -95,7 +103,7 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
             else ->{
                 binding.loginLoginLoadingPb.visibility = View.GONE
                 binding.loginLoginEditTextPasswordEt.setText("")
-                showToast("아이디와 비밀번호를 확인하세요.")
+                showToast(message)
             }
         }
     }

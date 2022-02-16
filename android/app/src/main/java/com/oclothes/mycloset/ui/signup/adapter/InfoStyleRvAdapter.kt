@@ -1,4 +1,4 @@
-package com.oclothes.mycloset.ui.info.adapter
+package com.oclothes.mycloset.ui.signup.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemStyleInfoTagBinding
-import com.oclothes.mycloset.ui.info.StyleInfoFragment
-import kotlinx.coroutines.selects.select
+import com.oclothes.mycloset.ui.signup.StyleInfoFragment
 
 class InfoStyleRvAdapter(private val tagList : ArrayList<Tag>, val f : StyleInfoFragment) : RecyclerView.Adapter<InfoStyleRvAdapter.ViewHolder>(){
 

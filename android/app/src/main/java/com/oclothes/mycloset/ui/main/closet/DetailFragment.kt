@@ -3,7 +3,6 @@ package com.oclothes.mycloset.ui.main.closet
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.R
@@ -34,26 +32,18 @@ import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.data.entities.remote.tag.TagService
 import com.oclothes.mycloset.databinding.FragmentDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
-import com.oclothes.mycloset.ui.info.TagView
+import com.oclothes.mycloset.ui.signup.TagView
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.DetailTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
 import com.oclothes.mycloset.ui.main.closet.view.ClosetView
 import com.oclothes.mycloset.ui.main.closet.view.UserInfoView
 import com.oclothes.mycloset.utils.FormDataUtils
-import com.oclothes.mycloset.utils.FormDataUtils.asMultipart
 import com.oclothes.mycloset.utils.getJwt
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.net.URI
 
 class DetailFragment(val f : MainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate), UserInfoView, StyleInfoView, TagView,
     StyleCreateView, ClosetView, StyleLockView {
