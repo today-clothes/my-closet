@@ -1,9 +1,7 @@
 package com.oclothes.domain.clothes.dao;
 
 import com.oclothes.domain.clothes.domain.Clothes;
-import com.oclothes.domain.clothes.dto.ClothesDto;
 import com.oclothes.domain.user.domain.User;
-import com.oclothes.global.config.security.util.SecurityUtils;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,18 +11,16 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 import static com.oclothes.domain.clothes.domain.QClothes.clothes;
 import static com.oclothes.domain.clothes.domain.QClothesEventTag.clothesEventTag;
 import static com.oclothes.domain.clothes.domain.QClothesMoodTag.clothesMoodTag;
 import static com.oclothes.domain.clothes.domain.QClothesSeasonTag.clothesSeasonTag;
-import static com.oclothes.domain.clothes.dto.ClothesDto.*;
+import static com.oclothes.domain.clothes.dto.ClothesDto.SearchRequest;
 import static java.util.Objects.isNull;
+import static org.springframework.util.StringUtils.hasText;
 
 
 @RequiredArgsConstructor
@@ -34,26 +30,17 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
 
     @Override
     public Slice<Clothes> searchByTag(SearchRequest request, User user, Pageable pageable) {
-        List<Long> seasonTagIds = new ArrayList<>();
-        List<Long> eventTagIds = new ArrayList<>();
-        List<Long> moodTagIds = new ArrayList<>();
-
-        if(!isNull(request)){
-            seasonTagIds = request.getSeasonTagIds();
-            eventTagIds = request.getEventTagIds();
-            moodTagIds = request.getMoodTagIds();
-        }
-
-        List<Clothes> content = jpaQueryFactory.selectFrom(clothes).distinct()
+        List<Clothes> content = jpaQueryFactory.selectFrom(clothes)
                 .leftJoin(clothes.seasonTags, clothesSeasonTag)
                 .leftJoin(clothes.eventTags, clothesEventTag)
                 .leftJoin(clothes.moodTags, clothesMoodTag)
-                .where( userIdEq(user),
-                        closetIdEq(request),
-                        contentsEq(request),
-                        tagsEq(seasonTagIds, isSeasonTag),
-                        tagsEq(eventTagIds, isEventTag),
-                        tagsEq(moodTagIds, isMoodTag))
+                .distinct()
+                .where(userIdEq(user),
+                        closetIdEq(request.getClosetId()),
+                        contentContains(request.getKeyword()),
+                        tagsIdEq(request.getSeasonTagIds(), seasonTagIdEq),
+                        tagsIdEq(request.getEventTagIds(), eventTagIdEq),
+                        tagsIdEq(request.getMoodTagIds(), moodTagIdEq))
                 .orderBy(clothes.updatedAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -70,31 +57,31 @@ public class ClothesSupportRepositoryImpl implements ClothesSupportRepository {
         return false;
     }
 
-    private BooleanExpression closetIdEq(SearchRequest req) {
-        return isNull(req) || isNull(req.getClosetId()) ? null : clothes.closet.id.eq(req.getClosetId());
+    private BooleanExpression closetIdEq(Long id) {
+        return isNull(id) ? null : clothes.closet.id.eq(id);
     }
 
     private BooleanExpression userIdEq(User user) {
         return isNull(user) ? null : clothes.user.id.eq(user.getId());
     }
 
-    private BooleanBuilder contentsEq(SearchRequest req) {
-        return isNull(req) || isNull(req.getKeyword()) ? null : new BooleanBuilder()
-                .and(clothes.content.contains(req.getKeyword())).and(clothes.locked.eq(false));
+    private BooleanExpression contentContains(String keyword) {
+        return hasText(keyword) ? clothes.content.contains(keyword).and(clothes.locked.isFalse()) : null;
     }
 
-    private BooleanBuilder tagsEq(List<Long> ids, Function<Long, BooleanExpression> isTag) {
+    private BooleanBuilder tagsIdEq(List<Long> ids, Function<Long, BooleanExpression> tagIdEq) {
+        if (isNull(ids) || ids.isEmpty()) return null;
         BooleanBuilder builder = new BooleanBuilder();
-        Optional.ofNullable(ids).orElseGet(Collections::emptyList).forEach(id -> builder.or(isTag.apply(id)));
+        ids.forEach(id -> builder.or(tagIdEq.apply(id)));
         return builder;
     }
 
-    private final Function<Long, BooleanExpression> isSeasonTag = id ->
+    private final Function<Long, BooleanExpression> seasonTagIdEq = id ->
             isNull(id) ? null : clothesSeasonTag.tag.id.eq(id);
 
-    private final Function<Long, BooleanExpression> isEventTag = id ->
+    private final Function<Long, BooleanExpression> eventTagIdEq = id ->
             isNull(id) ? null : clothesEventTag.tag.id.eq(id);
 
-    private final Function<Long, BooleanExpression> isMoodTag = id ->
+    private final Function<Long, BooleanExpression> moodTagIdEq = id ->
             isNull(id) ? null : clothesMoodTag.id.eq(id);
 }
