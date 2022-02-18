@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Closet
+import com.oclothes.mycloset.data.entities.Status
 import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.data.entities.remote.style.StyleCreateView
@@ -28,19 +29,15 @@ import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetStyleListRVAdapt
 import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
 
-class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate)
+class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate)
     ,View.OnClickListener , TagView, StyleCreateView, StyleDeleteView, StyleSearchView{
 
-    val styleList: ArrayList<Style> by lazy{
-        ArrayList<Style>()
-    }
+    private val styleList: ArrayList<Style> = ArrayList<Style>()
     lateinit var eventTags : ArrayList<Tag>
     lateinit var moodTags : ArrayList<Tag>
     lateinit var seasonTags : ArrayList<Tag>
     lateinit var allTags : ArrayList<Tag>
-    lateinit var currentCloset : Closet
-    var isFailFromGallery = false
-    var isAllCloset = false
+    val a by lazy {(requireActivity() as MainActivity)}
     private lateinit var tagListAdapter : SingleClosetTagListRvAdapter
     private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
     private lateinit var myLayoutManager: GridLayoutManager
@@ -48,16 +45,21 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
 
     override fun initAfterBinding() {
+        if(MainActivity.pageStatus == Status.STATE_STYLE_FRAGMENT){
+            setCloset(a.currentCloset!!)
+        }
         initTags()
         initOnClickListeners()
         setSingleClosetRvAdapter()
-        if(isFailFromGallery){
-            setSingleCloset((requireActivity() as MainActivity).singleClosetCurrent)
+
+        if(MainActivity.pageStatus == Status.STATE_GALLERY_FAIL){
+            f.style.setCloset(a.currentCloset!!)
+            MainActivity.pageStatus = Status.STATE_STYLE_FRAGMENT
         }
     }
 
     private fun setSingleClosetRvAdapter() {
-        clothListAdapter = SingleClosetStyleListRVAdapter(this, styleList)
+        clothListAdapter = SingleClosetStyleListRVAdapter(f, styleList)
         clothListAdapter.setMyItemClickListener(object :
             SingleClosetStyleListRVAdapter.MyItemClickListener {
             override fun onItemClick(style: Style, position: Int) {
@@ -84,12 +86,6 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         binding.singleClosetFilterCountTv.text = "0"
     }
 
-    fun openDetail(style: Style) {
-        f.getBinding().mainFragmentVp.currentItem = 2
-        f.detail.fromCloset(style.clothesId)
-    }
-
-
     private fun initOnClickListeners() {
         binding.singleClosetBackBtnIv.setOnClickListener(this)
         binding.singleClosetScissorsIv.setOnClickListener(this)
@@ -98,11 +94,10 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
         binding.singleClosetDeleteIv.setOnClickListener(this)
     }
 
-
     override fun onClick(v: View?) {
         when(v){
             binding.singleClosetBackBtnIv ->{
-                f.getBinding().mainFragmentVp.currentItem = 0
+                f.backPressed()
                 clothListAdapter.finishEditMode()
                 binding.singleClosetClothesListRv.layoutManager?.scrollToPosition(0)
             }
@@ -112,11 +107,10 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             }
 
             binding.singleClosetPlusIv ->{
-                if(isAllCloset){
+                if(a.currentCloset!!.id == 0){
                     showToast("전체 옷에서는 옷을 추가할 수 없습니다.")
                 }else{
                     (requireContext() as MainActivity).openGallery()
-
                 }
             }
 
@@ -127,7 +121,6 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
             binding.singleClosetDeleteIv ->{
                 setDeleteButtonTrigger()
             }
-
         }
     }
 
@@ -165,38 +158,23 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
     private fun setDeleteButtonTrigger() {
 
         AlertDialog.Builder(context).setTitle("옷을 삭제 하시겠습니까?")
-            .setPositiveButton("예", object : DialogInterface.OnClickListener {
-                override fun onClick(p0: DialogInterface?, p1: Int) {
-                    clothListAdapter.deleteSelectedItem()
-                    normalMode()
-                }
-            }).setNegativeButton("아니요",object : DialogInterface.OnClickListener{
-                override fun onClick(p0: DialogInterface?, p1: Int) {
+            .setPositiveButton("예") { p0, p1 ->
+                clothListAdapter.deleteSelectedItem()
+                normalMode()
+            }.setNegativeButton("아니요") { p0, p1 ->
 
-                }
-            }).show()
+            }.show()
     }
 
-    fun setSingleCloset(closet : Closet){
-        isAllCloset = false
-        currentCloset = closet
+    fun setCloset(closet : Closet){
         normalMode()
         binding.singleClosetTitleTv.text = closet.name
         val intMap = HashMap<String, Int>()
-        intMap["closetId"] = closet.id
+        if(a.currentCloset!!.id != 0)
+            intMap["closetId"] = closet.id
         intMap["size"] = 20
         StyleService.searchClothes(this, intMap, HashMap<String, String>())
     }
-
-    fun setAllCloset(){
-        normalMode()
-        isAllCloset = true
-        binding.singleClosetTitleTv.text = "모든 옷"
-        val intMap = HashMap<String, Int>()
-        intMap["page"] = 0
-        StyleService.searchClothes(this, intMap, HashMap<String, String>())
-    }
-
 
     private fun initTags(){
         allTags = ArrayList<Tag>()
@@ -228,11 +206,11 @@ class SingleClosetFragment(val f : MainFragment) : BaseFragment<FragmentSingleCl
 
     }
 
-    override fun onSuccess() {
+    override fun onDeleteSuccess() {
 
     }
 
-    override fun onFailure() {
+    override fun onDeleteFailure() {
 
     }
 

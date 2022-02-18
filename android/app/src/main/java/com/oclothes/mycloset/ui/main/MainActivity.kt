@@ -1,194 +1,228 @@
 package com.oclothes.mycloset.ui.main
 
+import android.Manifest
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.fragment.app.*
 import com.google.gson.Gson
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Closet
+import com.oclothes.mycloset.data.entities.Status
+import com.oclothes.mycloset.data.entities.Style
 import com.oclothes.mycloset.databinding.ActivityMainBinding
-import com.oclothes.mycloset.ui.main.closet.MainFragment
+import com.oclothes.mycloset.ui.main.closet.ClosetMainFragment
 import com.oclothes.mycloset.ui.main.mypage.MyPageFragment
-import com.oclothes.mycloset.ui.main.search.MainSearchFragment
-import com.oclothes.mycloset.ui.main.search.SearchFragment
+import com.oclothes.mycloset.ui.main.search.SearchMainFragment
+import com.oclothes.mycloset.utils.getString
 import com.oclothes.mycloset.utils.saveString
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding : ActivityMainBinding
-    lateinit var closet : MainFragment
-    lateinit var search : MainSearchFragment
+    lateinit var closetMain : ClosetMainFragment
+    lateinit var searchMain : SearchMainFragment
     lateinit var mypage : MyPageFragment
     private var backPressedTime: Long = 0
     lateinit var filterActionActivityLauncher: ActivityResultLauncher<Intent>
-    var currentPage = 0
-    val TIME_INTERVAL: Long = 2000
-    var galleryFlag = false
-    var galleryFailFlag = false
-    lateinit var singleClosetCurrent : Closet
-
-    var detailImage : Bitmap? = null
+    companion object {
+        const val TIME_INTERVAL: Long = 2000
+        var pageStatus : Status? = null;
+    }
+    var currentCloset : Closet? = null
+    var currentStyle : Int? = null
+    var currentImage : Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        initActivity()
         initFragment()
         initNavigation()
-        supportActionBar?.hide()
+        getPermission()
+        initGalleryActionLauncher()
+        setNavigation()
+    }
 
-        val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
-        }
-        permissionLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-
-
-
-        filterActionActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK && it.data != null) {
-                val currentImageUri = it.data?.data
-                try {
-                    currentImageUri?.let {
-                        if (Build.VERSION.SDK_INT < 28) {
-                            val bitmap = MediaStore.Images.Media.getBitmap(
-                                contentResolver, currentImageUri
-                            )
-                            this.detailImage = bitmap
-                        } else {
-                            closet.detail.mainImageUri = currentImageUri
-                            val source = ImageDecoder.createSource(contentResolver, currentImageUri)
-                            val imageBitmap = ImageDecoder.decodeBitmap(source)
-                            galleryFlag = true
-                            this.detailImage = imageBitmap
-                            closet.detail.currentClosetId = singleClosetCurrent.id
-                            closet.detail.currentClosetName = singleClosetCurrent.name
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            } else if (it.resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_SHORT).show()
-                closet.detail.currentClosetId = singleClosetCurrent.id
-                closet.detail.currentClosetName = singleClosetCurrent.name
-                closet.singleCloset.currentCloset = singleClosetCurrent
-                galleryFailFlag = true
-                closet.getBinding().mainFragmentVp.currentItem = 1
-            } else {
-
-            }
-        }
-
+    private fun setNavigation() {
         binding.mainNavBnv.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.homeFragment -> {
-                    showFragment(closet)
-                    if(currentPage == 0){
-                        closet.getBinding().mainFragmentVp.currentItem = 0
+                    showFragment(closetMain)
+                    if (pageStatus == Status.STATE_CLOSET_FRAGMENT) {
+                        closetMain.setVp(ClosetMainFragment.CLOSET)
                     }
-                    currentPage = 0
-
+                    if(pageStatus == Status.STATE_SEARCH_FRAGMENT || pageStatus == Status.STATE_MY_PAGE_FRAGMENT) {
+                        pageStatus = Status.STATE_CLOSET_FRAGMENT
+                    }
                     return@setOnItemSelectedListener true
                 }
 
                 R.id.searchFragment -> {
-                    showFragment(search)
-                    currentPage = 1
+                    showFragment(searchMain)
+                    pageStatus = Status.STATE_SEARCH_FRAGMENT
                     return@setOnItemSelectedListener true
                 }
 
                 R.id.myFragment -> {
                     showFragment(mypage)
-                    currentPage = 2
+                    pageStatus = Status.STATE_MY_PAGE_FRAGMENT
                     return@setOnItemSelectedListener true
                 }
             }
             false
         }
-        showFragment(closet)
-        if(savedInstanceState != null){
-            when(savedInstanceState.getInt("currentPage")) {
-                0 -> {
-                    showFragment(closet)
-                    savedInstanceState.getInt("currentItem")?.let{
-                        closet.getBinding().mainFragmentVp.currentItem = it
+        showFragment(closetMain)
+        pageStatus = Status.STATE_CLOSET_FRAGMENT
+    }
+
+    private fun initGalleryActionLauncher() {
+        filterActionActivityLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == RESULT_OK && it.data != null) {
+                    val currentImageUri = it.data?.data
+                    try {
+                        currentImageUri?.let {
+                            if (Build.VERSION.SDK_INT < 28) {
+                                val bitmap = MediaStore.Images.Media.getBitmap(
+                                    contentResolver, currentImageUri
+                                )
+                                currentImage = bitmap
+                            } else {
+                                closetMain.detail.mainImageUri = currentImageUri
+                                val source = ImageDecoder.createSource(contentResolver, currentImageUri)
+                                val imageBitmap = ImageDecoder.decodeBitmap(source)
+                                pageStatus = Status.STATE_GALLERY_SUCCESS
+                                currentImage = imageBitmap
+                            }
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
+                } else if (it.resultCode == RESULT_CANCELED) {
+                    Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_SHORT).show()
+                    pageStatus = Status.STATE_GALLERY_FAIL
+                } else {
+
                 }
-                1 -> showFragment(search)
-                2 -> showFragment(mypage)
-                else -> showFragment(closet)
             }
-        }
+    }
+
+    private fun initActivity() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        supportActionBar?.hide()
+    }
+
+    private fun getPermission() {
+        val permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            }
+        permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     fun openGallery(){
-        singleClosetCurrent = closet.singleCloset.currentCloset
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         filterActionActivityLauncher.launch(intent)
-
     }
 
     override fun onPause() {
         super.onPause()
-        singleClosetCurrent?.let{
-            saveString("currentCloset", Gson().toJson(singleClosetCurrent, Closet::class.java))
+        saveString("pageStatus", pageStatus.toString())
+
+        currentStyle?.let {
+            saveString("currentStyle", Gson().toJson(currentStyle, Int::class.java))
+        }
+        currentCloset?.let{
+            saveString("currentCloset", Gson().toJson(currentCloset, Closet::class.java))
+        }
+        currentImage?.let{
+            saveString("currentImage", Gson().toJson(currentImage, Bitmap::class.java))
         }
     }
 
     override fun onResume() {
         super.onResume()
-        com.oclothes.mycloset.utils.getString("currentCloset")?.let {
-            singleClosetCurrent = Gson().fromJson(it, Closet::class.java)
-        }
-        if(galleryFlag) {
-            closet.getBinding().mainFragmentVp.currentItem = 2
-            closet.detail.setImage(this.detailImage!!)
-            galleryFlag = false
-            closet.detail.editMode = true
-            closet.detail.isEditable = false
-        }else if(galleryFailFlag){
-            closet.getBinding().mainFragmentVp.currentItem = 1
-            closet.detail.currentClosetId = singleClosetCurrent.id
-            closet.singleCloset.currentCloset = singleClosetCurrent
-            closet.singleCloset.isFailFromGallery = true
-            galleryFailFlag = false
-        }
-    }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("currentPage", currentPage)
-        outState.putInt("currentItem", closet.getBinding().mainFragmentVp.currentItem)
+        getString("currentPage")?.let {
+            pageStatus = Status.valueOf(it!!)
+        }
+        getString("currentCloset")?.let {
+            currentCloset = Gson().fromJson(it, Closet::class.java)
+        }
+        getString("currentStyle")?.let {
+            currentStyle = Gson().fromJson(it, Int::class.java)
+        }
+
+        if(pageStatus != Status.STATE_GALLERY_SUCCESS) {
+            getString("currentImage")?.let {
+                currentImage = Gson().fromJson(it, Bitmap::class.java)
+            }
+        }
+
+        when (pageStatus){
+            Status.STATE_CLOSET_FRAGMENT ->{
+                binding.mainNavBnv.menu.getItem(0).isChecked = true
+                closetMain.setVp(ClosetMainFragment.CLOSET)
+            }
+
+            Status.STATE_STYLE_FRAGMENT->{
+                closetMain.setVp(ClosetMainFragment.STYLE)
+                binding.mainNavBnv.menu.getItem(0).isChecked = true
+            }
+
+            Status.STATE_DETAIL_FRAGMENT->{
+                binding.mainNavBnv.menu.getItem(0).isChecked = true
+                closetMain.setVp(ClosetMainFragment.DETAIL)
+                closetMain.detail.setImage(currentImage!!)
+                closetMain.detail.onEditModeBegin()
+            }
+
+            Status.STATE_GALLERY_SUCCESS->{
+                closetMain.setVp(ClosetMainFragment.DETAIL)
+                closetMain.detail.editMode = true
+            }
+
+            Status.STATE_GALLERY_FAIL ->{
+                closetMain.setVp(ClosetMainFragment.STYLE)
+                Toast.makeText(this, "사진 선택 취소", Toast.LENGTH_SHORT).show()
+            }
+
+            Status.STATE_SEARCH_FRAGMENT->{
+                binding.mainNavBnv.menu.getItem(1).isChecked = true
+            }
+
+            Status.STATE_SEARCH_DETAIL_FRAGMENT->{
+                binding.mainNavBnv.menu.getItem(1).isChecked = true
+            }
+
+            Status.STATE_MY_PAGE_FRAGMENT->{
+                binding.mainNavBnv.menu.getItem(2).isChecked = true
+            }
+        }
     }
 
     private fun initFragment() {
         mypage = MyPageFragment()
-        closet = MainFragment()
-        search = MainSearchFragment()
+        closetMain = ClosetMainFragment()
+        searchMain = SearchMainFragment()
     }
 
     private fun initNavigation() {
-        supportFragmentManager.beginTransaction().add(R.id.main_frm, closet).hide(closet).commit()
-        supportFragmentManager.beginTransaction().add(R.id.main_frm, search).hide(search).commit()
+        supportFragmentManager.beginTransaction().add(R.id.main_frm, closetMain).hide(closetMain).commit()
+        supportFragmentManager.beginTransaction().add(R.id.main_frm, searchMain).hide(searchMain).commit()
         supportFragmentManager.beginTransaction().add(R.id.main_frm, mypage).hide(mypage).commit()
     }
 
     fun showFragment(f : Fragment){
-        supportFragmentManager.beginTransaction().hide(closet).hide(search).hide(mypage).commit()
+        supportFragmentManager.beginTransaction().hide(closetMain).hide(searchMain).hide(mypage).commit()
         supportFragmentManager.beginTransaction().show(f).commit()
     }
 
@@ -196,9 +230,9 @@ class MainActivity : AppCompatActivity() {
         val currentTime = System.currentTimeMillis()
         val intervalTime = currentTime - backPressedTime
 
-        when(currentPage){
-            0->{
-                if(closet.backPressed()){
+        when(pageStatus){
+            Status.STATE_CLOSET_FRAGMENT, Status.STATE_STYLE_FRAGMENT, Status.STATE_GALLERY_SUCCESS, Status.STATE_GALLERY_FAIL, Status.STATE_DETAIL_FRAGMENT->{
+                if(closetMain.backPressed()){
                     val currentTime = System.currentTimeMillis()
                     val intervalTime = currentTime - backPressedTime
                     if (intervalTime in 0..TIME_INTERVAL) {
@@ -210,8 +244,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            1->{
-                if(search.backPressed()){
+            Status.STATE_SEARCH_FRAGMENT->{
+                if(searchMain.backPressed()){
                     val currentTime = System.currentTimeMillis()
                     val intervalTime = currentTime - backPressedTime
                     if (intervalTime in 0..TIME_INTERVAL) {
@@ -223,7 +257,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            2->{
+            Status.STATE_MY_PAGE_FRAGMENT->{
                 if(mypage.backPressed()){
                     val currentTime = System.currentTimeMillis()
                     val intervalTime = currentTime - backPressedTime
@@ -234,6 +268,10 @@ class MainActivity : AppCompatActivity() {
                         backPressedTime = currentTime
                     }
                 }
+            }
+
+            else->{
+
             }
         }
     }

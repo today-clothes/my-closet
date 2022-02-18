@@ -48,7 +48,7 @@
 
     <TextView
         android:id="@+id/single_closet_cloth_name_tv"
-        android:layout_width="51dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/roboto_bold"

@@ -12,13 +12,14 @@ import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.data.entities.remote.style.StyleDeleteView
 import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.databinding.ItemSingleClosetClothBinding
-import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
+import com.oclothes.mycloset.ui.main.MainActivity
+import com.oclothes.mycloset.ui.main.closet.ClosetMainFragment
+import com.oclothes.mycloset.ui.main.closet.StyleFragment
 import com.oclothes.mycloset.utils.getJwt
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
-class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragment, private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(),
+class SingleClosetStyleListRVAdapter (private val f : ClosetMainFragment, private val styleList : ArrayList<Style>) : RecyclerView.Adapter<SingleClosetStyleListRVAdapter.ViewHolder>(),
     StyleDeleteView {
     private var editMode = false
     private val viewList = ArrayList<ItemSingleClosetClothBinding>()
@@ -47,7 +48,6 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
 
     override fun onBindViewHolder(holder: SingleClosetStyleListRVAdapter.ViewHolder, position: Int) {
         holder.bind(styleList[position])
-
         setBackground(position, holder)
 
         holder.itemView.setOnLongClickListener {
@@ -62,7 +62,7 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
                 styleList[position].isSelected = !styleList[position].isSelected
             }
             if(!editMode){
-                fragment.openDetail(styleList[position])
+                f.openStyle(styleList[position].clothesId)
             }
             setBackground(position, holder)
             notifyItemChanged(position)
@@ -144,16 +144,16 @@ class SingleClosetStyleListRVAdapter (private val fragment : SingleClosetFragmen
             val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${style.imgUrl}", LazyHeaders.Builder()
                 .addHeader("Authorization", getJwt()!!)
                 .build())
-            Glide.with(fragment).load(glideUrl).into(binding.singleClosetClothImageIv)
+            Glide.with(f).load(glideUrl).into(binding.singleClosetClothImageIv)
         }
     }
 
-    override fun onSuccess() {
-        fragment.setSingleCloset(fragment.currentCloset)
+    override fun onDeleteSuccess() {
+        f.openCloset((f.requireActivity() as MainActivity).currentCloset!!)
         notifyDataSetChanged()
     }
 
-    override fun onFailure() {
+    override fun onDeleteFailure() {
 
     }
 }
