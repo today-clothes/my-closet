@@ -10,10 +10,10 @@ import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetTagBinding
 import com.oclothes.mycloset.ui.main.closet.DetailFragment
 
-class DetailTagListRvAdapter (val fragment : Fragment, private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<DetailTagListRvAdapter.ViewHolder>() {
+class DetailTagListRvAdapter (val f : DetailFragment, private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<DetailTagListRvAdapter.ViewHolder>() {
 
+    private var touchable = true
     private val selectedTag : ArrayList<Tag> = ArrayList<Tag>()
-    var isEditOnDetail = false
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
         viewType: Int
@@ -31,9 +31,14 @@ class DetailTagListRvAdapter (val fragment : Fragment, private val tagList : Arr
     fun setSelectedTag(selectedTag : ArrayList<Tag>){
         this.selectedTag.clear()
         this.selectedTag.addAll(selectedTag)
+        f.getBinding().detailSecondFilterCountTv.text = selectedTag.size.toString()
     }
 
     fun getSelectedTag() : ArrayList<Tag> = selectedTag
+
+    fun setTouchable(state: Boolean) {
+        touchable = state
+    }
 
 
     inner class ViewHolder(val binding: ItemSingleClosetTagBinding): RecyclerView.ViewHolder(binding.root){
@@ -49,24 +54,25 @@ class DetailTagListRvAdapter (val fragment : Fragment, private val tagList : Arr
 
 
             binding.singleClosetTagBtnCl.setOnClickListener {
-                if(selectedTag.contains(tag)){
-                    selectedTag.remove(tag)
-                    tagList.remove(tag)
-                    binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.basic_theme_button_inactive_stroke)
-                    binding.singleClosetTagNameTv.setTextColor(Color.BLACK)
-                    notifyDataSetChanged()
+                if(touchable) {
+                    if (selectedTag.contains(tag)) {
+                        selectedTag.remove(tag)
+                        tagList.remove(tag)
+                        binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.basic_theme_button_inactive_stroke)
+                        binding.singleClosetTagNameTv.setTextColor(Color.BLACK)
+                        notifyDataSetChanged()
 
-                }else{
-                    selectedTag.add(tag)
-                    tagList.add(tag)
-                    binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.style_info_tag_background_active)
-                    binding.singleClosetTagNameTv.setTextColor(Color.WHITE)
-                    notifyDataSetChanged()
+                    } else {
+                        selectedTag.add(tag)
+                        tagList.add(tag)
+                        binding.singleClosetTagBtnCl.setBackgroundResource(R.drawable.style_info_tag_background_active)
+                        binding.singleClosetTagNameTv.setTextColor(Color.WHITE)
+                        notifyDataSetChanged()
 
+                    }
+                    f.getBinding().detailSecondFilterCountTv.text = selectedTag.size.toString()
+                    f.updateList(selectedTag)
                 }
-
-                (fragment as DetailFragment).getBinding().detailSecondFilterCountTv.text = selectedTag.size.toString()
-                (fragment as DetailFragment).updateList(selectedTag)
             }
         }
     }

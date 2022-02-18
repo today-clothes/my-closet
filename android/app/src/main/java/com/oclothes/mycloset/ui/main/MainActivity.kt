@@ -31,8 +31,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var mypage : MyPageFragment
     private var backPressedTime: Long = 0
     lateinit var filterActionActivityLauncher: ActivityResultLauncher<Intent>
+    private val TIME_INTERVAL: Long = 2000
+
     companion object {
-        const val TIME_INTERVAL: Long = 2000
         var pageStatus : Status? = null;
     }
     var currentCloset : Closet? = null

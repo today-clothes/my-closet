@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.oclothes.mycloset.ApplicationClass.Companion.DEV_URL
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.*
 import com.oclothes.mycloset.data.entities.remote.auth.AuthService
@@ -45,15 +46,14 @@ import java.io.InputStream
 class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) , StyleInfoView, TagView,
     StyleCreateView, StyleLockView {
     var editMode = false
-    lateinit var tagListAdapter: DetailTagListRvAdapter
     val tagListForAdapter = ArrayList<Tag>()
+    val tagListAdapter = DetailTagListRvAdapter(this, tagListForAdapter)
     val a by lazy {(requireActivity() as MainActivity)}
     lateinit var eventTags : ArrayList<Tag>
     lateinit var moodTags : ArrayList<Tag>
     lateinit var seasonTags : ArrayList<Tag>
 
     lateinit var mainImageUri : Uri
-    val detailTagRvAdapter : DetailTagListRvAdapter = DetailTagListRvAdapter(this, tagListForAdapter)
     lateinit var mainImageView: ImageView
     private val selectedTag = ArrayList<Tag>()
 
@@ -62,8 +62,6 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
         mainImageView = binding.detailMainImageIv
         setClickListeners()
         fromGallery()
-
-        tagListAdapter = DetailTagListRvAdapter(this, tagListForAdapter)
         binding.singleClosetFilterListRv.adapter = tagListAdapter
         binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.detailSecondFilterCountTv.text = "0"
@@ -79,6 +77,8 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
         onEditModeBegin()
         binding.detailSecondTitleEditEt.setText("")
         binding.detailSecondInfoDetailEditEt.setText("")
+        tagListAdapter.setTouchable(true)
+        binding.detailSecondFilterImageIv.isEnabled = true
         clearTagListForEdit()
         TagService.getTags(this)
     }
@@ -160,7 +160,7 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
 
     private fun clearTagListForEdit() {
         tagListForAdapter.clear()
-        detailTagRvAdapter.notifyDataSetChanged()
+        tagListAdapter.notifyDataSetChanged()
     }
 
     private fun setClickListeners() {
@@ -228,14 +228,12 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
 
     fun onEditModeBegin() {
         editModeViewSet()
-        detailTagRvAdapter.isEditOnDetail = true
         editMode = true
 
     }
 
     private fun onEditDiscard() {
         normalModeViewSet()
-        detailTagRvAdapter.isEditOnDetail = false
         f.style.setCloset(a.currentCloset!!)
         f.setVp(ClosetMainFragment.STYLE)
     }
@@ -243,7 +241,6 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
     private fun onEditConfirm() {
         uploadCloth()
         normalModeViewSet()
-        detailTagRvAdapter.isEditOnDetail = false
 
     }
 
@@ -271,7 +268,7 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
         binding.detailSecondInfoDetailEditEt.setText(styleinfo.content)
         binding.detailSecondLockSwitchS.isChecked = styleinfo.locked
 
-        val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${styleinfo.imgUrl}", LazyHeaders.Builder()
+        val glideUrl = GlideUrl("${DEV_URL}clothes/images/${styleinfo.imgUrl}", LazyHeaders.Builder()
             .addHeader("Authorization", getJwt()!!)
             .build())
         Glide.with(this).load(glideUrl).into(binding.detailMainImageIv)
@@ -281,8 +278,17 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
         tagListForAdapter.addAll(styleinfo.eventTags)
         tagListForAdapter.addAll(styleinfo.moodTags)
         tagListForAdapter.addAll(styleinfo.seasonTags)
-        detailTagRvAdapter.notifyDataSetChanged()
+        selectedTag.clear()
+        selectedTag.addAll(tagListForAdapter)
+        tagListAdapter.setSelectedTag(tagListForAdapter)
+        disableTag()
+        tagListAdapter.notifyDataSetChanged()
 
+    }
+
+    private fun disableTag() {
+        tagListAdapter.setTouchable(false)
+        binding.detailSecondFilterImageIv.isEnabled = false
     }
 
     override fun onInfoFailure() {
@@ -301,7 +307,7 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
         this.eventTags = eventTags
         this.moodTags = moodTags
         this.seasonTags = seasonTags
-        detailTagRvAdapter.notifyDataSetChanged()
+        tagListAdapter.notifyDataSetChanged()
     }
 
     override fun onGetTagsFailure(code: Int, message: String) {
