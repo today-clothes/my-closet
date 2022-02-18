@@ -55,6 +55,5 @@ class SearchDetailFragment(val f : SearchMainFragment) : BaseFragment<FragmentSe
     fun fromSearch(id : Int){
         StyleService.getClothInfo(this, id)
     }
-//이거 나중에 써야함.
 
 }
