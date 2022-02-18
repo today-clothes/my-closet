@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetTagBinding
-import com.oclothes.mycloset.ui.main.closet.DetailFragment
-import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
 
 class SearchDetailTagListRvAdapter (val fragment : Fragment, private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<SearchDetailTagListRvAdapter.ViewHolder>() {
 

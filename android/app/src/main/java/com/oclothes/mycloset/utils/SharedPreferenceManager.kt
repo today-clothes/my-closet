@@ -12,6 +12,18 @@ fun saveJwt(jwtToken: String) {
     editor.apply()
 }
 
+fun saveInt(key: String, body: Int) {
+    val editor = mSharedPreferences.edit()
+    editor.putInt(key, body)
+    editor.apply()
+}
+
+
+fun getInt(key : String) : Int{
+    return mSharedPreferences.getInt(key, -1)
+}
+
+
 fun saveString(key : String, body : String){
     val editor = mSharedPreferences.edit()
     editor.putString(key, body)
@@ -29,15 +41,13 @@ fun deleteJwt(){
 }
 
 fun getLogin(): UserDto? {
-    val gson = Gson()
-    return gson.fromJson(mSharedPreferences.getString("userDto", null), UserDto::class.java)
+    return Gson().fromJson(mSharedPreferences.getString("userDto", null), UserDto::class.java)
 }
 
 
 fun saveLogin(userDto : UserDto){
     val editor = mSharedPreferences.edit()
-    val gson = Gson()
-    var jsonStr : String = gson.toJson(userDto, UserDto::class.java)
+    var jsonStr : String = Gson().toJson(userDto, UserDto::class.java)
     editor.putString("userDto", jsonStr)
     editor.apply()
 }

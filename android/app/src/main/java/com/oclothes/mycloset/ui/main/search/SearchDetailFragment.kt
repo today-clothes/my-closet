@@ -10,11 +10,10 @@ import com.oclothes.mycloset.data.entities.remote.style.StyleInfoView
 import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.databinding.FragmentSearchDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
-import com.oclothes.mycloset.ui.main.closet.adapter.DetailTagListRvAdapter
 import com.oclothes.mycloset.ui.main.search.adapter.SearchDetailTagListRvAdapter
 import com.oclothes.mycloset.utils.getJwt
 
-class SearchDetailFragment(val f : MainSearchFragment) : BaseFragment<FragmentSearchDetailBinding>(FragmentSearchDetailBinding::inflate) , StyleInfoView{
+class SearchDetailFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchDetailBinding>(FragmentSearchDetailBinding::inflate) , StyleInfoView{
 
     val tagListForAdapter = ArrayList<Tag>()
     val detailTagRvAdapter = SearchDetailTagListRvAdapter(this, tagListForAdapter)

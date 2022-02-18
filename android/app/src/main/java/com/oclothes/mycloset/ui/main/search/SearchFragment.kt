@@ -10,12 +10,10 @@ import com.oclothes.mycloset.data.entities.remote.style.StyleSearchView
 import com.oclothes.mycloset.data.entities.remote.style.StyleService
 import com.oclothes.mycloset.databinding.FragmentSearchBinding
 import com.oclothes.mycloset.ui.BaseFragment
-import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.search.adapter.SearchStyleListRVAdapter
-import java.util.concurrent.CopyOnWriteArrayList
 
 
-class SearchFragment(val f : MainSearchFragment) : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate),
+class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate),
     StyleSearchView {
     lateinit var searchAdapter : SearchStyleListRVAdapter
     val styleList: ArrayList<Style> by lazy{

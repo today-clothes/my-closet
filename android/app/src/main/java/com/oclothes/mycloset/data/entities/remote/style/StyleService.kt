@@ -121,16 +121,15 @@ object StyleService {
             ) {
                 when(response.code()) {
                     in 200..299 -> {
-                        val resp = response.body()!!
-                        styleDeleteView.onSuccess()
+                        styleDeleteView.onDeleteSuccess()
                     }
                     else -> {
-                        styleDeleteView.onFailure()
+                        styleDeleteView.onDeleteFailure()
                     }
                 }
             }
             override fun onFailure(call: Call<DeleteResponse>, t: Throwable) {
-                styleDeleteView.onFailure()
+                styleDeleteView.onDeleteFailure()
             }
         })
     }
@@ -139,7 +138,6 @@ object StyleService {
         val styleService = ApplicationClass.retrofit.create(StyleRetrofitInterface::class.java)
         styleService.lockCloth(id).enqueue(object : Callback<LockResponse>{
             override fun onResponse(call: Call<LockResponse>, response: Response<LockResponse>) {
-                val resp = response.body()!!
                 when(response.code()) {
                     in 200..299 -> {
                         styleLockView.onLockSuccess()

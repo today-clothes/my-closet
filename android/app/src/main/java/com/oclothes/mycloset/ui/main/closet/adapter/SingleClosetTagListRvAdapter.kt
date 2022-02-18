@@ -3,14 +3,13 @@ package com.oclothes.mycloset.ui.main.closet.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetTagBinding
-import com.oclothes.mycloset.ui.main.closet.SingleClosetFragment
+import com.oclothes.mycloset.ui.main.closet.StyleFragment
 
-class SingleClosetTagListRvAdapter (val fragment : Fragment, private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<SingleClosetTagListRvAdapter.ViewHolder>() {
+class SingleClosetTagListRvAdapter (val f : StyleFragment, private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<SingleClosetTagListRvAdapter.ViewHolder>() {
 
     private val selectedTag : ArrayList<Tag> = ArrayList<Tag>()
     override fun onCreateViewHolder(
@@ -58,9 +57,9 @@ class SingleClosetTagListRvAdapter (val fragment : Fragment, private val tagList
                     binding.singleClosetTagNameTv.setTextColor(Color.WHITE)
                 }
 
-                (fragment as SingleClosetFragment).getBinding().singleClosetFilterCountTv.text = selectedTag.size.toString()
-                (fragment as SingleClosetFragment).updateList(selectedTag)
-                (fragment as SingleClosetFragment).updateStyleList()
+                f.getBinding().singleClosetFilterCountTv.text = selectedTag.size.toString()
+                f.updateList(selectedTag)
+                f.updateStyleList()
             }
         }
     }
