@@ -5,12 +5,14 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.GridLayoutManager
+import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.data.entities.remote.domain.Style
 import com.oclothes.mycloset.data.entities.remote.style.view.StyleSearchView
 import com.oclothes.mycloset.data.entities.remote.style.service.StyleService
 import com.oclothes.mycloset.data.entities.remote.style.view.RecommendClothView
 import com.oclothes.mycloset.databinding.FragmentSearchBinding
 import com.oclothes.mycloset.ui.BaseFragment
+import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.search.adapter.SearchStyleListRVAdapter
 import com.oclothes.mycloset.utils.getUser
 
@@ -28,8 +30,9 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
         setRecommendation()
     }
 
-    private fun setRecommendation() {
+    fun setRecommendation() {
         binding.searchResultTv.text = "'${getUser()?.nickname}'님을 위한 추천"
+        binding.searchMainEt.setText("")
         StyleService.recommendClothes(this)
     }
 
@@ -43,9 +46,11 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
         }
 
         binding.searchBtnTv.setOnClickListener {
+            hideKeyboard()
             val map = HashMap<String, String>()
+            binding.searchResultTv.text = "'${binding.searchMainEt.text.toString()}' 검색 결과"
             map["keyword"] = binding.searchMainEt.text.toString()
-            StyleService.searchClothes(this, HashMap<String, Int>(), map)
+            StyleService.searchClothes(this, HashMap<String, Int>(), map, ArrayList<Int>(), ArrayList<Int>(), ArrayList<Int>())
         }
     }
 
@@ -54,6 +59,7 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
         searchAdapter.setMyItemClickListener(object : SearchStyleListRVAdapter.MyItemClickListener{
             override fun onItemClick(style: Style, position: Int) {
                 f.detail.fromSearch(style.clothesId)
+                MainActivity.pageStatus = Status.STATE_SEARCH_DETAIL_FRAGMENT
                 f.getBinding().mainSearchFragmentVp.currentItem = 1
             }
         })

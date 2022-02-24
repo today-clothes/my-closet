@@ -10,6 +10,9 @@ interface StyleRetrofitInterface {
     fun searchClothes(
         @QueryMap queryNum : Map<String, Int>,
         @QueryMap queryString : Map<String, String>,
+        @Query("eventTagIds") eventTagIds : ArrayList<Int>,
+        @Query("moodTagIds") moodTagIds : ArrayList<Int>,
+        @Query("seasonTagIds") seasonTagIds : ArrayList<Int>,
     ) : Call<SearchResponse>
 
     @Multipart

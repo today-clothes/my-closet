@@ -1,8 +1,10 @@
 package com.oclothes.mycloset.ui.main.search
 
 import androidx.viewpager2.widget.ViewPager2
+import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.databinding.FragmentSearchMainBinding
 import com.oclothes.mycloset.ui.BaseFragment
+import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.search.adapter.MainSearchFragmentVpAdapter
 
 class SearchMainFragment : BaseFragment<FragmentSearchMainBinding>(FragmentSearchMainBinding::inflate) {
@@ -42,6 +44,13 @@ class SearchMainFragment : BaseFragment<FragmentSearchMainBinding>(FragmentSearc
     }
 
     fun backPressed() : Boolean{
-        return true
+        return if(binding.mainSearchFragmentVp.currentItem == 1){
+            binding.mainSearchFragmentVp.currentItem = 0
+            MainActivity.pageStatus = Status.STATE_SEARCH_FRAGMENT
+            false
+        }else{
+            true
+        }
+
     }
 }
