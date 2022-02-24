@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
 import com.oclothes.mycloset.databinding.ItemTagSelectBinding
 
 class TagSelectDialogRvAdapter(private val tagList : ArrayList<Tag>, private val selectedTag : ArrayList<Tag>, val d : Dialog) : RecyclerView.Adapter<TagSelectDialogRvAdapter.ViewHolder>(){

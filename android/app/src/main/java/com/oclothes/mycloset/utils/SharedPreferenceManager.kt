@@ -3,7 +3,8 @@ package com.oclothes.mycloset.utils
 import com.google.gson.Gson
 import com.oclothes.mycloset.ApplicationClass.Companion.X_ACCESS_TOKEN
 import com.oclothes.mycloset.ApplicationClass.Companion.mSharedPreferences
-import com.oclothes.mycloset.data.entities.remote.auth.UserDto
+import com.oclothes.mycloset.data.entities.remote.auth.dto.UserDto
+import com.oclothes.mycloset.data.entities.remote.domain.User
 
 fun saveJwt(jwtToken: String) {
     val editor = mSharedPreferences.edit()
@@ -50,4 +51,16 @@ fun saveLogin(userDto : UserDto){
     var jsonStr : String = Gson().toJson(userDto, UserDto::class.java)
     editor.putString("userDto", jsonStr)
     editor.apply()
+}
+
+fun saveUser(user: User) {
+    val editor = mSharedPreferences.edit()
+    user?.let{
+        editor.putString("user", Gson().toJson(it, User::class.java))
+    }
+    editor.apply()
+}
+
+fun getUser(): User? {
+    return Gson().fromJson(mSharedPreferences.getString("user", null), User::class.java)
 }

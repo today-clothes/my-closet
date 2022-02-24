@@ -4,16 +4,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
-import com.oclothes.mycloset.data.entities.StyleInfo
-import com.oclothes.mycloset.data.entities.Tag
-import com.oclothes.mycloset.data.entities.remote.style.StyleInfoView
-import com.oclothes.mycloset.data.entities.remote.style.StyleService
+import com.oclothes.mycloset.data.entities.remote.domain.StyleInfo
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleInfoView
+import com.oclothes.mycloset.data.entities.remote.style.service.StyleService
 import com.oclothes.mycloset.databinding.FragmentSearchDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.search.adapter.SearchDetailTagListRvAdapter
 import com.oclothes.mycloset.utils.getJwt
 
-class SearchDetailFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchDetailBinding>(FragmentSearchDetailBinding::inflate) , StyleInfoView{
+class SearchDetailFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchDetailBinding>(FragmentSearchDetailBinding::inflate) ,
+    StyleInfoView {
 
     val tagListForAdapter = ArrayList<Tag>()
     val detailTagRvAdapter = SearchDetailTagListRvAdapter(this, tagListForAdapter)

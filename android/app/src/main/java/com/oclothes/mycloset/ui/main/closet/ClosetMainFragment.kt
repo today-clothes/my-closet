@@ -1,8 +1,8 @@
 package com.oclothes.mycloset.ui.main.closet
 
 import androidx.viewpager2.widget.ViewPager2
-import com.oclothes.mycloset.data.entities.Closet
-import com.oclothes.mycloset.data.entities.Status
+import com.oclothes.mycloset.data.entities.remote.domain.Closet
+import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.databinding.FragmentClosetMainBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.MainActivity

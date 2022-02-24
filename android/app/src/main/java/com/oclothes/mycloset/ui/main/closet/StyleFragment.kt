@@ -1,7 +1,6 @@
 package com.oclothes.mycloset.ui.main.closet
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.graphics.Color
 import android.util.Log
 import android.view.View
@@ -12,15 +11,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.Closet
-import com.oclothes.mycloset.data.entities.Status
-import com.oclothes.mycloset.data.entities.Style
-import com.oclothes.mycloset.data.entities.Tag
-import com.oclothes.mycloset.data.entities.remote.style.StyleCreateView
-import com.oclothes.mycloset.data.entities.remote.style.StyleDeleteView
-import com.oclothes.mycloset.data.entities.remote.style.StyleSearchView
-import com.oclothes.mycloset.data.entities.remote.style.StyleService
-import com.oclothes.mycloset.data.entities.remote.tag.TagService
+import com.oclothes.mycloset.data.entities.remote.domain.Closet
+import com.oclothes.mycloset.data.entities.remote.domain.Status
+import com.oclothes.mycloset.data.entities.remote.domain.Style
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleCreateView
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleDeleteView
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleSearchView
+import com.oclothes.mycloset.data.entities.remote.style.service.StyleService
+import com.oclothes.mycloset.data.entities.remote.tag.service.TagService
 import com.oclothes.mycloset.databinding.FragmentSingleClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.signup.TagView
@@ -30,7 +29,7 @@ import com.oclothes.mycloset.ui.main.closet.adapter.SingleClosetTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
 
 class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentSingleClosetBinding>(FragmentSingleClosetBinding::inflate)
-    ,View.OnClickListener , TagView, StyleCreateView, StyleDeleteView, StyleSearchView{
+    ,View.OnClickListener , TagView, StyleCreateView, StyleDeleteView, StyleSearchView {
 
     private val styleList: ArrayList<Style> = ArrayList<Style>()
     lateinit var eventTags : ArrayList<Tag>

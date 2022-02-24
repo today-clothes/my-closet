@@ -6,11 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
-import com.oclothes.mycloset.data.entities.Style
+import com.oclothes.mycloset.data.entities.remote.domain.Style
 import com.oclothes.mycloset.databinding.ItemSearchedItemBinding
 import com.oclothes.mycloset.ui.main.search.SearchFragment
 import com.oclothes.mycloset.utils.getJwt
-import java.util.concurrent.CopyOnWriteArrayList
 
 class SearchStyleListRVAdapter (private val fragment : SearchFragment, val styleList : ArrayList<Style>) : RecyclerView.Adapter<SearchStyleListRVAdapter.ViewHolder>(){
     interface MyItemClickListener{

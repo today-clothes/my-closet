@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
 import com.oclothes.mycloset.databinding.ItemStyleInfoTagBinding
 import com.oclothes.mycloset.ui.signup.StyleInfoFragment
 

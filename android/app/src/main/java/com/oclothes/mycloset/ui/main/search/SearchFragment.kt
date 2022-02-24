@@ -5,31 +5,40 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.GridLayoutManager
-import com.oclothes.mycloset.data.entities.Style
-import com.oclothes.mycloset.data.entities.remote.style.StyleSearchView
-import com.oclothes.mycloset.data.entities.remote.style.StyleService
+import com.oclothes.mycloset.data.entities.remote.domain.Style
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleSearchView
+import com.oclothes.mycloset.data.entities.remote.style.service.StyleService
+import com.oclothes.mycloset.data.entities.remote.style.view.RecommendClothView
 import com.oclothes.mycloset.databinding.FragmentSearchBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.search.adapter.SearchStyleListRVAdapter
+import com.oclothes.mycloset.utils.getUser
 
 
 class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate),
-    StyleSearchView {
+    StyleSearchView, RecommendClothView {
     lateinit var searchAdapter : SearchStyleListRVAdapter
-    val styleList: ArrayList<Style> by lazy{
-        ArrayList<Style>()
-    }
+    private val styleList: ArrayList<Style> = ArrayList<Style>()
+
     private lateinit var myLayoutManager: GridLayoutManager
 
     override fun initAfterBinding() {
-
         setRvAdapter()
+        setOnClickListeners()
+        setRecommendation()
+    }
 
-        binding.searchMainRv.setOnClickListener{
+    private fun setRecommendation() {
+        binding.searchResultTv.text = "'${getUser()?.nickname}'님을 위한 추천"
+        StyleService.recommendClothes(this)
+    }
+
+    private fun setOnClickListeners() {
+        binding.searchMainRv.setOnClickListener {
             hideKeyboard()
         }
 
-        binding.searchBackground.setOnClickListener{
+        binding.searchBackground.setOnClickListener {
             hideKeyboard()
         }
 
@@ -38,9 +47,6 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
             map["keyword"] = binding.searchMainEt.text.toString()
             StyleService.searchClothes(this, HashMap<String, Int>(), map)
         }
-
-        binding.searchResultTv.text = ""
-
     }
 
     private fun setRvAdapter() {
@@ -87,6 +93,16 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
 
     override fun onSearchFailure(message: String) {
         showToast("검색 실패 : $message")
+    }
+
+    override fun onRecommendSuccess(styles: ArrayList<Style>) {
+        searchAdapter.styleList.clear()
+        searchAdapter.styleList.addAll(styles)
+        searchAdapter.notifyDataSetChanged()
+    }
+
+    override fun onRecommendFailure(message: String) {
+        showToast("추천 실패 : $message")
     }
 
 

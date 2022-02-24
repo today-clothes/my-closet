@@ -1,10 +1,9 @@
 package com.oclothes.mycloset.ui.signup
 
 import android.util.Log
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
-import com.oclothes.mycloset.data.entities.Tag
-import com.oclothes.mycloset.data.entities.remote.tag.TagService
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
+import com.oclothes.mycloset.data.entities.remote.tag.service.TagService
 import com.oclothes.mycloset.databinding.FragmentStyleInfoBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.signup.adapter.InfoStyleRvAdapter

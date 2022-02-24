@@ -20,22 +20,20 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.ApplicationClass.Companion.DEV_URL
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.*
-import com.oclothes.mycloset.data.entities.remote.auth.AuthService
-import com.oclothes.mycloset.data.entities.remote.closet.ClosetService
-import com.oclothes.mycloset.data.entities.remote.style.StyleCreateView
-import com.oclothes.mycloset.data.entities.remote.style.StyleInfoView
-import com.oclothes.mycloset.data.entities.remote.style.StyleLockView
-import com.oclothes.mycloset.data.entities.remote.style.StyleService
-import com.oclothes.mycloset.data.entities.remote.tag.TagService
+import com.oclothes.mycloset.data.entities.remote.domain.Status
+import com.oclothes.mycloset.data.entities.remote.domain.StyleInfo
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleCreateView
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleInfoView
+import com.oclothes.mycloset.data.entities.remote.style.view.StyleLockView
+import com.oclothes.mycloset.data.entities.remote.style.service.StyleService
+import com.oclothes.mycloset.data.entities.remote.tag.service.TagService
 import com.oclothes.mycloset.databinding.FragmentDetailBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.signup.TagView
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.DetailTagListRvAdapter
 import com.oclothes.mycloset.ui.main.closet.adapter.TagSelectDialogRvAdapter
-import com.oclothes.mycloset.ui.main.closet.view.ClosetView
-import com.oclothes.mycloset.ui.main.closet.view.UserInfoView
 import com.oclothes.mycloset.utils.FormDataUtils
 import com.oclothes.mycloset.utils.getJwt
 import java.io.File
@@ -43,7 +41,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) , StyleInfoView, TagView,
+class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding::inflate) ,
+    StyleInfoView, TagView,
     StyleCreateView, StyleLockView {
     var editMode = false
     val tagListForAdapter = ArrayList<Tag>()
