@@ -34,12 +34,12 @@ import static org.mockito.Mockito.*;
 
 class ClosetServiceImplTest extends BaseTest {
 
+    @Mock
+    private ClosetMapperSupport closetMapperSupport;
+
     @Spy
     @InjectMocks
     private ClosetMapper closetMapper = Mappers.getMapper(ClosetMapper.class);
-
-    @Mock
-    private ClosetMapperSupport closetMapperSupport;
 
     @Mock
     private ClosetRepository closetRepository;
@@ -72,7 +72,7 @@ class ClosetServiceImplTest extends BaseTest {
 
         securityUtilsMock.when(SecurityUtils::getLoggedInUser).thenReturn(user);
         when(this.closetRepository.save(any())).thenReturn(closet);
-        when(this.closetMapperSupport.getImgUrl(any())).thenReturn("imgUrl");
+        when(this.closetMapperSupport.mapThumbnail(any())).thenReturn("thumbnail-url");
 
         DefaultResponse response = this.closetService.create(request);
         assertEquals(name, response.getName());
@@ -100,7 +100,7 @@ class ClosetServiceImplTest extends BaseTest {
         final ClosetDto.NameUpdateRequest request = new ClosetDto.NameUpdateRequest(id, "test");
 
         when(this.closetRepository.findByIdAndUser(any(), any())).thenReturn(Optional.of(closet));
-        when(this.closetMapperSupport.getImgUrl(any())).thenReturn("imgUrl");
+        when(this.closetMapperSupport.mapThumbnail(any())).thenReturn("thumbnail-url");
 
         final DefaultResponse response = this.closetService.updateName(id, request);
         assertEquals("test", response.getName());

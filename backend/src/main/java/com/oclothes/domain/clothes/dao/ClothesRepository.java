@@ -35,4 +35,5 @@ public interface ClothesRepository extends JpaRepository<Clothes, Long>, Clothes
             "and c.user.personalInformation.weight between :weight - 5 and :weight + 5")
     List<Clothes> findAllForRecommend(UserPersonalInformation.Gender gender, int age, int height, int weight);
 
+    Optional<Clothes> findFirstByClosetOrderByCreatedAtDesc(Closet closet);
 }

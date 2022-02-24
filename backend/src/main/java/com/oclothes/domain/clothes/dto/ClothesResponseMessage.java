@@ -11,7 +11,8 @@ public enum ClothesResponseMessage {
     SEARCH_CLOTHES_SUCCESS("옷 검색을 완료했습니다."),
     CHANGE_LOCKED_STATUS_SUCCESS("해당 옷 공개 상태를 변경 완료했습니다."),
     DELETE_SUCCESS("해당 옷 삭제를 완료했습니다."),
-    DELETE_All_SUCCESS("해당 옷들을 삭제 완료했습니다.");
+    DELETE_All_SUCCESS("해당 옷들을 삭제 완료했습니다."),
+    RECOMMEND_CLOTHES_SUCCESS("옷 추천 리스트를 반환 성공했습니다.");
 
     private final String message;
 }
