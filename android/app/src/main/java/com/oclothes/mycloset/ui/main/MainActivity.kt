@@ -65,6 +65,9 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.searchFragment -> {
                     showFragment(searchMain)
+                    if(pageStatus == Status.STATE_SEARCH_FRAGMENT){
+                        searchMain.search.setRecommendation()
+                    }
                     pageStatus = Status.STATE_SEARCH_FRAGMENT
                     return@setOnItemSelectedListener true
                 }
@@ -244,7 +247,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            Status.STATE_SEARCH_FRAGMENT->{
+            Status.STATE_SEARCH_FRAGMENT, Status.STATE_SEARCH_DETAIL_FRAGMENT->{
                 if(searchMain.backPressed()){
                     val currentTime = System.currentTimeMillis()
                     val intervalTime = currentTime - backPressedTime

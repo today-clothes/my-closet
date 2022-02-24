@@ -36,7 +36,7 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
     lateinit var moodTags : ArrayList<Tag>
     lateinit var seasonTags : ArrayList<Tag>
     lateinit var allTags : ArrayList<Tag>
-    val a by lazy {(requireActivity() as MainActivity)}
+    private val a by lazy {(requireActivity() as MainActivity)}
     private lateinit var tagListAdapter : SingleClosetTagListRvAdapter
     private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
     private lateinit var myLayoutManager: GridLayoutManager
@@ -138,11 +138,22 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
     }
 
     fun updateStyleList() {
-        /**
-         * 여기 아주 중요한 부분.,.....,.,.,,, 여기서 태그 검색해서 넘겨주고, 받아서 처리하는 부분은 success에서 처리하는걸로!!!
-         *
-         *
-         */
+        val intMap = HashMap<String, Int>()
+        if(a.currentCloset!!.id != 0)
+            intMap["closetId"] = a.currentCloset!!.id
+        intMap["size"] = 20
+        val tagMap = HashMap<String, ArrayList<Int>>()
+        val moodList = ArrayList<Int>()
+        val seasonList = ArrayList<Int>()
+        val eventList = ArrayList<Int>()
+        for(tag in selectedTag){
+            when {
+                moodTags.contains(tag) -> moodList.add(tag.id)
+                seasonTags.contains(tag) -> seasonList.add(tag.id)
+                eventTags.contains(tag) -> eventList.add(tag.id)
+            }
+        }
+        StyleService.searchClothes(this, intMap, HashMap<String, String>(), eventList, moodList , seasonList)
     }
 
     fun updateList(selectedTag: ArrayList<Tag>) {
@@ -155,7 +166,6 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
     }
 
     private fun setDeleteButtonTrigger() {
-
         AlertDialog.Builder(context).setTitle("옷을 삭제 하시겠습니까?")
             .setPositiveButton("예") { p0, p1 ->
                 clothListAdapter.deleteSelectedItem()
@@ -172,7 +182,14 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
         if(a.currentCloset!!.id != 0)
             intMap["closetId"] = closet.id
         intMap["size"] = 20
-        StyleService.searchClothes(this, intMap, HashMap<String, String>())
+        StyleService.searchClothes(this, intMap, HashMap<String, String>(), ArrayList<Int>(), ArrayList<Int>(), ArrayList<Int>())
+        emptySelectedTags()
+    }
+
+    private fun emptySelectedTags() {
+        tagListAdapter.setSelectedTag(ArrayList<Tag>())
+        tagListAdapter.notifyDataSetChanged()
+        binding.singleClosetFilterCountTv.text = "0"
     }
 
     private fun initTags(){

@@ -126,10 +126,6 @@ class SingleClosetStyleListRVAdapter (private val f : ClosetMainFragment, privat
         return styleList.size
     }
 
-    fun updateByTag(selectedTag: HashMap<String, Tag>) {
-        //서버에서 리스트 받아와서 업데이트 하는걸로!!
-    }
-
     inner class ViewHolder(val binding: ItemSingleClosetClothBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(style: Style){
             binding.singleClosetClothNameTv.text = style.styleTitle
