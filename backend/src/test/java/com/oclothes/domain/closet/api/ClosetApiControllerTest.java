@@ -34,7 +34,7 @@ class ClosetApiControllerTest extends BaseWebMvcTest {
     void createClosetTest() throws Exception {
         final String closetName = "나의 옷장1";
         final CreateRequest request = new CreateRequest(closetName);
-        final DefaultResponse response = new DefaultResponse(1L, closetName);
+        final DefaultResponse response = new DefaultResponse(1L, closetName, "imgUrl");
 
         when(this.closetService.create(any())).thenReturn(response);
 
@@ -66,8 +66,9 @@ class ClosetApiControllerTest extends BaseWebMvcTest {
     void updateNameTest() throws Exception {
         final long id = 1L;
         final String name = "test";
+        final String thumbnail = "imgUrl";
         final NameUpdateRequest request = new NameUpdateRequest(id, name);
-        final DefaultResponse dto = new DefaultResponse(id, name);
+        final DefaultResponse dto = new DefaultResponse(id, name, thumbnail);
 
         when(this.closetService.updateName(any(), any())).thenReturn(dto);
 

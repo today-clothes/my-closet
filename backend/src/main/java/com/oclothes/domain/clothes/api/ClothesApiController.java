@@ -76,8 +76,8 @@ public class ClothesApiController {
 
     @ApiOperation(value = "옷 추천", notes = "옷 추천 알고리즘")
     @GetMapping("/recommend")
-    public ResponseEntity<?> recommendClothes() {
-        return ResponseEntity.ok(ResponseDto.create("옷 추천 리스트 반환 성공.", this.clothesRecommendService.recommendClothes()));
+    public ResponseEntity<ResponseDto<List<ClothesDto.SearchResponse>>> recommendClothes() {
+        return ResponseEntity.ok(ResponseDto.create(RECOMMEND_CLOTHES_SUCCESS.getMessage(), this.clothesRecommendService.recommendClothes()));
     }
 
 }

@@ -34,6 +34,7 @@ import static org.mockito.Mockito.*;
 class ClosetServiceImplTest extends BaseTest {
 
     @Spy
+    @InjectMocks
     private ClosetMapper closetMapper = Mappers.getMapper(ClosetMapper.class);
 
     @Mock

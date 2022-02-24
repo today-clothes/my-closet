@@ -10,5 +10,8 @@ public interface ClosetMapper {
     @Mapping(target = "user", expression = "java(SecurityUtils.getLoggedInUser())")
     Closet toEntity(ClosetDto.CreateRequest request);
 
+    @Mapping(target = "thumbnail", ignore = true)
     ClosetDto.DefaultResponse entityToDefaultResponse(Closet closet);
+
+    ClosetDto.DefaultResponse entityToDefaultResponse(Closet closet, String thumbnail);
 }

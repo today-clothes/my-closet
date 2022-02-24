@@ -160,7 +160,7 @@ public class ClothesRepositoryTest extends BaseDataJpaTest {
         this.clothesRepository.save(clothes2);
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        Slice<Clothes> clothes = this.clothesRepository.searchByTag(request,null, pageRequest);
+        Slice<Clothes> clothes = this.clothesRepository.searchByTag(request, null, pageRequest);
         assertEquals(1, clothes.getNumberOfElements());
     }
 
