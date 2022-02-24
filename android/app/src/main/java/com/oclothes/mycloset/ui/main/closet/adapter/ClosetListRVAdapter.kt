@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.oclothes.mycloset.data.entities.Closet
+import com.oclothes.mycloset.data.entities.remote.domain.Closet
 import com.oclothes.mycloset.databinding.ItemClosetBinding
 import com.oclothes.mycloset.ui.main.closet.ClosetFragment
 

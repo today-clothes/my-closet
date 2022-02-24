@@ -21,6 +21,7 @@ class SearchMainFragment : BaseFragment<FragmentSearchMainBinding>(FragmentSearc
         setVpAdapter()
     }
 
+
     private fun setVpAdapter() {
         vpAdapter = MainSearchFragmentVpAdapter(this)
         vpAdapter.addFragment(search)

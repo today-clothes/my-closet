@@ -113,7 +113,7 @@
                 android:text="2"
                 android:fontFamily="@font/roboto_bold"
                 android:layout_marginBottom="5dp"
-                android:layout_marginEnd="13dp"
+                android:layout_marginEnd="10dp"
                 />
 
             <com.oclothes.mycloset.ui.main.closet.custom.NestedScrollableHost

@@ -1,6 +1,6 @@
 package com.oclothes.mycloset.ui.main.closet.view
 
-import com.oclothes.mycloset.data.entities.Closet
+import com.oclothes.mycloset.data.entities.remote.domain.Closet
 
 interface ClosetView {
     fun onGetClosetsSuccess(data: ArrayList<Closet>)

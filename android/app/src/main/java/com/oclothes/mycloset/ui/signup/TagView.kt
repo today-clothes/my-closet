@@ -1,6 +1,6 @@
 package com.oclothes.mycloset.ui.signup
 
-import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
 import java.util.ArrayList
 
 interface TagView {

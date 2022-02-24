@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.Tag
+import com.oclothes.mycloset.data.entities.remote.domain.Tag
 import com.oclothes.mycloset.databinding.ItemSingleClosetTagBinding
 
 class SearchDetailTagListRvAdapter (val fragment : Fragment, private val tagList : ArrayList<Tag>) : RecyclerView.Adapter<SearchDetailTagListRvAdapter.ViewHolder>() {

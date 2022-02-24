@@ -14,9 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.*
 import com.google.gson.Gson
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.Closet
-import com.oclothes.mycloset.data.entities.Status
-import com.oclothes.mycloset.data.entities.Style
+import com.oclothes.mycloset.data.entities.remote.domain.Closet
+import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.databinding.ActivityMainBinding
 import com.oclothes.mycloset.ui.main.closet.ClosetMainFragment
 import com.oclothes.mycloset.ui.main.mypage.MyPageFragment

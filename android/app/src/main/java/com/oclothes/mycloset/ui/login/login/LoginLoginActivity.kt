@@ -5,12 +5,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.remote.auth.AuthService
-import com.oclothes.mycloset.data.entities.remote.auth.UserDto
+import com.oclothes.mycloset.data.entities.remote.auth.service.AuthService
+import com.oclothes.mycloset.data.entities.remote.auth.dto.UserDto
 import com.oclothes.mycloset.databinding.ActivityLoginLoginBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.login.EmailAuthActivity
-import com.oclothes.mycloset.ui.signup.SignUpEmailFragment
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.signup.SignUpActivity
 import com.oclothes.mycloset.utils.saveJwt
