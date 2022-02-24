@@ -93,6 +93,13 @@ public class ClothesServiceImpl implements ClothesService {
         this.clothesRepository.deleteAllByIdIn(ids);
     }
 
+    @Override
+    public String getClosetThumbnail(Closet closet) {
+        Clothes clothes = this.clothesRepository.findFirstByClosetOrderByCreatedAtDesc(closet).orElse(null);
+        if (isNull(clothes)) return null;
+        return clothes.getImgUrl();
+    }
+
     public Clothes findById(Long id) {
         return this.clothesRepository.findById(id).orElseThrow(ClothesNotFoundException::new);
     }

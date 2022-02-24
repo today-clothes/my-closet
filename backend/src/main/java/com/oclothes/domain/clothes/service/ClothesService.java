@@ -24,4 +24,6 @@ public interface ClothesService {
     void deleteById(Long id);
 
     void deleteAllByIdIn(Collection<Long> ids);
+
+    String getClosetThumbnail(Closet closet);
 }

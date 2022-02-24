@@ -31,7 +31,8 @@ public class ClosetServiceImpl implements ClosetService {
 
     @Override
     public SliceDto<DefaultResponse> findAllSliceByUser(Pageable pageable) {
-        return SliceDto.create(this.closetRepository.findAllSliceByUser(getLoggedInUser(), pageable).map(this.closetMapper::entityToDefaultResponse));
+        return SliceDto.create(this.closetRepository.findAllSliceByUser(getLoggedInUser(), pageable)
+                .map(closet -> this.closetMapper.entityToDefaultResponse(closet, this.clothesService.getClosetThumbnail(closet))));
     }
 
     @Override
