@@ -1,5 +1,6 @@
 package com.oclothes.mycloset.data.entities.remote.style.service
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.oclothes.mycloset.ApplicationClass
@@ -13,6 +14,7 @@ import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 object StyleService {
     val gson = Gson()
@@ -161,11 +163,9 @@ object StyleService {
                     in 200..299 -> {
                         val resp = response.body()!!
                         val styles = ArrayList<Style>()
-                        resp.data?.let {
-                            for (style in it.contents) {
-                                style.apply {
-                                    styles.add(Style(closetId, clothesId, imgUrl, locked, "", styleTitle ,eventTags, moodTags, seasonTags, updatedAt))
-                                }
+                        for (style in resp.data) {
+                            style.apply {
+                                styles.add(Style(closetId, clothesId, imgUrl, locked, "", styleTitle ,eventTags, moodTags, seasonTags, updatedAt))
                             }
                         }
                         recommendClothView.onRecommendSuccess(styles)
@@ -185,6 +185,7 @@ object StyleService {
                 }
             }
             override fun onFailure(call: Call<RecommendResponse>, t: Throwable) {
+                Log.d("FAILURE", if(t is IOException) "네트워크 문제" else "시리얼라이즈 문제")
                 recommendClothView.onRecommendFailure("알 수 없는 오류 in failure")
             }
         })

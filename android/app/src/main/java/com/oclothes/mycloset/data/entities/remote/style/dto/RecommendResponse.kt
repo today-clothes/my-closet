@@ -5,14 +5,10 @@ import com.oclothes.mycloset.data.entities.remote.domain.Tag
 
 data class RecommendResponse (
     @SerializedName("message") val message : String,
-    @SerializedName("data") val data : RecommendData?
+    @SerializedName("data") val data : ArrayList<RecommendData>
 )
 
 data class RecommendData(
-    @SerializedName("contents") val contents : ArrayList<Data>
-)
-
-data class Data(
     @SerializedName("closetId") val closetId : Int,
     @SerializedName("clothesId") val clothesId : Int,
     @SerializedName("imgUrl") val imgUrl : String,
