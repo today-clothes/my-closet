@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                     showFragment(searchMain)
                     if(pageStatus == Status.STATE_SEARCH_FRAGMENT){
                         searchMain.search.setRecommendation()
+                        searchMain.setVp(0)
                     }
                     pageStatus = Status.STATE_SEARCH_FRAGMENT
                     return@setOnItemSelectedListener true
@@ -75,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.myFragment -> {
                     showFragment(mypage)
                     pageStatus = Status.STATE_MY_PAGE_FRAGMENT
+                    mypage.setEmail()
                     return@setOnItemSelectedListener true
                 }
             }

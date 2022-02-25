@@ -9,10 +9,10 @@ import com.oclothes.mycloset.data.entities.remote.closet.controller.ClosetRetrof
 import com.oclothes.mycloset.data.entities.remote.domain.Closet
 import com.oclothes.mycloset.data.entities.remote.domain.ErrorBody
 import com.oclothes.mycloset.data.entities.remote.closet.dto.*
-import com.oclothes.mycloset.ui.main.closet.view.ClosetCreateView
-import com.oclothes.mycloset.ui.main.closet.view.ClosetDeleteView
-import com.oclothes.mycloset.ui.main.closet.view.ClosetUpdateView
-import com.oclothes.mycloset.ui.main.closet.view.ClosetView
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetCreateView
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetDeleteView
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetUpdateView
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

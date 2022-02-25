@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/modify_account_back_btn"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/arrow_gray_to_left"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="계정정보 수정"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/modify_account_back_btn"
+        app:layout_constraintBottom_toBottomOf="@id/modify_account_back_btn"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roboto_bold"
+        />
+
+    <TextView
+        android:id="@+id/modify_first_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="닉네임"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        android:fontFamily="@font/roboto_regular"
+        />
+
+    <EditText
+        android:id="@+id/modify_first_et"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@id/modify_first_tv"
+        android:background="#165A5A5A"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="5dp"
+        android:hint="변경하실 값을 입력해주세요"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:fontFamily="@font/roboto_regular"
+        />
+
+    <TextView
+        android:id="@+id/modify_second_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="나이"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="180dp"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        android:fontFamily="@font/roboto_regular"
+        />
+
+    <EditText
+        android:id="@+id/modify_second_et"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@id/modify_second_tv"
+        android:background="#165A5A5A"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="5dp"
+        android:hint="변경하실 값을 입력해주세요"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:fontFamily="@font/roboto_regular"
+        />
+
+    <TextView
+        android:id="@+id/modify_account_confirm_btn_tv"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/basic_theme_button_active"
+        android:gravity="center"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="수정"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

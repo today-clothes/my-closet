@@ -3,7 +3,7 @@ package com.oclothes.mycloset.ui.splash
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.oclothes.mycloset.data.entities.remote.auth.service.AuthService
+import com.oclothes.mycloset.data.entities.remote.user.service.UserService
 import com.oclothes.mycloset.databinding.ActivitySplashBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.login.LoginActivity
@@ -20,7 +20,7 @@ class SplashActivity: BaseActivity<ActivitySplashBinding>(ActivitySplashBinding:
 }
 
     private fun autoLogin() {
-        AuthService.autoLogin(this)
+        UserService.autoLogin(this)
         finish()
     }
 
