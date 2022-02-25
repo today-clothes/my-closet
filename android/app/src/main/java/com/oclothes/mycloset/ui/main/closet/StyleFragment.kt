@@ -7,10 +7,12 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.R
+import com.oclothes.mycloset.data.entities.remote.closet.service.ClosetService
 import com.oclothes.mycloset.data.entities.remote.domain.Closet
 import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.data.entities.remote.domain.Style
@@ -41,6 +43,15 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
     private lateinit var clothListAdapter: SingleClosetStyleListRVAdapter
     private lateinit var myLayoutManager: GridLayoutManager
     private val selectedTag = ArrayList<Tag>()
+    var hasNext = false
+    var currentPage = 1
+    val me by lazy{this}
+
+    var lastParam1 : HashMap<String, Int>? = null
+    var lastParam2 : HashMap<String, String>? = null
+    var lastParam3 : ArrayList<Int>? = null
+    var lastParam4 : ArrayList<Int>? = null
+    var lastParam5 : ArrayList<Int>? = null
 
 
     override fun initAfterBinding() {
@@ -83,6 +94,16 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
         binding.singleClosetFilterListRv.adapter = tagListAdapter
         binding.singleClosetFilterListRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.singleClosetFilterCountTv.text = "0"
+
+
+        binding.singleClosetNs.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if(scrollY ==(v.getChildAt(0).measuredHeight) - v.measuredHeight){
+                if(hasNext) {
+                    currentPage += 1
+                    StyleService.searchClothes(me, lastParam1!!, lastParam2!!, lastParam3!!, lastParam4!!, lastParam5!!, currentPage)
+                }
+            }
+        })
     }
 
     private fun initOnClickListeners() {
@@ -153,7 +174,14 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
                 eventTags.contains(tag) -> eventList.add(tag.id)
             }
         }
-        StyleService.searchClothes(this, intMap, HashMap<String, String>(), eventList, moodList , seasonList)
+        lastParam1 = intMap
+        lastParam2 = HashMap<String, String>()
+        lastParam3 = eventList
+        lastParam4 = moodList
+        lastParam5 = seasonList
+        this.styleList.clear()
+        currentPage = 1
+        StyleService.searchClothes(this, intMap, HashMap<String, String>(), eventList, moodList , seasonList, 1)
     }
 
     fun updateList(selectedTag: ArrayList<Tag>) {
@@ -186,7 +214,15 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
         if(a.currentCloset!!.id != 0)
             intMap["closetId"] = closet.id
         intMap["size"] = 20
-        StyleService.searchClothes(this, intMap, HashMap<String, String>(), ArrayList<Int>(), ArrayList<Int>(), ArrayList<Int>())
+
+        lastParam1 = intMap
+        lastParam2 = HashMap<String, String>()
+        lastParam3 = ArrayList<Int>()
+        lastParam4 = ArrayList<Int>()
+        lastParam5 = ArrayList<Int>()
+        this.styleList.clear()
+        currentPage = 1
+        StyleService.searchClothes(this, intMap, HashMap<String, String>(), ArrayList<Int>(), ArrayList<Int>(), ArrayList<Int>(), 1)
         emptySelectedTags()
     }
 
@@ -234,8 +270,8 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
 
     }
 
-    override fun onSearchSuccess(styles: ArrayList<Style>, b: Boolean) {
-        this.styleList.clear()
+    override fun onSearchSuccess(styles: ArrayList<Style>, hasNext: Boolean) {
+        this.hasNext = hasNext
         this.styleList.addAll(styles)
         clothListAdapter.notifyDataSetChanged()
     }

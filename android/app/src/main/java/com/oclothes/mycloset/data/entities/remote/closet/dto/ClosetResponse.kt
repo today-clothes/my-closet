@@ -8,7 +8,7 @@ data class ClosetResponse(
 )
 
 data class ClosetData(
-    @SerializedName("contentsCount") val contentsCount : Int,
+    @SerializedName("hasNext") val hasNext : Boolean,
     @SerializedName("contents") val contents : List<Closet>
 )
 

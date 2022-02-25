@@ -22,10 +22,10 @@ object ClosetService {
     val type = object : TypeToken<ErrorBody>() {}.type
 
 
-    fun getClosets(closetView: ClosetView){
+    fun getClosets(closetView: ClosetView, page : Int){
         val closetService = ApplicationClass.retrofit.create(ClosetRetrofitInterface::class.java)
 
-        closetService.getClosets().enqueue(object : Callback<ClosetResponse> {
+        closetService.getClosets(page).enqueue(object : Callback<ClosetResponse> {
             override fun onResponse(call: Call<ClosetResponse>, response: Response<ClosetResponse>) {
                 val resp = response.body()!!
                 when(response.code()){
@@ -35,7 +35,7 @@ object ClosetService {
                             val closet = Closet(content.id, content.name, content.thumbnail)
                             closets.add(closet)
                         }
-                        closetView.onGetClosetsSuccess(closets)
+                        closetView.onGetClosetsSuccess(closets, resp.data.hasNext)
                     }
                     else -> closetView.onGetClosetsFailure(response.code(), resp.message)
                 }

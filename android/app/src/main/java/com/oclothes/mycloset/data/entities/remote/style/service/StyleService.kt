@@ -21,9 +21,9 @@ object StyleService {
     val gson = Gson()
     val type = object : TypeToken<ErrorBody>() {}.type
 
-    fun searchClothes(styleSearchView : StyleSearchView, intMap : Map<String, Int>, stringMap : Map<String, String>, eventIds : ArrayList<Int>,moodIds : ArrayList<Int>, seasonIds : ArrayList<Int>){
+    fun searchClothes(styleSearchView : StyleSearchView, intMap : Map<String, Int>, stringMap : Map<String, String>, eventIds : ArrayList<Int>,moodIds : ArrayList<Int>, seasonIds : ArrayList<Int>, page : Int){
         val styleService = ApplicationClass.retrofit.create(StyleRetrofitInterface::class.java)
-        styleService.searchClothes(intMap, stringMap, eventIds, moodIds, seasonIds).enqueue(object : Callback<SearchResponse> {
+        styleService.searchClothes(intMap, stringMap, eventIds, moodIds, seasonIds, page).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
                 call: Call<SearchResponse>,
                 response: Response<SearchResponse>
@@ -37,11 +37,8 @@ object StyleService {
                                 styles.add(Style(closetId, clothesId, imgUrl, locked, "", styleTitle ,eventTags, moodTags, seasonTags, updatedAt))
                             }
                         }
-                        if(resp.data.hasNext){
-                            styleSearchView.onSearchSuccess(styles, true)
-                        }else{
-                            styleSearchView.onSearchSuccess(styles, false)
-                        }
+                        styleSearchView.onSearchSuccess(styles, resp.data.hasNext)
+
                     }
                     else -> {
                         var errorBody: ErrorBody? =

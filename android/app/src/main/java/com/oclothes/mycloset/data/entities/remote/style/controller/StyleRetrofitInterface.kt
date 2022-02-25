@@ -13,6 +13,7 @@ interface StyleRetrofitInterface {
         @Query("eventTagIds") eventTagIds : ArrayList<Int>,
         @Query("moodTagIds") moodTagIds : ArrayList<Int>,
         @Query("seasonTagIds") seasonTagIds : ArrayList<Int>,
+        @Query("page") page :Int
     ) : Call<SearchResponse>
 
     @Multipart

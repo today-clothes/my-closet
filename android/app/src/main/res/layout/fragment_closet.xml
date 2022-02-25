@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/closet_ns"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -100,18 +101,7 @@
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/black"
             />
-        
-        <TextView
-            android:id="@+id/closet_all_closet_number_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/closet_main_logo_iv"
-            app:layout_constraintTop_toBottomOf="@id/closet_all_closet_tv"
-            android:text="10 개"
-            android:textSize="15dp"
-            android:fontFamily="@font/roboto_regular"
-            />
-        
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/closet_all_closet_list_rv"
             android:layout_width="match_parent"
@@ -123,7 +113,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@id/closet_all_closet_number_tv"
+            app:layout_constraintTop_toBottomOf="@id/closet_all_closet_tv"
             android:nestedScrollingEnabled="false"/>
         
         
