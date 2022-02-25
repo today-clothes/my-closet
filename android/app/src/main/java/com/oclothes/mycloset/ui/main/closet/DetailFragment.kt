@@ -316,6 +316,7 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
     override fun onCreateSuccess(closetId: Int, clothesId: Int,  url: String) {
         showToast("옷장에 옷이 등록되었습니다.")
         f.openCloset(a.currentCloset!!)
+        f.closet.init()
     }
 
     override fun onCreateFailure(message: String) {

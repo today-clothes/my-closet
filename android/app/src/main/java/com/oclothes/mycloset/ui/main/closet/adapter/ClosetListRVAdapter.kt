@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.data.entities.remote.domain.Closet
 import com.oclothes.mycloset.databinding.ItemClosetBinding
 import com.oclothes.mycloset.ui.main.closet.ClosetFragment
+import com.oclothes.mycloset.utils.getJwt
 
 class ClosetListRVAdapter(private val closetList : ArrayList<Closet>, val f : ClosetFragment) : RecyclerView.Adapter<ClosetListRVAdapter.ViewHolder>(){
 
@@ -55,7 +58,7 @@ class ClosetListRVAdapter(private val closetList : ArrayList<Closet>, val f : Cl
     inner class ViewHolder(val binding: ItemClosetBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(closet: Closet){
-            if(closet.imageSource == null){
+            if(closet.thumbnail == null){
                 binding.closetItemNameTv.setTextColor(Color.BLACK)
                 binding.closetItemNameTv.text = closet.name
                 binding.closetItemWhenEmptyTv.visibility = View.VISIBLE
@@ -63,9 +66,10 @@ class ClosetListRVAdapter(private val closetList : ArrayList<Closet>, val f : Cl
                 binding.closetItemWhenEmptyTv.visibility = View.GONE
                 binding.closetItemNameTv.text = closet.name
             }
-            Glide.with(binding.closetItemCv)
-                .load(closet.imageSource)
-                .into(binding.closetItemImageIv)
+            val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${closet.thumbnail}", LazyHeaders.Builder()
+                .addHeader("Authorization", getJwt()!!)
+                .build())
+            Glide.with(f).load(glideUrl).into(binding.closetItemImageIv)
         }
     }
 }

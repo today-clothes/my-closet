@@ -7,7 +7,6 @@ data class ClosetResponse(
     @SerializedName("data") val data : ClosetData
 )
 
-
 data class ClosetData(
     @SerializedName("contentsCount") val contentsCount : Int,
     @SerializedName("contents") val contents : List<Closet>
@@ -15,6 +14,7 @@ data class ClosetData(
 
 data class Closet(
     @SerializedName("id") val id : Int,
-    @SerializedName("name") val name : String
+    @SerializedName("name") val name : String,
+    @SerializedName("thumbnail") val thumbnail : String
 )
 

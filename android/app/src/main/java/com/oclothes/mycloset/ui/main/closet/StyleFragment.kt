@@ -166,13 +166,17 @@ class StyleFragment(private val f : ClosetMainFragment) : BaseFragment<FragmentS
     }
 
     private fun setDeleteButtonTrigger() {
-        AlertDialog.Builder(context).setTitle("옷을 삭제 하시겠습니까?")
-            .setPositiveButton("예") { p0, p1 ->
-                clothListAdapter.deleteSelectedItem()
-                normalMode()
-            }.setNegativeButton("아니요") { p0, p1 ->
+        if(clothListAdapter.getSelectedCount() == 0){
+            normalMode()
+        }else {
+            AlertDialog.Builder(context).setTitle("옷을 삭제 하시겠습니까?")
+                .setPositiveButton("예") { p0, p1 ->
+                    clothListAdapter.deleteSelectedItem()
+                    normalMode()
+                }.setNegativeButton("아니요") { p0, p1 ->
 
-            }.show()
+                }.show()
+        }
     }
 
     fun setCloset(closet : Closet){

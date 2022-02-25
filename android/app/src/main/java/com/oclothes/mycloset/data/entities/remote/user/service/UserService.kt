@@ -95,11 +95,6 @@ object UserService {
                             return
                         }
                         else->{
-                            var errorBody : ErrorBody? = gson.fromJson(response.errorBody()!!.charStream(), type)
-                            if (errorBody != null) {
-                                splashView.onAutoLoginFailure(response.code(), errorBody.errorMessage)
-                                return
-                            }
                             splashView.onAutoLoginFailure(response.code(), "자동 로그인에 실패했습니다.")
                             return
                         }

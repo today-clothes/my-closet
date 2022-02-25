@@ -6,6 +6,9 @@ import android.view.View
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.ApplicationClass
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.remote.domain.Closet
@@ -24,11 +27,12 @@ import com.oclothes.mycloset.databinding.FragmentClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.ClosetListRVAdapter
+import com.oclothes.mycloset.utils.getJwt
 import com.oclothes.mycloset.utils.saveUser
 
 class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate),
     ClosetView, ClosetCreateView, ClosetDeleteView, ClosetUpdateView, UserInfoView {
-    lateinit var closetList : ArrayList<Closet>
+    val closetList = ArrayList<Closet>()
     lateinit var nickName : String
     val a by lazy {(requireActivity() as MainActivity)}
     lateinit var closetRvAdapter : ClosetListRVAdapter
@@ -113,20 +117,24 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
         ClosetService.createCloset(this, CreateClosetDto(name))
     }
 
-    private fun init() {
-        closetList = ArrayList<Closet>()
+    fun init() {
         nickName = ApplicationClass.mSharedPreferences.getString("nickname", "사용자").toString()
         ClosetService.getClosets(this)
         UserService.getUserInfo(this)
-        initAllClothes()
     }
 
     private fun initAllClothes() {
+
+        val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${closetList[0].thumbnail}", LazyHeaders.Builder()
+            .addHeader("Authorization", getJwt()!!)
+            .build())
+        Glide.with(this).load(glideUrl).into(binding.closetAllClosetImageIv)
+
         binding.closetAllClosetCv.setOnClickListener {
             f.setVp(ClosetMainFragment.STYLE)
             MainActivity.pageStatus = Status.STATE_STYLE_FRAGMENT
-            a.currentCloset = Closet(0, "모든 옷")
-            f.style.setCloset(Closet(0,"모든 옷"))
+            a.currentCloset = Closet(0, "모든 옷", null)
+            f.style.setCloset(Closet(0,"모든 옷", null))
         }
     }
 
@@ -138,7 +146,7 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
         closetList.clear()
         closetList.addAll(data)
         notifyClosetChanged()
-        closetRvAdapter.notifyDataSetChanged()
+        initAllClothes()
     }
 
     private fun notifyClosetChanged() {
