@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.data.entities.remote.domain.Style
@@ -21,7 +22,15 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
     StyleSearchView, RecommendClothView {
     lateinit var searchAdapter : SearchStyleListRVAdapter
     private val styleList: ArrayList<Style> = ArrayList<Style>()
-
+    var lastParam1 : HashMap<String, Int>? = null
+    var lastParam2 : HashMap<String, String>? = null
+    var lastParam3 : ArrayList<Int>? = null
+    var lastParam4 : ArrayList<Int>? = null
+    var lastParam5 : ArrayList<Int>? = null
+    var hasNext = false
+    var currentPage = 1
+    var status = 0
+    val me by lazy{this}
     private lateinit var myLayoutManager: GridLayoutManager
 
     override fun initAfterBinding() {
@@ -33,6 +42,7 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
     fun setRecommendation() {
         binding.searchResultTv.text = "'${getUser()?.nickname}'님을 위한 추천"
         binding.searchMainEt.setText("")
+        searchAdapter.styleList.clear()
         StyleService.recommendClothes(this)
     }
 
@@ -50,7 +60,14 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
             val map = HashMap<String, String>()
             binding.searchResultTv.text = "'${binding.searchMainEt.text.toString()}' 검색 결과"
             map["keyword"] = binding.searchMainEt.text.toString()
-            StyleService.searchClothes(this, HashMap<String, Int>(), map, ArrayList<Int>(), ArrayList<Int>(), ArrayList<Int>())
+            lastParam1 = HashMap<String, Int>()
+            lastParam2 = map
+            lastParam3 = ArrayList<Int>()
+            lastParam4 = ArrayList<Int>()
+            lastParam5 = ArrayList<Int>()
+            this.styleList.clear()
+            currentPage = 1
+            StyleService.searchClothes(this, HashMap<String, Int>(), map, ArrayList<Int>(), ArrayList<Int>(), ArrayList<Int>(), 1)
         }
     }
 
@@ -75,6 +92,15 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
                 return false
             }
         })
+
+        binding.searchBackground.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if(scrollY ==(v.getChildAt(0).measuredHeight) - v.measuredHeight){
+                if(hasNext) {
+                    currentPage += 1
+                    StyleService.searchClothes(me, lastParam1!!, lastParam2!!, lastParam3!!, lastParam4!!, lastParam5!!, currentPage)
+                }
+            }
+        })
     }
 
     fun backPressed() : Boolean {
@@ -92,7 +118,8 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
     }
 
     override fun onSearchSuccess(styles: ArrayList<Style>, b: Boolean) {
-        searchAdapter.styleList.clear()
+        this.hasNext = b
+        this.status = 1
         searchAdapter.styleList.addAll(styles)
         searchAdapter.notifyDataSetChanged()
     }
@@ -102,7 +129,7 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
     }
 
     override fun onRecommendSuccess(styles: ArrayList<Style>) {
-        searchAdapter.styleList.clear()
+        status = 2
         searchAdapter.styleList.addAll(styles)
         searchAdapter.notifyDataSetChanged()
     }

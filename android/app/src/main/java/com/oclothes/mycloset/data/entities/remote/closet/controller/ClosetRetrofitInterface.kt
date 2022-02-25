@@ -6,7 +6,7 @@ import retrofit2.http.*
 
 interface ClosetRetrofitInterface {
     @GET("/closets")
-    fun getClosets(): Call<ClosetResponse>
+    fun getClosets(@Query("page") page : Int): Call<ClosetResponse>
 
     @POST("/closets")
     fun createCloset(@Body createClosetDto: CreateClosetDto) : Call<CreateResponse>

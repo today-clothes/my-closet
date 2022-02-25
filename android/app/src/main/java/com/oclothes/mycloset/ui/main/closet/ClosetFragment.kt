@@ -5,7 +5,9 @@ import android.content.DialogInterface
 import android.view.View
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
@@ -36,7 +38,10 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
     lateinit var nickName : String
     val a by lazy {(requireActivity() as MainActivity)}
     lateinit var closetRvAdapter : ClosetListRVAdapter
+    val me by lazy{this}
     val closetFragment = this
+    var hasNext = false
+    var currentPage = 1
     override fun initAfterBinding() {
         getBundle()
         init()
@@ -69,6 +74,15 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
             }
         })
         binding.closetAllClosetListRv.adapter = closetRvAdapter
+
+        binding.closetNs.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if(scrollY ==(v.getChildAt(0).measuredHeight) - v.measuredHeight){
+                if(hasNext) {
+                    currentPage += 1
+                    ClosetService.getClosets(me, currentPage)
+                }
+            }
+        })
     }
 
     private fun setAddBtnTrigger() {
@@ -119,7 +133,9 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
 
     fun init() {
         nickName = ApplicationClass.mSharedPreferences.getString("nickname", "사용자").toString()
-        ClosetService.getClosets(this)
+        closetList.clear()
+        ClosetService.getClosets(this, 1)
+        currentPage = 1
         UserService.getUserInfo(this)
     }
 
@@ -142,16 +158,11 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
         f.openCloset(closet)
     }
 
-    override fun onGetClosetsSuccess(data: ArrayList<Closet>) {
-        closetList.clear()
+    override fun onGetClosetsSuccess(data: ArrayList<Closet>, hasNext : Boolean) {
         closetList.addAll(data)
-        notifyClosetChanged()
-        initAllClothes()
-    }
-
-    private fun notifyClosetChanged() {
         closetRvAdapter.notifyDataSetChanged()
-        binding.closetAllClosetNumberTv.text = closetList.size.toString() + " 개"
+        this.hasNext = hasNext
+        initAllClothes()
     }
 
     override fun onGetClosetsFailure(code: Int, message: String) {
@@ -159,7 +170,9 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
     }
 
     override fun onCreateClosetsSuccess() {
-        ClosetService.getClosets(this)
+        closetList.clear()
+        ClosetService.getClosets(this, 1)
+        currentPage = 1
     }
 
     override fun onCreateClosetsFailure() {
@@ -167,7 +180,9 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
     }
 
     override fun onClosetDeleteSuccess() {
-        ClosetService.getClosets(closetFragment)
+        closetList.clear()
+        ClosetService.getClosets(closetFragment, 1)
+        currentPage = 1
         showToast("옷장을 삭제했습니다.")
     }
 
@@ -176,7 +191,9 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
     }
 
     override fun onClosetUpdateSuccess() {
-        ClosetService.getClosets(closetFragment)
+        closetList.clear()
+        ClosetService.getClosets(closetFragment, 1)
+        currentPage = 1
     }
 
     override fun onClosetUpdateFailure() {
