@@ -32,7 +32,7 @@ object ClosetService {
                     200 -> {
                         val closets = ArrayList<Closet>()
                         for (content in resp.data.contents) {
-                            val closet = Closet(content.id, content.name)
+                            val closet = Closet(content.id, content.name, content.thumbnail)
                             closets.add(closet)
                         }
                         closetView.onGetClosetsSuccess(closets)

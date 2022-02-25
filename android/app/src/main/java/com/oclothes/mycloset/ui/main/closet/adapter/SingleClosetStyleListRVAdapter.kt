@@ -68,6 +68,15 @@ class SingleClosetStyleListRVAdapter (private val f : ClosetMainFragment, privat
         }
     }
 
+    fun getSelectedCount() : Int{
+        var count = 0
+        for(style in styleList){
+            if(style.isSelected)
+                count++
+        }
+        return count
+    }
+
     fun getEditMode() = editMode
 
     fun setEditMode(b : Boolean){
