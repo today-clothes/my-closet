@@ -53,6 +53,11 @@
             android:windowSoftInputMode="adjustNothing">
         </activity>
 
+        <activity
+            android:name=".ui.main.mypage.modify.ModifyInfoActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

@@ -3,7 +3,7 @@ package com.oclothes.mycloset.utils
 import com.google.gson.Gson
 import com.oclothes.mycloset.ApplicationClass.Companion.X_ACCESS_TOKEN
 import com.oclothes.mycloset.ApplicationClass.Companion.mSharedPreferences
-import com.oclothes.mycloset.data.entities.remote.auth.dto.UserDto
+import com.oclothes.mycloset.data.entities.remote.user.dto.UserDto
 import com.oclothes.mycloset.data.entities.remote.domain.User
 
 fun saveJwt(jwtToken: String) {

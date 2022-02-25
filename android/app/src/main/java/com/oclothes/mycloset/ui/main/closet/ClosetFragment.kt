@@ -11,15 +11,19 @@ import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.remote.domain.Closet
 import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.data.entities.remote.domain.User
-import com.oclothes.mycloset.data.entities.remote.auth.service.AuthService
+import com.oclothes.mycloset.data.entities.remote.user.service.UserService
 import com.oclothes.mycloset.data.entities.remote.closet.service.ClosetService
 import com.oclothes.mycloset.data.entities.remote.closet.dto.CreateClosetDto
 import com.oclothes.mycloset.data.entities.remote.closet.dto.UpdateClosetDto
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetCreateView
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetDeleteView
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetUpdateView
+import com.oclothes.mycloset.data.entities.remote.closet.view.ClosetView
+import com.oclothes.mycloset.data.entities.remote.user.view.UserInfoView
 import com.oclothes.mycloset.databinding.FragmentClosetBinding
 import com.oclothes.mycloset.ui.BaseFragment
 import com.oclothes.mycloset.ui.main.MainActivity
 import com.oclothes.mycloset.ui.main.closet.adapter.ClosetListRVAdapter
-import com.oclothes.mycloset.ui.main.closet.view.*
 import com.oclothes.mycloset.utils.saveUser
 
 class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<FragmentClosetBinding>(FragmentClosetBinding::inflate),
@@ -113,7 +117,7 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
         closetList = ArrayList<Closet>()
         nickName = ApplicationClass.mSharedPreferences.getString("nickname", "사용자").toString()
         ClosetService.getClosets(this)
-        AuthService.getUserInfo(this)
+        UserService.getUserInfo(this)
         initAllClothes()
     }
 

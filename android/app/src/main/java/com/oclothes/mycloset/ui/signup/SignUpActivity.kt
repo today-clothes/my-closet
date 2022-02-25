@@ -3,8 +3,8 @@ package com.oclothes.mycloset.ui.signup
 import android.content.Intent
 import android.view.View
 import com.google.android.material.tabs.TabLayoutMediator
-import com.oclothes.mycloset.data.entities.remote.auth.service.AuthService
-import com.oclothes.mycloset.data.entities.remote.auth.dto.SignUpDto
+import com.oclothes.mycloset.data.entities.remote.user.service.UserService
+import com.oclothes.mycloset.data.entities.remote.user.dto.SignUpDto
 import com.oclothes.mycloset.databinding.ActivityInfoSelectBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.signup.adapter.InfoSelectAdapter
@@ -45,7 +45,7 @@ class SignUpActivity : BaseActivity<ActivityInfoSelectBinding>(ActivityInfoSelec
     }
 
     fun signUp(){
-        AuthService.signUp(this, SignUpDto(email,password,nickname,gender,age,height,weight,tagList))
+        UserService.signUp(this, SignUpDto(email,password,nickname,gender,age,height,weight,tagList))
     }
 
 

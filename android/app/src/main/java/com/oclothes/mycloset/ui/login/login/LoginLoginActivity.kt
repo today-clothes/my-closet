@@ -5,8 +5,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.oclothes.mycloset.R
-import com.oclothes.mycloset.data.entities.remote.auth.service.AuthService
-import com.oclothes.mycloset.data.entities.remote.auth.dto.UserDto
+import com.oclothes.mycloset.data.entities.remote.user.service.UserService
+import com.oclothes.mycloset.data.entities.remote.user.dto.UserDto
 import com.oclothes.mycloset.databinding.ActivityLoginLoginBinding
 import com.oclothes.mycloset.ui.BaseActivity
 import com.oclothes.mycloset.ui.login.EmailAuthActivity
@@ -80,7 +80,7 @@ class LoginLoginActivity : BaseActivity<ActivityLoginLoginBinding>(ActivityLogin
     }
 
     private fun login() {
-        AuthService.login(this, UserDto(binding.loginLoginEditTextEmailEt.text.toString(), binding.loginLoginEditTextPasswordEt.text.toString()))
+        UserService.login(this, UserDto(binding.loginLoginEditTextEmailEt.text.toString(), binding.loginLoginEditTextPasswordEt.text.toString()))
     }
 
     override fun onLoginLoading() {

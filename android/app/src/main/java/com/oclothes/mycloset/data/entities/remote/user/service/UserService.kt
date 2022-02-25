@@ -1,29 +1,31 @@
-package com.oclothes.mycloset.data.entities.remote.auth.service
+package com.oclothes.mycloset.data.entities.remote.user.service
 
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.oclothes.mycloset.ApplicationClass.Companion.TAG
 import com.oclothes.mycloset.ApplicationClass.Companion.retrofit
-import com.oclothes.mycloset.data.entities.remote.auth.controller.AuthRetrofitInterface
+import com.oclothes.mycloset.data.entities.remote.user.controller.UserRetrofitInterface
 import com.oclothes.mycloset.data.entities.remote.domain.ErrorBody
 import com.oclothes.mycloset.data.entities.remote.domain.User
-import com.oclothes.mycloset.data.entities.remote.auth.dto.*
+import com.oclothes.mycloset.data.entities.remote.user.dto.*
+import com.oclothes.mycloset.data.entities.remote.user.view.AccountUpdateView
+import com.oclothes.mycloset.data.entities.remote.user.view.PersonalUpdateView
 import com.oclothes.mycloset.ui.signup.SignUpView
 import com.oclothes.mycloset.ui.login.login.LoginView
-import com.oclothes.mycloset.ui.main.closet.view.UserInfoView
+import com.oclothes.mycloset.data.entities.remote.user.view.UserInfoView
 import com.oclothes.mycloset.ui.splash.SplashView
 import com.oclothes.mycloset.utils.getLogin
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object AuthService {
+object UserService {
     val gson = Gson()
     val type = object : TypeToken<ErrorBody>() {}.type
 
     fun signUp(signUpView: SignUpView, signUpDto: SignUpDto) {
-        val authService = retrofit.create(AuthRetrofitInterface::class.java)
+        val authService = retrofit.create(UserRetrofitInterface::class.java)
         signUpView.onSignUpLoading()
         authService.signUp(signUpDto).enqueue(object : Callback<SignUpResponse> {
             override fun onResponse(
@@ -51,7 +53,7 @@ object AuthService {
     }
 
     fun login(loginView: LoginView, userDto: UserDto) {
-        val authService = retrofit.create(AuthRetrofitInterface::class.java)
+        val authService = retrofit.create(UserRetrofitInterface::class.java)
         loginView.onLoginLoading()
         authService.login(userDto).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -80,7 +82,7 @@ object AuthService {
         })
     }
     fun autoLogin(splashView: SplashView) {
-        val authService = retrofit.create(AuthRetrofitInterface::class.java)
+        val authService = retrofit.create(UserRetrofitInterface::class.java)
         Log.d("AUTOLOGIN","서비스")
         splashView.onAutoLoginLoading()
         getLogin()?.let {
@@ -114,7 +116,7 @@ object AuthService {
     }
 
     fun getUserInfo(userInfoView: UserInfoView){
-        val authService = retrofit.create(AuthRetrofitInterface::class.java)
+        val authService = retrofit.create(UserRetrofitInterface::class.java)
         authService.getUserInfo().enqueue(object : Callback<InfoResponse>{
             override fun onResponse(call: Call<InfoResponse>, response: Response<InfoResponse>) {
                 when(response.code()){
@@ -133,6 +135,48 @@ object AuthService {
             override fun onFailure(call: Call<InfoResponse>, t: Throwable) {
 
             }
+        })
+    }
+
+    fun updatePersonal(personalUpdateView : PersonalUpdateView, personalDto : PersonalDto){
+        val authService = retrofit.create(UserRetrofitInterface::class.java)
+        authService.updatePersonalInfo(personalDto).enqueue(object : Callback<UpdateResponse>{
+            override fun onResponse(
+                call: Call<UpdateResponse>,
+                response: Response<UpdateResponse>
+            ) {
+                when(response.code()){
+                    200->{
+                        personalUpdateView.onPersonalUpdateSuccess()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
+                personalUpdateView.onPersonalUpdateFailure()
+            }
+
+        })
+    }
+
+    fun updateAccount(accountUpdateView : AccountUpdateView, accountDto : AccountDto){
+        val authService = retrofit.create(UserRetrofitInterface::class.java)
+        authService.updateAccountInfo(accountDto).enqueue(object : Callback<UpdateResponse>{
+            override fun onResponse(
+                call: Call<UpdateResponse>,
+                response: Response<UpdateResponse>
+            ) {
+                when(response.code()){
+                    200->{
+                        accountUpdateView.onAccountUpdateSuccess()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateResponse>, t: Throwable) {
+                accountUpdateView.onAccountUpdateFailure()
+            }
+
         })
     }
 }

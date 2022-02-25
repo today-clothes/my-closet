@@ -1,6 +1,6 @@
 package com.oclothes.mycloset.ui.login.login
 
-import com.oclothes.mycloset.data.entities.remote.auth.dto.UserDto
+import com.oclothes.mycloset.data.entities.remote.user.dto.UserDto
 
 
 interface LoginView {

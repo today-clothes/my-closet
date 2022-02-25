@@ -1,4 +1,4 @@
-package com.oclothes.mycloset.ui.main.closet.view
+package com.oclothes.mycloset.data.entities.remote.closet.view
 
 interface ClosetUpdateView {
     fun onClosetUpdateSuccess()

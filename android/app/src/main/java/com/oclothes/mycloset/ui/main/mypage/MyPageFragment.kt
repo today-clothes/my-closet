@@ -1,59 +1,67 @@
 package com.oclothes.mycloset.ui.main.mypage
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.oclothes.mycloset.databinding.FragmentMyPageBinding
+import com.oclothes.mycloset.ui.BaseFragment
+import com.oclothes.mycloset.ui.main.mypage.modify.ModifyInfoActivity
+import com.oclothes.mycloset.utils.RegulationUtils
+import com.oclothes.mycloset.utils.getUser
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::inflate) {
 
-class MyPageFragment : Fragment() {
-    lateinit var binding : FragmentMyPageBinding
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun initAfterBinding() {
+        init()
+        setOnClickListeners()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private fun init() {
+        getUser()?.let{
+            binding.myPageEmailTv.text = it.email
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentMyPageBinding.inflate(inflater, container, false)
-        return binding.root
+    fun setEmail(){
+        getUser()?.let{
+            binding.myPageEmailTv.text = it.email
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyPageFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyPageFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun setOnClickListeners() {
+        binding.myPageSetAccountInfoBtn.setOnClickListener {
+            val intent = Intent(requireContext(), ModifyInfoActivity::class.java)
+            intent.putExtra("mode", 1)
+            startActivity(intent)
+        }
+
+        binding.myPageSetPersonalInfoBtn.setOnClickListener {
+            val intent = Intent(requireContext(), ModifyInfoActivity::class.java)
+            intent.putExtra("mode", 2)
+            startActivity(intent)
+        }
+
+        binding.myPageAskBtn.setOnClickListener {
+            AlertDialog.Builder(context)
+                .setTitle("문의하기")
+                .setMessage("성명 :박동규\n" +
+                        "연락처 :01038879173, rnlgksclsrn9868@gmail.com")
+                .create()
+                .show()
+        }
+
+        binding.myPagePersonalInfoRegulationBtn.setOnClickListener {
+            RegulationUtils.showPersonalInfoRegulation(requireContext())
+        }
+
+        binding.myPageServiceRegulationBtn.setOnClickListener {
+            RegulationUtils.showUsageRegulation(requireContext())
+        }
     }
 
     fun backPressed() : Boolean {

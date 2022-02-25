@@ -1,4 +1,4 @@
-package com.oclothes.mycloset.data.entities.remote.auth.dto
+package com.oclothes.mycloset.data.entities.remote.user.dto
 
 import com.google.gson.annotations.SerializedName
 

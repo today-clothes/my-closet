@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.databinding.FragmentSignUpEmailBinding
 import com.oclothes.mycloset.ui.BaseFragment
+import com.oclothes.mycloset.utils.RegulationUtils
 
 class SignUpEmailFragment : BaseFragment<FragmentSignUpEmailBinding>(FragmentSignUpEmailBinding::inflate), View.OnClickListener {
     private var emailFilled = false
@@ -78,6 +79,8 @@ class SignUpEmailFragment : BaseFragment<FragmentSignUpEmailBinding>(FragmentSig
         binding.loginSignUpAgree3Cb.setOnClickListener(this)
         binding.loginSignUpSignUpBtnTv.isClickable = false
         binding.loginSignUpMainBackgroundCl.setOnClickListener(this)
+        binding.loginSignUpReg1Tv.setOnClickListener(this)
+        binding.loginSignUpReg2Tv.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -90,6 +93,13 @@ class SignUpEmailFragment : BaseFragment<FragmentSignUpEmailBinding>(FragmentSig
             }
             binding.loginSignUpMainBackgroundCl ->{
                 hideKeyboard()
+            }
+            binding.loginSignUpReg1Tv->{
+                RegulationUtils.showUsageRegulation(requireContext())
+            }
+            binding.loginSignUpReg2Tv->{
+                RegulationUtils.showPersonalInfoRegulation(requireContext())
+
             }
         }
         checkLogic()
