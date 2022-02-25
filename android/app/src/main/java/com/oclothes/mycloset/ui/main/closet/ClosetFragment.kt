@@ -7,7 +7,6 @@ import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
@@ -164,6 +163,7 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
         this.hasNext = hasNext
         initAllClothes()
     }
+
 
     override fun onGetClosetsFailure(code: Int, message: String) {
         showToast("옷장 불러오기 실패")
