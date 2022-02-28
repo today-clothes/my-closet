@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    group:
+      "prod": "jwt,oauth,mail,aws"
+      "local": "jwt,oauth,mail"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+

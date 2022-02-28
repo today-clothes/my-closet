@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/homeFragment"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:title=""
+        android:icon="@drawable/closet_selected"
+        tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/searchFragment"
+        app:showAsAction="always"
+        android:icon="@drawable/search_unselect"
+        android:title=""/>
+    <item
+        android:id="@+id/myFragment"
+        app:showAsAction="always"
+        android:icon="@drawable/my_page_unselect"
+        android:title="" />
+
+</menu>

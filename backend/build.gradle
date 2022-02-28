@@ -1,0 +1,87 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.oclothes'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'commons-io:commons-io:2.11.0'
+
+    // DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'mysql:mysql-connector-java'
+
+    // AWS
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.152'
+
+    // QUERYDSL
+    compileOnly 'com.querydsl:querydsl-core'
+    compileOnly 'com.querydsl:querydsl-jpa'
+    testImplementation 'com.querydsl:querydsl-jpa'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+
+    // LOMBOK
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // MAPSTRUCT
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+    // JWT
+    compileOnly 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2', 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+    // MAIL
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // TEST
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.mockito:mockito-inline'
+    testImplementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
+
+    // SWAGGER
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources.dependsOn('copySecret')
+
+task copySecret(type: Copy) {
+    from '../my-closet-secret'
+    include "*.yml"
+    into 'src/main/resources'
+}
+
+task cleanGeneatedDir(type: Delete) {
+    delete file('src/main/generated')
+}

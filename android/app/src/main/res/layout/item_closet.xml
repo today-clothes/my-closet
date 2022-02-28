@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="350dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <androidx.cardview.widget.CardView
+        android:id="@+id/closet_item_cv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cardCornerRadius="10dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="3dp"
+        android:background="@color/white"
+        >
+        <ImageView
+            android:id="@+id/closet_item_image_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/temp_selfee"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"
+            />
+        <TextView
+            android:id="@+id/closet_item_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="제주도에서\n입을 옷"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:fontFamily="@font/roboto_bold"/>
+        <TextView
+            android:id="@+id/closet_item_when_empty_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="표시할 코디나 아이템이 없습니다."
+            android:textSize="17dp"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_marginTop="170dp"/>
+    </androidx.cardview.widget.CardView>
+    
+</androidx.constraintlayout.widget.ConstraintLayout>
