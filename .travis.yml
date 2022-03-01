@@ -1,0 +1,45 @@
+language: java
+
+jdk:
+  - openjdk11
+
+branches:
+  only:
+    - main
+
+git:
+  submodules: false
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+before_install:
+  - git submodule update --remote --merge
+
+before_deploy:
+  - zip -r oclothes
+  - mkdir -p deploy
+  - mv oclothes.zip deploy/oclothes.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: oclothes-deploy
+    region: ap-northease-2
+    skip_cleanup: true
+    acl: public_read
+    wait-until-deployed: true
+    local_dir: deploy
+    on:
+      repo: https://github.com/today-clothes/my-closet.git
+      branch: main
+
+notifications:
+  email:
+    recipients:
+      -iamsemi1115@gmail.com
