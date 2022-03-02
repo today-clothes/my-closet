@@ -7,9 +7,6 @@ branches:
   only:
     - main
 
-git:
-  submodules: false
-
 cache:
   directories:
     - '$HOME/.m2/repository'
@@ -18,14 +15,8 @@ cache:
 script: "./gradlew clean build"
 
 before_install:
-  - sudo wget https://services.gradle.org/distributions/gradle-6.8-bin.zip
-  - sudo unzip -qq gradle-6.8-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-6.8
-  - export PATH=$GRADLE_HOME/bin:$PATH
-  - gradle -version
   - cd ./backend/
   - gradle wrap
-  - git submodule update --init --recursive
   - chmod +x gradlew
 
 before_deploy:
@@ -37,8 +28,9 @@ deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
+    github-token: $GITHUB_TOKEN
     bucket: oclothes-deploy
-    region: ap-northease-2
+    region: ap-northeast-2
     skip_cleanup: true
     acl: public_read
     wait-until-deployed: true
