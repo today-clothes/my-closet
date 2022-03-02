@@ -3,6 +3,9 @@ language: java
 jdk:
   - openjdk11
 
+git:
+  submodules: false
+
 branches:
   only:
     - main
@@ -15,6 +18,12 @@ cache:
 script: "./gradlew clean build"
 
 before_install:
+  - |
+    cat >~/.netrc <<!
+    machine github.com
+    login $GITHUB_TOKEN
+    !
+  - git submodule update --init --recursive
   - cd ./backend/
   - gradle wrap
   - chmod +x gradlew
