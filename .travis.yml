@@ -28,7 +28,7 @@ before_install:
   - chmod +x gradlew
 
 before_deploy:
-  - zip -r oclothes
+  - zip -r oclothes *
   - mkdir -p deploy
   - mv oclothes.zip deploy/oclothes.zip
 
@@ -44,7 +44,7 @@ deploy:
     wait-until-deployed: true
     local_dir: deploy
     on:
-      repo: https://github.com/today-clothes/my-closet.git
+      repo: today-clothes/my-closet
       branch: main
 
 notifications:
