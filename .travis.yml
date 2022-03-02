@@ -18,7 +18,15 @@ cache:
 script: "./gradlew clean build"
 
 before_install:
-  - git submodule update --remote --merge
+  - sudo wget https://services.gradle.org/distributions/gradle-6.8-bin.zip
+  - sudo unzip -qq gradle-6.8-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-6.8
+  - export PATH=$GRADLE_HOME/bin:$PATH
+  - gradle -version
+  - cd ./backend/
+  - gradle wrap
+  - git submodule update --init --recursive
+  - chmod +x gradlew
 
 before_deploy:
   - zip -r oclothes
