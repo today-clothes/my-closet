@@ -25,7 +25,6 @@ before_install:
     !
   - git submodule update --init --recursive
   - cd ./backend/
-  - gradle wrap
   - chmod +x gradlew
 
 before_deploy:
