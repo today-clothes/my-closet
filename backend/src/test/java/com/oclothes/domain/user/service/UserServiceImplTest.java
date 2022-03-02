@@ -24,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Spy;
+import org.springframework.core.env.Environment;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -55,6 +56,9 @@ class UserServiceImplTest extends BaseTest {
 
     @Mock
     private TagService tagService;
+
+    @Mock
+    private Environment environment;
 
     @Spy
     @InjectMocks
@@ -95,6 +99,7 @@ class UserServiceImplTest extends BaseTest {
         when(this.tagService.findAllByMoodTagIds(any())).thenReturn(Collections.emptyList());
         when(this.userRepository.save(any())).thenReturn(user);
         when(this.emailAuthenticationCodeService.save(any())).thenReturn(new EmailAuthenticationCode(user, EmailAuthenticationCodeGenerator.generateAuthCode()));
+        when(this.environment.getProperty(any())).thenReturn("http://localhost:8080");
         doNothing().when(this.emailService).sendEmail(any(), any(), any());
 
         SignUpResponse signUpResponse = this.userService.signUp(requestDto);
