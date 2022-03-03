@@ -78,51 +78,51 @@
             android:background="@drawable/login_button_email_background"
             />
         
-        <TextView
-            android:id="@+id/login_naver_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="네이버로 시작하기"
-            android:gravity="center"
-            android:textSize="16dp"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/login_email_btn"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/login_button_naver_background"
-            />
-        
-        <TextView
-            android:id="@+id/login_kakao_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="카카오로 시작하기"
-            android:textSize="16dp"
-            android:gravity="center"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/login_naver_btn"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/login_button_kakao_background"
-            />
-        
-        <TextView
-            android:id="@+id/login_google_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="구글로 시작하기"
-            android:gravity="center"
-            android:textSize="16dp"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/login_kakao_btn"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/login_button_google_background"
-            />
+<!--        <TextView-->
+<!--            android:id="@+id/login_naver_btn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:text="네이버로 시작하기"-->
+<!--            android:gravity="center"-->
+<!--            android:textSize="16dp"-->
+<!--            android:textColor="@color/black"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/login_email_btn"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:layout_marginEnd="15dp"-->
+<!--            android:background="@drawable/login_button_naver_background"-->
+<!--            />-->
+<!--        -->
+<!--        <TextView-->
+<!--            android:id="@+id/login_kakao_btn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:text="카카오로 시작하기"-->
+<!--            android:textSize="16dp"-->
+<!--            android:gravity="center"-->
+<!--            android:textColor="@color/black"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/login_naver_btn"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:layout_marginEnd="15dp"-->
+<!--            android:background="@drawable/login_button_kakao_background"-->
+<!--            />-->
+<!--        -->
+<!--        <TextView-->
+<!--            android:id="@+id/login_google_btn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:text="구글로 시작하기"-->
+<!--            android:gravity="center"-->
+<!--            android:textSize="16dp"-->
+<!--            android:textColor="@color/black"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/login_kakao_btn"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:layout_marginEnd="15dp"-->
+<!--            android:layout_marginBottom="20dp"-->
+<!--            android:background="@drawable/login_button_google_background"-->
+<!--            />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

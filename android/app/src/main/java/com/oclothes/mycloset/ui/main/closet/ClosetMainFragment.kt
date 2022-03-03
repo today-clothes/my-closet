@@ -74,6 +74,7 @@ class ClosetMainFragment : BaseFragment<FragmentClosetMainBinding>(FragmentClose
             1->{
                 setVp(CLOSET)
                 MainActivity.pageStatus = Status.STATE_CLOSET_FRAGMENT
+                closet.init()
                 return false
             }
             0->{

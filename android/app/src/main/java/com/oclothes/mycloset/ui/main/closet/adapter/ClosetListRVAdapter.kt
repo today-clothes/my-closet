@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.oclothes.mycloset.ApplicationClass.Companion.BASE_URL
 import com.oclothes.mycloset.data.entities.remote.domain.Closet
 import com.oclothes.mycloset.databinding.ItemClosetBinding
 import com.oclothes.mycloset.ui.main.closet.ClosetFragment
@@ -66,7 +67,7 @@ class ClosetListRVAdapter(private val closetList : ArrayList<Closet>, val f : Cl
                 binding.closetItemWhenEmptyTv.visibility = View.GONE
                 binding.closetItemNameTv.text = closet.name
             }
-            val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${closet.thumbnail}", LazyHeaders.Builder()
+            val glideUrl = GlideUrl("${BASE_URL}clothes/images/${closet.thumbnail}", LazyHeaders.Builder()
                 .addHeader("Authorization", getJwt()!!)
                 .build())
             Glide.with(f).load(glideUrl).into(binding.closetItemImageIv)

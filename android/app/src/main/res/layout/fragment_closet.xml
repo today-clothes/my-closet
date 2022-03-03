@@ -80,6 +80,7 @@
                 android:clipToOutline="true"
                 />
             <TextView
+                android:id="@+id/closet_all_closet_all_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"

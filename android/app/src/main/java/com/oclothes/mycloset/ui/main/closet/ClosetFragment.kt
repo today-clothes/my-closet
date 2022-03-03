@@ -2,6 +2,7 @@ package com.oclothes.mycloset.ui.main.closet
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.view.View
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.oclothes.mycloset.ApplicationClass
+import com.oclothes.mycloset.ApplicationClass.Companion.BASE_URL
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.remote.domain.Closet
 import com.oclothes.mycloset.data.entities.remote.domain.Status
@@ -140,10 +142,16 @@ class ClosetFragment (private val f : ClosetMainFragment): BaseFragment<Fragment
 
     private fun initAllClothes() {
 
-        val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${closetList[0].thumbnail}", LazyHeaders.Builder()
+        val glideUrl = GlideUrl("${BASE_URL}clothes/images/${closetList[0].thumbnail}", LazyHeaders.Builder()
             .addHeader("Authorization", getJwt()!!)
             .build())
         Glide.with(this).load(glideUrl).into(binding.closetAllClosetImageIv)
+
+        if (closetList[0].thumbnail == null) {
+            binding.closetAllClosetAllTv.setTextColor(Color.BLACK)
+        }else
+            binding.closetAllClosetAllTv.setTextColor(Color.WHITE)
+
 
         binding.closetAllClosetCv.setOnClickListener {
             f.setVp(ClosetMainFragment.STYLE)

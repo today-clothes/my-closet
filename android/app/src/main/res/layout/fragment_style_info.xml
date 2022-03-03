@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="00님의\n정보를 입력해주세요."
+        android:text="사용자님의\n정보를 입력해주세요."
         android:layout_marginTop="30dp"
         android:layout_marginStart="20dp"
         android:textSize="30dp"
