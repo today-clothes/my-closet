@@ -11,13 +11,17 @@ import java.io.InputStreamReader;
 
 @Slf4j
 public class EmailMessageUtil {
-    public static String getSignUpEmailMessage(Email email, String authenticationCode) {
+    public static String getSignUpEmailMessage(String domain, Email email, String authenticationCode) {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(new ClassPathResource("mail/sign-up.html").getFile())));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ClassPathResource("mail/sign-up.html").getInputStream()));
             StringBuilder stringBuilder = new StringBuilder();
             while (bufferedReader.ready()) stringBuilder.append(bufferedReader.readLine());
-            return stringBuilder.toString().replace("{email}", email.getValue()).replace("{code}", authenticationCode);
+            return stringBuilder.toString()
+                    .replace("{domain}", domain)
+                    .replace("{email}", email.getValue())
+                    .replace("{code}", authenticationCode);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("회원가입 인증 메일 가져오는 도중 엑셉션 발생");
         }
     }

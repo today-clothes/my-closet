@@ -17,6 +17,7 @@ import com.oclothes.domain.user.util.EmailMessageUtil;
 import com.oclothes.global.config.security.jwt.JwtProvider;
 import com.oclothes.infra.email.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,17 +39,23 @@ public class UserServiceImpl implements UserService {
     private final TagService tagService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProvider jwtProvider;
+    private final Environment environment;
+
+    private static final String DOMAIN = "domain";
 
     @Override
     public SignUpResponse signUp(SignUpRequest requestDto) {
         this.validateAlreadyExistsEmail(requestDto);
         this.validateAlreadyExistsNickname(requestDto.getNickname());
         final List<MoodTag> moodTags = this.tagService.findAllByMoodTagIds(requestDto.getMoodTags());
-        User user = this.userRepository.save(this.userMapper.toEntity(requestDto))
-                .addAllMoodTags(moodTags);
+        User user = this.userRepository.save(this.userMapper.toEntity(requestDto)).addAllMoodTags(moodTags);
         String authenticationCode = EmailAuthenticationCodeGenerator.generateAuthCode();
         this.emailAuthenticationCodeService.save(new EmailAuthenticationCode(user, authenticationCode));
-        this.emailService.sendEmail(user.getEmail(), EmailSubject.SIGN_UP, EmailMessageUtil.getSignUpEmailMessage(user.getEmail(), authenticationCode));
+        this.emailService.sendEmail(
+                user.getEmail(),
+                EmailSubject.SIGN_UP,
+                EmailMessageUtil.getSignUpEmailMessage(this.environment.getProperty(DOMAIN), user.getEmail(), authenticationCode)
+        );
         return new SignUpResponse(user.getEmail().getValue());
     }
 
