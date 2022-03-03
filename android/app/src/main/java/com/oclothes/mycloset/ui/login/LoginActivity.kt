@@ -14,18 +14,18 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             startActivity(Intent(this, LoginLoginActivity::class.java))
         }
 
-        binding.loginGoogleBtn.setOnClickListener{
-        }
+//        binding.loginGoogleBtn.setOnClickListener{
+//        }
 
         binding.loginEmailBtn.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
-
-        binding.loginNaverBtn.setOnClickListener{
-        }
-
-        binding.loginKakaoBtn.setOnClickListener {
-
-        }
+//
+//        binding.loginNaverBtn.setOnClickListener{
+//        }
+//
+//        binding.loginKakaoBtn.setOnClickListener {
+//
+//        }
     }
 }

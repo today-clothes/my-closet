@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.oclothes.mycloset.data.entities.remote.domain.Status
 import com.oclothes.mycloset.data.entities.remote.domain.Style
 import com.oclothes.mycloset.data.entities.remote.style.view.StyleSearchView
@@ -56,18 +57,30 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
         }
 
         binding.searchBtnTv.setOnClickListener {
-            hideKeyboard()
-            val map = HashMap<String, String>()
-            binding.searchResultTv.text = "'${binding.searchMainEt.text.toString()}' 검색 결과"
-            map["keyword"] = binding.searchMainEt.text.toString()
-            lastParam1 = HashMap<String, Int>()
-            lastParam2 = map
-            lastParam3 = ArrayList<Int>()
-            lastParam4 = ArrayList<Int>()
-            lastParam5 = ArrayList<Int>()
-            this.styleList.clear()
-            currentPage = 1
-            StyleService.searchClothes(this, HashMap<String, Int>(), map, ArrayList<Int>(), ArrayList<Int>(), ArrayList<Int>(), 1)
+            if(binding.searchMainEt.text.toString().isNotEmpty()) {
+                hideKeyboard()
+                val map = HashMap<String, String>()
+                binding.searchResultTv.text = "'${binding.searchMainEt.text.toString()}' 검색 결과"
+                map["keyword"] = binding.searchMainEt.text.toString()
+                lastParam1 = HashMap<String, Int>()
+                lastParam2 = map
+                lastParam3 = ArrayList<Int>()
+                lastParam4 = ArrayList<Int>()
+                lastParam5 = ArrayList<Int>()
+                this.styleList.clear()
+                currentPage = 1
+                StyleService.searchClothes(
+                    this,
+                    HashMap<String, Int>(),
+                    map,
+                    ArrayList<Int>(),
+                    ArrayList<Int>(),
+                    ArrayList<Int>(),
+                    1
+                )
+            }else{
+                showToast("검색어를 입력하세요")
+            }
         }
     }
 
@@ -93,11 +106,14 @@ class SearchFragment(val f : SearchMainFragment) : BaseFragment<FragmentSearchBi
             }
         })
 
-        binding.searchBackground.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            if(scrollY ==(v.getChildAt(0).measuredHeight) - v.measuredHeight){
-                if(hasNext) {
-                    currentPage += 1
-                    StyleService.searchClothes(me, lastParam1!!, lastParam2!!, lastParam3!!, lastParam4!!, lastParam5!!, currentPage)
+        binding.searchMainRv.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (recyclerView.canScrollVertically(-1)) {
+                    if(hasNext) {
+                        currentPage += 1
+                        StyleService.searchClothes(me, lastParam1!!, lastParam2!!, lastParam3!!, lastParam4!!, lastParam5!!, currentPage)
+                    }
                 }
             }
         })

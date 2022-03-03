@@ -151,7 +151,7 @@
             app:layout_constraintEnd_toEndOf="@id/my_page_version_tv"
             app:layout_constraintTop_toTopOf="@id/my_page_version_tv"
             app:layout_constraintBottom_toBottomOf="@id/my_page_version_tv"
-            android:text="현재 1.12.8 / 최신 1.12.8"
+            android:text="현재 1.0.0 / 최신 1.0.0"
             android:textSize="11dp"
             android:fontFamily="@font/roboto_regular"
             />

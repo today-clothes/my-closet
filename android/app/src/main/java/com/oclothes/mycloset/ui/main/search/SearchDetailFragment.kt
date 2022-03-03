@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.oclothes.mycloset.ApplicationClass.Companion.BASE_URL
 import com.oclothes.mycloset.data.entities.remote.domain.StyleInfo
 import com.oclothes.mycloset.data.entities.remote.domain.Tag
 import com.oclothes.mycloset.data.entities.remote.style.view.StyleInfoView
@@ -37,7 +38,7 @@ class SearchDetailFragment(val f : SearchMainFragment) : BaseFragment<FragmentSe
         binding.searchDetailSecondInfoSearchDetailEditEt.setText(styleInfo.content)
         binding.searchDetailSecondInfoUserTv.text = "${styleInfo.updatedAt.substring(0,10)}/${styleInfo.userName} ${styleInfo.height}cm ${styleInfo.weight}kg"
 
-        val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${styleInfo.imgUrl}", LazyHeaders.Builder()
+        val glideUrl = GlideUrl("${BASE_URL}clothes/images/${styleInfo.imgUrl}", LazyHeaders.Builder()
             .addHeader("Authorization", getJwt()!!)
             .build())
         Glide.with(this).load(glideUrl).into(binding.searchDetailMainImageIv)

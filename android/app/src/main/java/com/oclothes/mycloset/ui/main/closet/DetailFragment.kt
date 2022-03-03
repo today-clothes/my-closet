@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.oclothes.mycloset.ApplicationClass.Companion.BASE_URL
 import com.oclothes.mycloset.ApplicationClass.Companion.DEV_URL
 import com.oclothes.mycloset.R
 import com.oclothes.mycloset.data.entities.remote.domain.Status
@@ -267,7 +268,7 @@ class DetailFragment(private val f : ClosetMainFragment) : BaseFragment<Fragment
         binding.detailSecondInfoDetailEditEt.setText(styleinfo.content)
         binding.detailSecondLockSwitchS.isChecked = styleinfo.locked
 
-        val glideUrl = GlideUrl("${DEV_URL}clothes/images/${styleinfo.imgUrl}", LazyHeaders.Builder()
+        val glideUrl = GlideUrl("${BASE_URL}clothes/images/${styleinfo.imgUrl}", LazyHeaders.Builder()
             .addHeader("Authorization", getJwt()!!)
             .build())
         Glide.with(this).load(glideUrl).into(binding.detailMainImageIv)

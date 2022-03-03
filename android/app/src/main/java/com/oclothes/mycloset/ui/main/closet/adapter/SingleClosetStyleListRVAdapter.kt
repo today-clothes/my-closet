@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.oclothes.mycloset.ApplicationClass.Companion.BASE_URL
 import com.oclothes.mycloset.data.entities.remote.domain.Style
 import com.oclothes.mycloset.data.entities.remote.domain.Tag
 import com.oclothes.mycloset.data.entities.remote.style.view.StyleDeleteView
@@ -145,7 +146,7 @@ class SingleClosetStyleListRVAdapter (private val f : ClosetMainFragment, privat
                 binding.singleClosetLockIconIv.visibility = View.GONE
             }
 
-            val glideUrl = GlideUrl("http://10.0.2.2:8080/clothes/images/${style.imgUrl}", LazyHeaders.Builder()
+            val glideUrl = GlideUrl("${BASE_URL}clothes/images/${style.imgUrl}", LazyHeaders.Builder()
                 .addHeader("Authorization", getJwt()!!)
                 .build())
             Glide.with(f).load(glideUrl).into(binding.singleClosetClothImageIv)

@@ -16,8 +16,8 @@ class ApplicationClass : Application() {
         const val APP_DATABASE = "$TAG-DB"
 
         const val DEV_URL: String = "http://10.0.2.2:8080/";       // 테스트 서버 주소
-        const val PROD_URL: String = "https://api.template.com/"    // 실서버 주소
-        const val BASE_URL: String = DEV_URL
+        const val PROD_URL: String = "http://3.38.82.175:8080/"    // 실서버 주소
+        const val BASE_URL: String = PROD_URL
 
         lateinit var mSharedPreferences: SharedPreferences
         lateinit var retrofit: Retrofit
