@@ -47,6 +47,20 @@ deploy:
       repo: today-clothes/my-closet
       branch: main
 
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: oclothes-deploy
+    key: oclothes.zip
+    bundle_type: zip
+    application: todayclothes-service
+    deployment_group: todayclothes-service-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: today-clothes/my-closet
+      branch: main
+
 notifications:
   email:
     recipients:
