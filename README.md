@@ -15,11 +15,14 @@
 > 옷을 여러 번 갈아입을 필요 없이, 스타일 목록에서 오늘 입을 옷을 선택할 수 있습니다.  
 > 또한 이용자의 특징 및 선호를 바탕으로 검색 및 추천 서비스를 제공합니다.
 
+## Google Play
+
 |  <img src="https://user-images.githubusercontent.com/67419004/161857441-87b36987-a0f4-4150-af0c-a959a0fe1c3e.jpg" width=400px/>  | <img src="https://user-images.githubusercontent.com/67419004/161857451-f40544bc-399f-432d-a2ba-24cee5d6cd22.jpg" width=400px /> | <img src="https://user-images.githubusercontent.com/67419004/161857454-ea0cac57-7355-49b5-bb36-78495a883282.jpg" width=400px /> | <img src="https://user-images.githubusercontent.com/67419004/161857457-0bfac007-16ef-4a95-9746-fb1fd07f1356.jpg" width=400px /> | <img src="https://user-images.githubusercontent.com/67419004/161857458-11ca9b05-e434-4664-86b9-c10f188d0644.jpg" width=400px /> |
 | :-----------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :--------------------------------------------------------: | :--------------------------------------------------------: |
 
-|<a href="https://play.google.com/store/apps/details?id=com.oclothes.mycloset"> <img src="https://user-images.githubusercontent.com/67419004/161859973-d5a51733-97d6-4dff-957e-a16a8a8513aa.png" /> </a>|
+| 2022.03.25 구글 플레이 스토어 등록 |
 |:--------------------------------------:|
+|<a href="https://play.google.com/store/apps/details?id=com.oclothes.mycloset"> <img src="https://user-images.githubusercontent.com/67419004/161859973-d5a51733-97d6-4dff-957e-a16a8a8513aa.png" /> </a>|
 
 ## Members
 
